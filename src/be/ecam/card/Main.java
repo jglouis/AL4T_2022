@@ -2,11 +2,17 @@ package be.ecam.card;
 
 public class Main {
     public static void main(String[] args) {
-        Card card1 = new Card(3, Suit.CLUB);
-        Card card2 = new Card(3, Suit.CLUB);
+       Deck deck = new Deck();
 
-        Object dummyObject = new Object();
+       for (int i =  0; i < 53; i++) {
+           Card card = null;
+           try {
+               card = deck.draw();
+               System.out.println(card.toString());
+           } catch  (NullPointerException e) {
+               System.out.println("uh oh");
+           }
 
-        System.out.println(card1.equals(dummyObject));
+       }
     }
 }
