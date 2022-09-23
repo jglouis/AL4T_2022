@@ -1,17 +1,22 @@
 package be.ecam.card;
 
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-       Deck deck = new Deck();
-
-       for (int i =  0; i < 53; i++) {
-           Card card = null;
-//           try {
-               card = deck.draw();
-               System.out.println(card.toString());
-//           } catch  (NullPointerException e) {
-//               System.out.println("uh oh");
-//           }
-       }
+        try (Scanner scanner = new Scanner(System.in)) {
+            Deck deck = new Deck();
+            while (true) {
+                String userInput = scanner.nextLine();
+                switch (userInput) {
+                    case "draw":
+                        Card card = deck.draw();
+                        System.out.println(card);
+                        break;
+                    case "exit":
+                        System.exit(0);
+                }
+            }
+        }
     }
 }

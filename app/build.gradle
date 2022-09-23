@@ -21,3 +21,7 @@ application {
     // Define the main class for the application.
     mainClass = 'be.ecam.card.Main'
 }
+
+run {
+    standardInput = System.in
+}
