@@ -12,7 +12,6 @@ public class Main {
            } catch  (NullPointerException e) {
                System.out.println("uh oh");
            }
-
        }
     }
 }
