@@ -1,5 +1,7 @@
 package be.ecam.card;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class Deck {
      *
      * @return the drawn {@link Card}. Null if None left.
      */
+    @Nullable
     public Card draw() {
         if (cards.size() == 0) return null;
         return cards.remove(0);

@@ -6,12 +6,12 @@ public class Main {
 
        for (int i =  0; i < 53; i++) {
            Card card = null;
-           try {
+//           try {
                card = deck.draw();
                System.out.println(card.toString());
-           } catch  (NullPointerException e) {
-               System.out.println("uh oh");
-           }
+//           } catch  (NullPointerException e) {
+//               System.out.println("uh oh");
+//           }
        }
     }
 }
