@@ -1,6 +1,7 @@
 /out/
 /.idea/
 /AL4T_2022.iml
+.DS_Store
 
 # Ignore Gradle project-specific cache directory
 .gradle
