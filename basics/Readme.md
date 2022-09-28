@@ -139,3 +139,8 @@ This means that the compiler does not protect against null usage.
 
 Correct `null` handling is a common source of mistake.
 By default, always assume that a reference type might be null.
+
+Common ways to handle null are:
+- basic null check
+- usage of type annotation `@Nullable`, `@NotNull`
+- usage of `Optional<T>` as return type from a method
