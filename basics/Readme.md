@@ -101,6 +101,16 @@ The issue with that is that your class will be incorrectly handled with other cl
 This includes `HashMap` and `HashSet`.
 If `obj1.equals(obj2)` is `true`, then `obj1.hashcode() == obj2.hashcode` ***must*** be `true`.
 
+### `finalize()`
+
+`finalize()` is not the same thing as a destructor.
+Because garbage collection is non-deterministic by definition, there is no guarantee about the order of execution of different `finalize()` from different objects.
+
+As a side note, RAII is not applicable to Java when dealing with resources.
+The proper ways to release resources is by using either:
+- `try-finally` blocks
+- `try-with` (Assuming the resource implements `Closeable` or `AutoCloseable`)
+
 ## Exceptions and Errors
 
 Java uses Exceptions and Errors, both inheriting from a common class `Throwable`.
