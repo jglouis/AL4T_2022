@@ -15,6 +15,7 @@ public class Card extends Object {
         this.rank = rank;
         this.suit = suit;
         // some comments
+        // comment 2
     }
 
     @Override
