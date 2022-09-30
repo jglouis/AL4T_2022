@@ -11,6 +11,7 @@ public class Card extends Object {
     private Suit suit;
 
     public Card(int rank, Suit suit) {
+        // comment 1
         this.rank = rank;
         this.suit = suit;
         // some comments
