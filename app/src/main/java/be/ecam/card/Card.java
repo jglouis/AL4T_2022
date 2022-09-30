@@ -13,6 +13,7 @@ public class Card extends Object {
     public Card(int rank, Suit suit) {
         this.rank = rank;
         this.suit = suit;
+        // some comments
     }
 
     @Override
