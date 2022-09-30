@@ -8,4 +8,4 @@
  */
 
 rootProject.name = 'AL4T_2022'
-include('app')
+include('basics')
