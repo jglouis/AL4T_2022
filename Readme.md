@@ -9,11 +9,14 @@ See <https://docs.gradle.org/current/userguide/userguide.html> for more details.
 For organisation purposes the gradle root projects is separated into independent modules. Each module is given a short description in this Readme.
 More details can be found in each module's own Readme.
 
-# `basics` module
+## `basics` module
 
 The `basics` module is an introduction to the Java programming language.
-
 
 The `basics` module uses the `application` gradle plugin.
 Running is done by running the `run` task, like so `./gradlew :basics:run`
 
+## `mario` module
+
+This module features an implementation of Super Mario Bros in Java found on Github.
+This module is used for showcasing code maintainability issues and possible refactoring.
