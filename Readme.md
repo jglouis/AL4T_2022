@@ -17,3 +17,6 @@ The `basics` module is an introduction to the Java programming language.
 The `basics` module uses the `application` gradle plugin.
 Running is done by running the `run` task, like so `./gradlew :basics:run`
 
+## `solid` modules
+
+This module illustrates basic SOLID principles violations with their corresponding solutions.
