@@ -20,3 +20,7 @@ Running is done by running the `run` task, like so `./gradlew :basics:run`
 
 This module features an implementation of Super Mario Bros in Java found on Github.
 This module is used for showcasing code maintainability issues and possible refactoring.
+
+## `solid` modules
+
+This module illustrates basic SOLID principles violations with their corresponding solutions.
