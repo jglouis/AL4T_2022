@@ -7,20 +7,27 @@ import be.ecam.carfactory.model.*;
 public class Main {
     public static void main(String[] args) {
         // Create some cars
-        Engine sportEngine = new V8Engine();
-        Wheel[] sportsWheels = new Wheel[4];
-        for (int i = 0; i < 4; i++) {
-            sportsWheels[i] = new Wheel(TireCompound.RACE);
-        }
+//        Engine sportEngine = new V8Engine();
+//        Wheel[] sportsWheels = new Wheel[4];
+//        for (int i = 0; i < 4; i++) {
+//            sportsWheels[i] = new Wheel(TireCompound.RACE);
+//        }
+//
+//
+//        Car sportCar = new Car(sportsWheels, sportEngine);
 
+        // Sport Car factory
+        CarFactory sportCarFactory = DaggerCarFactory.builder()
+                .carFlavor(CarFlavor.SPORT_CAR)
+                .build();
 
-        Car sportCar = new Car(sportsWheels, sportEngine);
+        Car sportCar = sportCarFactory.car();
 
-        // Car factory
-        CarFactory carFactory = DaggerCarFactory.create();
-        carFactory.car();
-        carFactory.car();
-        carFactory.car();
-        carFactory.car();
+        // Electric car factory
+        CarFactory electricCraFactory = DaggerCarFactory.builder()
+                .carFlavor(CarFlavor.ELECTRIC_CAR)
+                .build();
+        Car electricCar = electricCraFactory.car();
+
     }
 }
