@@ -2,6 +2,8 @@ package be.ecam.carfactory;
 
 import be.ecam.carfactory.dagger.CarFactory;
 import be.ecam.carfactory.dagger.DaggerCarFactory;
+import be.ecam.carfactory.data.DataStore;
+import be.ecam.carfactory.data.DataStoreImpl;
 import be.ecam.carfactory.model.*;
 
 public class Main {
@@ -28,6 +30,8 @@ public class Main {
                 .carFlavor(CarFlavor.ELECTRIC_CAR)
                 .build();
         Car electricCar = electricCraFactory.car();
+
+        DataStore dataStore = electricCraFactory.dataStore();
 
     }
 }
