@@ -24,3 +24,7 @@ This module is used for showcasing code maintainability issues and possible refa
 ## `solid` modules
 
 This module illustrates basic SOLID principles violations with their corresponding solutions.
+
+## `carfactory` modules
+
+This module illustrates dependency injection with dagger.
