@@ -5,7 +5,10 @@ import be.ecam.carfactory.model.Car;
 import dagger.BindsInstance;
 import dagger.Component;
 
-@Component(modules = {WheelModule.class, EngineModule.class})
+import javax.inject.Singleton;
+
+@Singleton
+@Component(modules = {WheelModule.class, EngineModule.class, DataStoreModule.class})
 public interface CarFactory {
     Car car();
 
