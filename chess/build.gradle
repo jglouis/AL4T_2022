@@ -1,0 +1,39 @@
+plugins {
+    id 'application'
+}
+
+version 'unspecified'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+// We use emoticon for pieces representations
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+test {
+    useJUnitPlatform()
+}
+
+application {
+    mainClass = 'be.ecam.chess.Main'
+}
+
+run {
+    standardInput = System.in
+}
+
+task utf8Run(type: JavaExec) {
+    group('application')
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'be.ecam.chess.Main'
+//    dependsOn(':chess:utf8Classes')
+    standardInput = System.in
+    args '-utf8'
+}
