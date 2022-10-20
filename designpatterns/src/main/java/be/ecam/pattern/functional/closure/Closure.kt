@@ -2,7 +2,8 @@ package be.ecam.pattern.functional.closure
 
 fun getCounter(): () -> Unit {
     var counter = 0
-    return { println(counter++) }
+    val myClosure = { println(counter++) } // the closure has access to var counter
+    return myClosure
 }
 
 fun main() {
