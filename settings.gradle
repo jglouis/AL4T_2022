@@ -11,6 +11,8 @@ rootProject.name = 'AL4T_2022'
 
 include 'basics'
 include 'mario'
+include 'designpatterns'
+
 include 'solid'
 include 'carfactory'
 
