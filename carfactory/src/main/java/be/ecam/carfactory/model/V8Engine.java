@@ -1,6 +1,13 @@
 package be.ecam.carfactory.model;
 
-public class V8Engine implements Engine {
+import javax.inject.Inject;
+
+public class V8Engine implements Engine{
+    @Inject
+    public V8Engine() {
+
+    }
+
     @Override
     public void start() {
 
