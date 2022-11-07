@@ -6,12 +6,9 @@ public class Car {
     private final Engine engine;
 
 
-    public Car() {
-        this.wheels = new Wheel[4];
-        for (int i = 0; i < 4; i++) {
-            this.wheels[i] = new Wheel(TireCompound.STANDARD);
-        }
-        this.engine = new DieselEngine();
+    public Car(Engine engine, Wheel[] wheels) {
+        this.wheels = wheels;
+        this.engine = engine;
 
     }
 }
