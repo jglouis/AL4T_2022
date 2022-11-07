@@ -1,19 +1,17 @@
 package be.ecam.carfactory.model;
 
-import be.ecam.carfactory.data.DataStore;
-
-import javax.inject.Inject;
-
 public class Car {
 
     private final Wheel[] wheels;
     private final Engine engine;
-    private final DataStore dataStore;
 
-    @Inject
-    public Car(Wheel[] wheels, Engine engine, DataStore dataStore) {
-        this.wheels = wheels;
-        this.engine = engine;
-        this.dataStore = dataStore;
+
+    public Car() {
+        this.wheels = new Wheel[4];
+        for (int i = 0; i < 4; i++) {
+            this.wheels[i] = new Wheel(TireCompound.STANDARD);
+        }
+        this.engine = new DieselEngine();
+
     }
 }
