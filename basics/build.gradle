@@ -6,8 +6,8 @@ plugins {
     id 'application'
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 15
+targetCompatibility = 15
 
 repositories {
     mavenCentral()
@@ -19,7 +19,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'be.ecam.card.Main'
+    mainClass = 'be.ecam.Main'
 }
 
 run {
