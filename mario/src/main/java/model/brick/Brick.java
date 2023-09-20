@@ -2,7 +2,6 @@ package model.brick;
 
 import manager.GameEngine;
 import model.GameObject;
-import model.Map;
 import model.prize.Prize;
 
 import java.awt.image.BufferedImage;

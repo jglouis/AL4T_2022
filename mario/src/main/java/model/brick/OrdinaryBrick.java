@@ -2,12 +2,10 @@ package model.brick;
 
 import manager.GameEngine;
 import manager.MapManager;
-import model.Map;
 import model.prize.Prize;
 import view.Animation;
 import view.ImageLoader;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class OrdinaryBrick extends Brick {

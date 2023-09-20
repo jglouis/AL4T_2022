@@ -1,7 +1,6 @@
 package model.prize;
 
-import manager.GameEngine;
-import manager.MapManager;
+import manager.SoundManager;
 import model.GameObject;
 import model.hero.Mario;
 
@@ -18,7 +17,7 @@ public abstract class BoostItem extends GameObject implements Prize{
         setDimension(48, 48);
     }
 
-    public abstract void onTouch(Mario mario, GameEngine engine);
+    public abstract void onTouch(Mario mario, SoundManager sound);
 
     @Override
     public int getPoint() {

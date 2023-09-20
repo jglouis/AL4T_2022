@@ -1,6 +1,6 @@
 package model.prize;
 
-import manager.GameEngine;
+import manager.SoundManager;
 import model.hero.Mario;
 
 import java.awt.image.BufferedImage;
@@ -13,9 +13,9 @@ public class OneUpMushroom extends BoostItem{
     }
 
     @Override
-    public void onTouch(Mario mario, GameEngine engine) {
+    public void onTouch(Mario mario, SoundManager sound) {
         mario.acquirePoints(getPoint());
         mario.setRemainingLives(mario.getRemainingLives() + 1);
-        engine.playOneUp();
+        sound.playSound("oneUp");
     }
 }

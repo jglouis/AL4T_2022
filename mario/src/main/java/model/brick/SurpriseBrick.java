@@ -1,10 +1,7 @@
 package model.brick;
 
 import manager.GameEngine;
-import model.Map;
-import model.hero.Mario;
 import model.prize.Prize;
-import view.ImageLoader;
 
 import java.awt.image.BufferedImage;
 

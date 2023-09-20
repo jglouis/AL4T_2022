@@ -1,7 +1,7 @@
 package model.prize;
 
 import manager.GameEngine;
-import manager.MapManager;
+import manager.SoundManager;
 import model.hero.Mario;
 
 import java.awt.*;
@@ -14,6 +14,6 @@ public interface Prize {
 
     Rectangle getBounds();
 
-    void onTouch(Mario mario, GameEngine engine);
+    void onTouch(Mario mario, SoundManager sound);
 
 }

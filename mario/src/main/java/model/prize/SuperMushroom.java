@@ -1,6 +1,7 @@
 package model.prize;
 
 import manager.GameEngine;
+import manager.SoundManager;
 import model.hero.Mario;
 import model.hero.MarioForm;
 import view.Animation;
@@ -16,7 +17,7 @@ public class SuperMushroom extends BoostItem{
     }
 
     @Override
-    public void onTouch(Mario mario, GameEngine engine) {
+    public void onTouch(Mario mario, SoundManager sound) {
         mario.acquirePoints(getPoint());
 
         ImageLoader imageLoader = new ImageLoader();
@@ -30,7 +31,7 @@ public class SuperMushroom extends BoostItem{
             mario.setMarioForm(newForm);
             mario.setDimension(48, 96);
 
-            engine.playSuperMushroom();
+            sound.playSound("superMushroom");
         }
     }
 }

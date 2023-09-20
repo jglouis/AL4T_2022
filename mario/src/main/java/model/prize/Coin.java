@@ -1,6 +1,6 @@
 package model.prize;
 
-import manager.GameEngine;
+import manager.SoundManager;
 import model.GameObject;
 import model.hero.Mario;
 
@@ -33,12 +33,12 @@ public class Coin extends GameObject implements Prize{
     }
 
     @Override
-    public void onTouch(Mario mario, GameEngine engine) {
+    public void onTouch(Mario mario, SoundManager sound) {
         if(!acquired){
             acquired = true;
             mario.acquirePoints(point);
             mario.acquireCoin();
-            engine.playCoin();
+            sound.playSound("coin");
         }
     }
 
