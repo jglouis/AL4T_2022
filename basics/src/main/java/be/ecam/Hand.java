@@ -34,7 +34,7 @@ public class Hand {
     public void sort() {
         cards.sort(
                 Comparator.comparingInt((Card card) -> card.getSuit().ordinal())
-                .thenComparingInt(Card::getValue));
+                        .thenComparingInt(Card::getValue));
     }
 
     @Override
