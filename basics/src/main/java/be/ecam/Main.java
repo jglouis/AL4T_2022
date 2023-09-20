@@ -37,7 +37,7 @@ public class Main {
 
                     // deal hands
                     for (Hand hand : hands) {
-                        for (int i = 0; i <13; i++) {
+                        for (int i = 0; i < 13; i++) {
                             hand.addCard(deck.draw());
                         }
                     }

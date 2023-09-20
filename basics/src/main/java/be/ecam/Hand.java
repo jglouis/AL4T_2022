@@ -39,8 +39,11 @@ public class Hand {
 
     @Override
     public String toString() {
-        return "Hand{" +
-                "cards=" + cards +
-                '}';
+        StringBuilder sb = new StringBuilder("Hand:\n");
+        for (int i = 0; i < cards.size(); i++) {
+            String handSlot = String.format("%d: %s\n", i, cards.get(i));
+            sb.append(handSlot);
+        }
+        return sb.toString();
     }
 }
