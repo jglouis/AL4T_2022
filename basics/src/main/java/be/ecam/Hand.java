@@ -22,6 +22,18 @@ public class Hand {
     }
 
     /**
+     * Remove a {@link Card} from hand.
+     *
+     * @param index the card index
+     * @return the {@link Card}
+     * @throws IndexOutOfBoundsException if index was out of bond
+     */
+    @NotNull
+    public Card take(int index) {
+        return cards.remove(index);
+    }
+
+    /**
      * Empty the hand.
      */
     public void empty() {

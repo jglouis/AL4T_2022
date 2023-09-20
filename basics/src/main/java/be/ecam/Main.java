@@ -10,6 +10,8 @@ public class Main {
     private static final Hand[] hands = new Hand[]{new Hand(), new Hand(), new Hand(), new Hand()};
     private static final int[] points = new int[4];
 
+    private static final Card[] currentTrick = new Card[4];
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -23,7 +25,9 @@ public class Main {
             System.out.println(hands[0]);
 
             String userInput = scanner.nextLine();
-            switch (userInput) {
+            String[] split = userInput.split(" ");
+            String command = split[0];
+            switch (command) {
                 case "start" -> { // start a new game
                     // reinitialize hand
                     for (Hand hand : hands) {
@@ -43,6 +47,21 @@ public class Main {
                     }
                     // sort your hand
                     hands[0].sort();
+                }
+                case "play" -> {
+                    if (split.length < 2) {
+                        System.out.println("You have to specify the index of the card you want to play.");
+                        continue;
+                    }
+                    try {
+                        int cardIndex = Integer.parseInt(split[1]);
+                        Card playedCard = hands[0].take(cardIndex);
+                        currentTrick[0] = playedCard;
+                    } catch (NumberFormatException e) {
+                        System.out.printf("Could not parse %s to an integer.\n", split[1]);
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.printf("%d is not a valid index.\n", Integer.parseInt(split[1]));
+                    }
                 }
                 case "exit" -> // exit program
                         System.exit(0);
