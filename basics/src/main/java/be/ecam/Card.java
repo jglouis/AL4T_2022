@@ -29,8 +29,8 @@ public class Card {
     }
 
     /**
-     * The value of a card is equal to its rank (except for aces which have a value of 14 instead of one).
-     * @return
+     * The value of a {@link Card} is equal to its rank (except for aces which have a value of 14 instead of one).
+     * @return the {@link Card}'s value
      */
     public int getValue() {
         if (rank == 1) {
