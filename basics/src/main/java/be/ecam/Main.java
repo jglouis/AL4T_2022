@@ -9,7 +9,7 @@ public class Main {
     // Player 0 is the human player.
     private static final Hand[] hands = new Hand[]{new Hand(), new Hand(), new Hand(), new Hand()};
     private static final int[] points = new int[4];
-
+    private static int startingPlayer;
     private static final Card[] currentTrick = new Card[4];
 
     public static void main(String[] args) {
@@ -40,9 +40,18 @@ public class Main {
                     deck.shuffle();
 
                     // deal hands
-                    for (Hand hand : hands) {
-                        for (int i = 0; i < 13; i++) {
-                            hand.addCard(deck.draw());
+                    for (int i = 0; i < hands.length; i++) {
+                        for (int j = 0; j < 13; j++) {
+                            Card card = deck.draw();
+                            if (card == null) {
+                                // should really never happen.
+                                throw new RuntimeException("WTF?");
+                            }
+                            // the player getting the 2 of Club is the starting player for the first trick.
+                            if (Suit.CLUB.equals(card.getSuit()) && card.getValue() == 2) {
+                                startingPlayer = i;
+                            }
+                            hands[i].addCard(card);
                         }
                     }
                     // sort your hand
