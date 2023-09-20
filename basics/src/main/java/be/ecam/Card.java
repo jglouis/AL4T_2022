@@ -23,4 +23,19 @@ public class Card {
         }
         return String.format("%s of %s", rankStr, suit);
     }
+
+    public Suit getSuit() {
+        return suit;
+    }
+
+    /**
+     * The value of a card is equal to its rank (except for aces which have a value of 14 instead of one).
+     * @return
+     */
+    public int getValue() {
+        if (rank == 1) {
+            return 14;
+        }
+        return rank;
+    }
 }

@@ -1,10 +1,10 @@
 package be.ecam;
 
 public enum Suit {
-    HEART,
-    DIAMOND,
+    CLUB,
     SPADE,
-    CLUB;
+    DIAMOND,
+    HEART;
 
     @Override
     public String toString() {
