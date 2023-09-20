@@ -10,10 +10,8 @@ public class Main {
         Deck myDeck = new Deck();
 
         Card card = myDeck.draw();
-        int rank = card.rank;
-        Suit suit = card.suit;
 
-        System.out.printf("Card %d of %s", rank, suit);
+        System.out.println(card);
 
     }
 

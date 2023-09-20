@@ -3,15 +3,24 @@ package be.ecam;
 import org.jetbrains.annotations.NotNull;
 
 public class Card {
-    Suit suit;
-    int rank;
+    private final Suit suit;
+    private final int rank;
 
     public Card(@NotNull Suit suit, int rank) {
-        //if (suit == null) throw new IllegalArgumentException("Suit cannot be null");
         this.suit = suit;
         this.rank = rank;
     }
 
-
-
+    @Override
+    public String toString() {
+        String rankStr;
+        switch (rank) {
+            case 1 -> rankStr = "Ace";
+            case 11 -> rankStr = "Jack";
+            case 12 -> rankStr = "Queen";
+            case 13 -> rankStr = "King";
+            default -> rankStr = String.valueOf(rank);
+        }
+        return String.format("%s of %s", rankStr, suit);
+    }
 }

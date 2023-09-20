@@ -2,10 +2,11 @@ package be.ecam;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.Stack;
 
 public class Deck {
-    private Stack<Card> cards = new Stack<>();
+    private final Stack<Card> cards = new Stack<>();
 
     public Deck() {
         for(int rank = 1; rank<=13; rank++) {
@@ -27,5 +28,12 @@ public class Deck {
             return null;
         }
         return cards.pop();
+    }
+
+    /**
+     * Randomize card order.
+     */
+    public void shuffle() {
+        Collections.shuffle(cards);
     }
 }
