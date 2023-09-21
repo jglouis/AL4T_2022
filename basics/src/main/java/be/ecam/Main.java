@@ -20,6 +20,10 @@ public class Main {
 
         while (true) {
             runAiOpponents();
+            if (hasGameEnded()) {
+                System.out.println("Game has ended");
+            }
+
 
             // print your hand and every one score
             System.out.printf("Your score: %d\n", points[0]);
@@ -98,6 +102,7 @@ public class Main {
     private static void runAiOpponents() {
         while (currentPlayer != 0) {
             Hand currentPlayerHand = hands[currentPlayer];
+            if (currentPlayerHand.size() == 0) return;
             int index = AiOpponent.chooseCardToPlay(currentPlayerHand, currentTrick, currentSuit);
             Card cardToPlay = currentPlayerHand.take(index);
             playToTrick(cardToPlay, currentPlayer);
@@ -159,6 +164,15 @@ public class Main {
     private static boolean isFirstTrick() {
         for (Card card : currentTrick) {
             if (card != null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean hasGameEnded() {
+        for (Hand hand : hands) {
+            if (hand.size() != 0) {
                 return false;
             }
         }

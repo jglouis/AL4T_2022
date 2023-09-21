@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * A Hand of {@link Card}.
  */
-public class Hand{
+public class Hand {
     private final List<Card> cards = new ArrayList<>();
 
     /**
@@ -35,12 +35,23 @@ public class Hand{
 
     /**
      * Return the {@link Card} at given index.
+     *
      * @param index the {@link Card}'s index
      * @return The {@link Card} to return
      * @throws IndexOutOfBoundsException if index is out of range
      */
     public Card get(int index) {
         return cards.get(index);
+    }
+
+    /**
+     * Check is the hand contains the given {@link Suit}.
+     *
+     * @param suit the given {@link Suit}
+     * @return `true` if the hand contains at least one {@link Card} of this {@link Suit}. `false` otherwise.
+     */
+    public boolean has(@NotNull Suit suit) {
+        return cards.stream().anyMatch(card -> suit.equals(card.getSuit()));
     }
 
     /**
