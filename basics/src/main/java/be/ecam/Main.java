@@ -1,5 +1,7 @@
 package be.ecam;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -9,13 +11,16 @@ public class Main {
     // Player 0 is the human player.
     private static final Hand[] hands = new Hand[]{new Hand(), new Hand(), new Hand(), new Hand()};
     private static final int[] points = new int[4];
-    private static int startingPlayer;
+    private static int currentPlayer;
     private static final Card[] currentTrick = new Card[4];
+    private static Suit currentSuit = null;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
+            runAiOpponents();
+
             // print your hand and every one score
             System.out.printf("Your score: %d\n", points[0]);
             System.out.printf("score adversary 1: %d\n", points[1]);
@@ -23,6 +28,11 @@ public class Main {
             System.out.printf("score adversary 3: %d\n", points[3]);
 
             System.out.println(hands[0]);
+
+            // Show cards played
+            for (int i = 0; i < currentTrick.length; i++) {
+                System.out.printf("Card played by player %d: %s \n", i, currentTrick[i]);
+            }
 
             String userInput = scanner.nextLine();
             String[] split = userInput.split(" ");
@@ -49,13 +59,14 @@ public class Main {
                             }
                             // the player getting the 2 of Club is the starting player for the first trick.
                             if (Suit.CLUB.equals(card.getSuit()) && card.getValue() == 2) {
-                                startingPlayer = i;
+                                currentPlayer = i;
                             }
                             hands[i].addCard(card);
                         }
                     }
                     // sort your hand
                     hands[0].sort();
+
                 }
                 case "play" -> {
                     if (split.length < 2) {
@@ -64,8 +75,14 @@ public class Main {
                     }
                     try {
                         int cardIndex = Integer.parseInt(split[1]);
+                        if (currentSuit != null && !currentSuit.equals(hands[0].get(cardIndex).getSuit())) {
+                            System.out.printf("Must follow suit: %s\n", currentSuit);
+                            continue;
+                        }
                         Card playedCard = hands[0].take(cardIndex);
-                        currentTrick[0] = playedCard;
+                        playToTrick(playedCard, 0);
+                        checkForTrickEnd();
+                        runAiOpponents();
                     } catch (NumberFormatException e) {
                         System.out.printf("Could not parse %s to an integer.\n", split[1]);
                     } catch (IndexOutOfBoundsException e) {
@@ -76,5 +93,75 @@ public class Main {
                         System.exit(0);
             }
         }
+    }
+
+    private static void runAiOpponents() {
+        while (currentPlayer != 0) {
+            Hand currentPlayerHand = hands[currentPlayer];
+            int index = AiOpponent.chooseCardToPlay(currentPlayerHand, currentTrick, currentSuit);
+            Card cardToPlay = currentPlayerHand.take(index);
+            playToTrick(cardToPlay, currentPlayer);
+            if (checkForTrickEnd()) break;
+        }
+    }
+
+    private static boolean checkForTrickEnd() {
+        boolean haveAllCardsBeenPlayed = true;
+        for (Card card : currentTrick) {
+            if (card == null) {
+                haveAllCardsBeenPlayed = false;
+                break;
+            }
+        }
+        if (haveAllCardsBeenPlayed) {
+            // Check winner
+            int highestValue = 0;
+            int winner = -1;
+            int points = 0;
+            for (int i = 0; i < currentTrick.length; i++) {
+                Card card = currentTrick[i];
+                if (currentSuit.equals(card.getSuit())) {
+                    int value = card.getValue();
+                    if (value > highestValue) {
+                        highestValue = value;
+                        winner = i;
+                    }
+                }
+                if (Suit.HEART.equals(card.getSuit())) {
+                    points += 1;
+                } else if (Suit.SPADE.equals(card.getSuit()) && card.getValue() == 12) {
+                    points += 13;
+                }
+            }
+            System.out.printf("Trick taken by player %d with %d points\n", winner, points);
+
+            // Winner get points.
+            Main.points[winner] += points;
+
+            // reset trick
+            Arrays.fill(currentTrick, null);
+            currentSuit = null;
+            currentPlayer = winner;
+        }
+        return haveAllCardsBeenPlayed;
+    }
+
+    private static void playToTrick(@NotNull Card card, int playerIndex) {
+        // if this is the first card of the trick, set the suit
+        if (isFirstTrick()) {
+            currentSuit = card.getSuit();
+        }
+        currentTrick[playerIndex] = card;
+        currentPlayer = (currentPlayer + 1) % 4;
+        System.out.printf("Player %d played %s, cards left in hand : %d\n", playerIndex, card, hands[playerIndex].size());
+    }
+
+    private static boolean isFirstTrick() {
+        for (Card card : currentTrick) {
+            if (card != null) {
+                return false;
+            }
+        }
+        return true;
     }
 }

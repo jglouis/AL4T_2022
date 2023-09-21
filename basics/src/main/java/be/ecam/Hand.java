@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * A Hand of {@link Card}.
  */
-public class Hand {
+public class Hand{
     private final List<Card> cards = new ArrayList<>();
 
     /**
@@ -34,6 +34,16 @@ public class Hand {
     }
 
     /**
+     * Return the {@link Card} at given index.
+     * @param index the {@link Card}'s index
+     * @return The {@link Card} to return
+     * @throws IndexOutOfBoundsException if index is out of range
+     */
+    public Card get(int index) {
+        return cards.get(index);
+    }
+
+    /**
      * Empty the hand.
      */
     public void empty() {
@@ -47,6 +57,15 @@ public class Hand {
         cards.sort(
                 Comparator.comparingInt((Card card) -> card.getSuit().ordinal())
                         .thenComparingInt(Card::getValue));
+    }
+
+    /**
+     * Get {@link Hand} size.
+     *
+     * @return number of {@link Card} in hand.
+     */
+    public int size() {
+        return cards.size();
     }
 
     @Override
