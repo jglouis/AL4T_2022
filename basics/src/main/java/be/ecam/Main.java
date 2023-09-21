@@ -26,12 +26,14 @@ public class Main {
 
 
             // print your hand and every one score
-            System.out.printf("Your score: %d\n", points[0]);
+            System.out.printf("\nYour score: %d\n", points[0]);
             System.out.printf("score adversary 1: %d\n", points[1]);
             System.out.printf("score adversary 2: %d\n", points[2]);
-            System.out.printf("score adversary 3: %d\n", points[3]);
+            System.out.printf("score adversary 3: %d\n\n", points[3]);
 
+            System.out.println();
             System.out.println(hands[0]);
+            System.out.println();
 
             // Show cards played
             for (int i = 0; i < currentTrick.length; i++) {
