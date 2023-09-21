@@ -75,7 +75,7 @@ public class Main {
                     }
                     try {
                         int cardIndex = Integer.parseInt(split[1]);
-                        if (currentSuit != null && !currentSuit.equals(hands[0].get(cardIndex).getSuit())) {
+                        if (currentSuit != null && hands[0].has(currentSuit) && !currentSuit.equals(hands[0].get(cardIndex).getSuit())) {
                             System.out.printf("Must follow suit: %s\n", currentSuit);
                             continue;
                         }
