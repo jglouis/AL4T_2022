@@ -1,6 +1,5 @@
 package model.prize;
 
-import manager.GameEngine;
 import manager.SoundManager;
 import model.hero.Mario;
 import model.hero.MarioForm;
@@ -9,29 +8,33 @@ import view.ImageLoader;
 
 import java.awt.image.BufferedImage;
 
-public class SuperMushroom extends BoostItem{
+public class SuperMushroom extends BoostItem {
 
-    public SuperMushroom(double x, double y, BufferedImage style) {
+    private static final int POINTS = 125;
+    private final ImageLoader imageLoader;
+
+    public SuperMushroom(double x, double y, BufferedImage style, ImageLoader imageLoader) {
         super(x, y, style);
-        setPoint(125);
+        this.imageLoader = imageLoader;
+        setPoint(POINTS);
     }
 
     @Override
     public void onTouch(Mario mario, SoundManager sound) {
         mario.acquirePoints(getPoint());
-
-        ImageLoader imageLoader = new ImageLoader();
-
-        if(!mario.getMarioForm().isSuper()){
-            BufferedImage[] leftFrames = imageLoader.getLeftFrames(MarioForm.SUPER);
-            BufferedImage[] rightFrames = imageLoader.getRightFrames(MarioForm.SUPER);
-
-            Animation animation = new Animation(leftFrames, rightFrames);
-            MarioForm newForm = new MarioForm(animation, true, false);
-            mario.setMarioForm(newForm);
-            mario.setDimension(48, 96);
-
-            sound.playSound("superMushroom");
+        if (!mario.getMarioForm().isSuper()) {
+            transformMarioToSuper(mario, sound);
         }
+    }
+
+    private void transformMarioToSuper(Mario mario, SoundManager sound) {
+        MarioForm superMarioForm = new MarioForm(null, false, false);
+        transformMario(mario, superMarioForm, "superMushroom", sound);
+
+        BufferedImage[] leftFrames = imageLoader.getFrames(superMarioForm, true);
+        BufferedImage[] rightFrames = imageLoader.getFrames(superMarioForm, false);
+
+        Animation animation = new Animation(leftFrames, rightFrames);
+        superMarioForm.setAnimation(animation);
     }
 }

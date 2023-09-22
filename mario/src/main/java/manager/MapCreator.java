@@ -4,6 +4,7 @@ import model.EndFlag;
 import model.brick.*;
 import model.prize.*;
 import view.ImageLoader;
+import view.Animation;
 import model.Map;
 import model.enemy.Enemy;
 import model.enemy.Goomba;
@@ -26,9 +27,9 @@ class MapCreator {
     MapCreator(ImageLoader imageLoader) {
 
         this.imageLoader = imageLoader;
-        BufferedImage sprite = imageLoader.loadImage("/sprite.png");
+        BufferedImage sprite = imageLoader.loadImageFromPath("/sprite.png");
 
-        this.backgroundImage = imageLoader.loadImage("/background.png");
+        this.backgroundImage = imageLoader.loadImageFromPath("/background.png");
         this.superMushroom = imageLoader.getSubImage(sprite, 2, 5, 48, 48);
         this.oneUpMushroom= imageLoader.getSubImage(sprite, 3, 5, 48, 48);
         this.fireFlower= imageLoader.getSubImage(sprite, 4, 5, 48, 48);
@@ -46,7 +47,7 @@ class MapCreator {
     }
 
     Map createMap(String mapPath, double timeLimit) {
-        BufferedImage mapImage = imageLoader.loadImage(mapPath);
+        BufferedImage mapImage = imageLoader.loadImageFromPath(mapPath);
 
         if (mapImage == null) {
             System.out.println("Given path is invalid...");
@@ -122,10 +123,10 @@ class MapCreator {
         int random = (int)(Math.random() * 12);
 
         if(random == 0){ //super mushroom
-            generated = new SuperMushroom(x, y, this.superMushroom);
+            generated = new SuperMushroom(x, y, this.superMushroom, imageLoader);
         }
         else if(random == 1){ //fire flower
-            generated = new FireFlower(x, y, this.fireFlower);
+            generated = new FireFlower(x, y, this.fireFlower, imageLoader);
         }
         else if(random == 2){ //one up mushroom
             generated = new OneUpMushroom(x, y, this.oneUpMushroom);
@@ -136,6 +137,4 @@ class MapCreator {
 
         return generated;
     }
-
-
 }

@@ -29,10 +29,15 @@ public class Mario extends GameObject{
         invincibilityTimer = 0;
 
         ImageLoader imageLoader = new ImageLoader();
-        BufferedImage[] leftFrames = imageLoader.getLeftFrames(MarioForm.SMALL);
-        BufferedImage[] rightFrames = imageLoader.getRightFrames(MarioForm.SMALL);
+
+        MarioForm smallMarioForm = new MarioForm(null, false, false);
+
+        BufferedImage[] leftFrames = imageLoader.getFrames(smallMarioForm, true);
+        BufferedImage[] rightFrames = imageLoader.getFrames(smallMarioForm, false);
 
         Animation animation = new Animation(leftFrames, rightFrames);
+        smallMarioForm.setAnimation(animation);
+
         marioForm = new MarioForm(animation, false, false);
         setStyle(marioForm.getCurrentStyle(toRight, false, false));
     }

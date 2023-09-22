@@ -7,7 +7,7 @@ import java.awt.event.MouseListener;
 
 public class InputManager implements KeyListener, MouseListener {
 
-    private InputListener listener;
+    private final InputListener listener;
 
     public InputManager(InputListener listener) {
         this.listener = listener;

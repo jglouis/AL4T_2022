@@ -19,8 +19,12 @@ public class MarioForm {
         this.isFire = isFire;
 
         ImageLoader imageLoader = new ImageLoader();
-        BufferedImage fireball = imageLoader.loadImage("/sprite.png");
+        BufferedImage fireball = imageLoader.loadImageFromPath("/sprite.png");
         fireballStyle = imageLoader.getSubImage(fireball, 3, 4, 24, 24);
+    }
+
+    public void setAnimation(Animation animation) {
+        this.animation = animation;
     }
 
     public BufferedImage getCurrentStyle(boolean toRight, boolean movingInX, boolean movingInY){
@@ -48,8 +52,8 @@ public class MarioForm {
     }
 
     public MarioForm onTouchEnemy(ImageLoader imageLoader) {
-        BufferedImage[] leftFrames = imageLoader.getLeftFrames(0);
-        BufferedImage[] rightFrames= imageLoader.getRightFrames(0);
+        BufferedImage[] leftFrames = imageLoader.getFrames(this, true);
+        BufferedImage[] rightFrames = imageLoader.getFrames(this, false);
 
         Animation newAnimation = new Animation(leftFrames, rightFrames);
 

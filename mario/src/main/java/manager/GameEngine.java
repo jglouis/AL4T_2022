@@ -1,6 +1,7 @@
 package manager;
 
 import model.hero.Mario;
+import view.Animation;
 import view.ImageLoader;
 import view.StartScreenSelection;
 import view.UIManager;
