@@ -15,4 +15,5 @@ include 'chess'
 include 'designpatterns'
 include 'solid'
 include 'carfactory'
+include 'exercises:hearts'
 
