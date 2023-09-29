@@ -2,25 +2,27 @@ package be.ecam;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Stack;
+import java.util.*;
 
 public class Deck {
     private Stack<Card> cards = new Stack<>();
 
     public Deck() {
-        for(int rank = 1; rank<=13; rank++) {
+        for (int rank = 1; rank <= 13; rank++) {
             for(Suit suit : Suit.values()) {
                 Card card = new Card(suit, rank);
                 cards.add(card);
             }
         }
+        Collections.shuffle(cards);
     }
 
     /**
      * Retrieve the first card from the deck.
      *
-     * @return The {@link Card} object or null if the deck was empty.
+     * @return The (@link Card) object or null if the deck was empty.
      */
+
     @Nullable
     public Card draw() {
         if (cards.isEmpty()) {
