@@ -17,15 +17,17 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        int Round = 0;
 
         while (true) {
             runAiOpponents();
-            if (hasGameEnded()) {
-                System.out.println("Game has ended");
+            if (hasGameEnded() & Round != 0) {
+                System.out.println("Game has ended \n ");
             }
 
 
             // print your hand and every one score
+            System.out.printf("Round : " + Round);
             System.out.printf("\nYour score: %d\n", points[0]);
             System.out.printf("score adversary 1: %d\n", points[1]);
             System.out.printf("score adversary 2: %d\n", points[2]);
@@ -36,8 +38,14 @@ public class Main {
             System.out.println();
 
             // Show cards played
-            for (int i = 0; i < currentTrick.length; i++) {
+            for (int i = 1; i < currentTrick.length; i++) {
                 System.out.printf("Card played by player %d: %s \n", i, currentTrick[i]);
+            }
+            if (Round == 0){
+                System.out.print("Write 'start' to start the game or 'exit' to quit the game \n");
+            }
+            if (Round !=0){
+                System.out.print("Write 'play' and specify the index of the card you want to play \n");
             }
 
             String userInput = scanner.nextLine();
@@ -72,6 +80,7 @@ public class Main {
                     }
                     // sort your hand
                     hands[0].sort();
+                    Round+=1;
 
                 }
                 case "play" -> {
@@ -89,11 +98,13 @@ public class Main {
                         playToTrick(playedCard, 0);
                         checkForTrickEnd();
                         runAiOpponents();
+                        Round+=1;
                     } catch (NumberFormatException e) {
                         System.out.printf("Could not parse %s to an integer.\n", split[1]);
                     } catch (IndexOutOfBoundsException e) {
                         System.out.printf("%d is not a valid index.\n", Integer.parseInt(split[1]));
                     }
+
                 }
                 case "exit" -> // exit program
                         System.exit(0);
