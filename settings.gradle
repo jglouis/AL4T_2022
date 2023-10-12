@@ -16,4 +16,5 @@ include 'designpatterns'
 include 'solid'
 include 'carfactory'
 include 'exercises:hearts'
+include 'exercises:hangman'
 
