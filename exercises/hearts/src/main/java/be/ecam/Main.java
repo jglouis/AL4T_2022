@@ -102,14 +102,22 @@ public class Main {
     }
 
     private static void runAiOpponents() {
-        while (currentPlayer != 0) {
+        int loopCounter = 0;
+        AiOpponent aiOpponent = new AiOpponent();
+        while (currentPlayer != 0 && loopCounter < 100) {
             Hand currentPlayerHand = hands[currentPlayer];
             if (currentPlayerHand.size() == 0) return;
-            int index = AiOpponent.chooseCardToPlay(currentPlayerHand, currentTrick, currentSuit);
+            int index = aiOpponent.chooseCardToPlay(currentPlayerHand, currentTrick, currentSuit);
             Card cardToPlay = currentPlayerHand.take(index);
             playToTrick(cardToPlay, currentPlayer);
             if (checkForTrickEnd()) break;
+
+            loopCounter++;
         }
+        if (loopCounter >= 100) {
+            System.out.println("Error: AI is stuck in a loop!");
+        }
+
     }
 
     private static boolean checkForTrickEnd() {
