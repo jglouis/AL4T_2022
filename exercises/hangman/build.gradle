@@ -8,5 +8,5 @@ repositories {
 
 application {
     // Define the main class for the application.
-    mainClass = 'be.ecam.Main'
+    mainClass = 'be.ecam.HangmanGame'
 }
