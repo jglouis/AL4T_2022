@@ -38,7 +38,6 @@ public class HangmanGame {
             System.out.println("No more tries left. The word was: " + wordToGuess);
         }
     }
-
     public static void main(String[] args) {
         HangmanGame hangmanGame = new HangmanGame();
         hangmanGame.play();
