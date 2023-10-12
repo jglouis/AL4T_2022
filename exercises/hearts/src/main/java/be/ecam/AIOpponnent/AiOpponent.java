@@ -1,5 +1,8 @@
-package be.ecam;
+package be.ecam.AIOpponnent;
 
+import be.ecam.Model.Card;
+import be.ecam.Model.Hand;
+import be.ecam.Model.Suit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
