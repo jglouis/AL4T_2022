@@ -3,72 +3,85 @@ package be.ecam;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Contains code for AI play.
- */
-public class AiOpponent {
 
-    /**
-     * Given all relevant information, pick a card's index to be played.
-     *
-     * @param hand         The opponent's {@link Hand}] of card
-     * @param cardsPlayed  The {@link Card}s already played
-     * @param suitToFollow The {@link Suit} to follow
-     * @return the {@link Hand} {@link Card}'s index to play
-     */
-    public static int chooseCardToPlay(
-            @NotNull Hand hand, Card[] cardsPlayed, @Nullable Suit suitToFollow) {
-        //Check if hand contains suit to Follow
-        hand.sort(); //==> highest heart will be at the end
 
-        if (suitToFollow == null) { //open with a low card
+public class AiOpponent implements CardChooser {
+
+
+    public int chooseCardToPlay(@NotNull Hand hand, Card[] cardsPlayed, @Nullable Suit suitToFollow) {
+        hand.sort();
+
+        if (suitToFollow == null) {
             return 0;
         }
 
-        int indexQueenOfSpade = -1;
-        int startSuit = -1;
-        int endSuit = -1;
-
-        for (int i = 0; i < hand.size(); i++) {
-            Card card = hand.get(i);
-            if (Suit.SPADE.equals(card.getSuit()) && card.getValue() == 12) {
-                indexQueenOfSpade = i;
-            }
-            if (suitToFollow.equals(card.getSuit())) {
-                if (startSuit == -1) {
-                    startSuit = i;
-                }
-                endSuit = i;
-            }
-        }
+        SuitChecker suitChecker = new SuitChecker(hand);
+        int indexQueenOfSpade = suitChecker.getQueenOfSpadeIndex();
+        int startSuit = suitChecker.getStartSuitIndex(suitToFollow);
+        int endSuit = suitChecker.getEndSuitIndex(suitToFollow);
 
         if (startSuit != -1) {
-            // Must follow suit
-            // play highest from the suit if no points
-            // play lowest otherwise
-            boolean isTherePointInThisTrick = false;
-            for (Card cardPlayed : cardsPlayed) {
-                if (cardPlayed == null) continue;
-                if (Suit.SPADE.equals(cardPlayed.getSuit()) && cardPlayed.getValue() == 12) {
-                    isTherePointInThisTrick = true;
-                    break;
-                }
-                if (Suit.HEART.equals(cardPlayed.getSuit())) {
-                    isTherePointInThisTrick = true;
-                    break;
-                }
-            }
-            if (isTherePointInThisTrick) {
-                return endSuit;
-            } else {
-                return startSuit;
-            }
+            boolean isTherePointInThisTrick = PointChecker.isTherePoint(cardsPlayed);
+            return isTherePointInThisTrick ? endSuit : startSuit;
         } else {
-            // Play Queen of spade -> card at the end
-            if (indexQueenOfSpade != -1) {
-                return indexQueenOfSpade;
-            }
-            return hand.size() - 1;
+            return indexQueenOfSpade != -1 ? indexQueenOfSpade : hand.size() - 1;
         }
     }
 }
+
+class SuitChecker {
+
+    private final Hand hand;
+
+    public SuitChecker(Hand hand) {
+        this.hand = hand;
+    }
+
+    public int getQueenOfSpadeIndex() {
+        for (int i = 0; i < hand.size(); i++) {
+            Card card = hand.get(i);
+            if (Suit.SPADE.equals(card.getSuit()) && card.getValue() == 12) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int getStartSuitIndex(Suit suit) {
+        for (int i = 0; i < hand.size(); i++) {
+            Card card = hand.get(i);
+            if (suit.equals(card.getSuit())) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int getEndSuitIndex(Suit suit) {
+        int endSuit = -1;
+        for (int i = 0; i < hand.size(); i++) {
+            Card card = hand.get(i);
+            if (suit.equals(card.getSuit())) {
+                endSuit = i;
+            }
+        }
+        return endSuit;
+    }
+}
+
+class PointChecker {
+
+    public static boolean isTherePoint(Card[] cardsPlayed) {
+        for (Card cardPlayed : cardsPlayed) {
+            if (cardPlayed == null) continue;
+            if (Suit.SPADE.equals(cardPlayed.getSuit()) && cardPlayed.getValue() == 12) {
+                return true;
+            }
+            if (Suit.HEART.equals(cardPlayed.getSuit())) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
