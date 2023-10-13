@@ -1,5 +1,10 @@
-package be.ecam;
+package be.ecam.Controller;
 
+import be.ecam.AIOpponnent.AiOpponent;
+import be.ecam.Model.Card;
+import be.ecam.Model.Deck;
+import be.ecam.Model.Suit;
+import be.ecam.Model.Hand;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
