@@ -13,8 +13,19 @@ public class Main {
         int rank = card.rank;
         Suit suit = card.suit;
 
-        System.out.printf("Card %d of %s", rank, suit);
-
+        printCard(rank, suit);
     }
 
+    public static void printCard(int rank, Suit suit) {
+        String[] ranks = {"", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+        String[] suits = {"♥", "♦", "♠", "♣"};
+
+        System.out.println("┌─────────┐");
+        System.out.println("│       " + ranks[rank] + " │");
+        System.out.println("│         │");
+        System.out.println("│    " + suits[suit.ordinal()] + "    │"); // se base sur l'odre dans la liste
+        System.out.println("│         │");
+        System.out.println("│   " + ranks[rank] + "     │");
+        System.out.println("└─────────┘");
+    }
 }
