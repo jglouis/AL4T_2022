@@ -14,7 +14,7 @@ public class GameEngine implements Runnable {
 
     private MapManager_I mapManager;
     private UIManager uiManager;
-    private SoundManager soundManager;
+    private SoundManager_I soundManager;
     private GameStatus gameStatus;
     private boolean isRunning;
     private Camera camera;
