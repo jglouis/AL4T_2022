@@ -15,12 +15,13 @@ import view.ImageLoader;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class MapManager {
+public class MapManager implements MapManager_I{
 
     private Map map;
 
     public MapManager() {}
 
+    @Override
     public void updateLocations() {
         if (map == null)
             return;
@@ -28,6 +29,7 @@ public class MapManager {
         map.updateLocations();
     }
 
+    @Override
     public void resetCurrentMap(GameEngine engine) {
         Mario mario = getMario();
         mario.resetLocation();
@@ -36,6 +38,7 @@ public class MapManager {
         map.setMario(mario);
     }
 
+    @Override
     public boolean createMap(ImageLoader loader, String path) {
         MapCreator mapCreator = new MapCreator(loader);
         map = mapCreator.createMap("/maps/" + path, 400);
@@ -43,14 +46,17 @@ public class MapManager {
         return map != null;
     }
 
+    @Override
     public void acquirePoints(int point) {
         map.getMario().acquirePoints(point);
     }
 
+    @Override
     public Mario getMario() {
         return map.getMario();
     }
 
+    @Override
     public void fire(GameEngine engine) {
         Fireball fireball = getMario().fire();
         if (fireball != null) {
@@ -58,27 +64,32 @@ public class MapManager {
             engine.playFireball();
         }
     }
-
+    @Override
     public boolean isGameOver() {
         return getMario().getRemainingLives() == 0 || map.isTimeOver();
     }
 
+    @Override
     public int getScore() {
         return getMario().getPoints();
     }
 
+    @Override
     public int getRemainingLives() {
         return getMario().getRemainingLives();
     }
 
+    @Override
     public int getCoins() {
         return getMario().getCoins();
     }
 
+    @Override
     public void drawMap(Graphics2D g2) {
         map.drawMap(g2);
     }
 
+    @Override
     public int passMission() {
         if(getMario().getX() >= map.getEndPoint().getX() && !map.getEndPoint().isTouched()){
             map.getEndPoint().setTouched(true);
@@ -89,10 +100,12 @@ public class MapManager {
             return -1;
     }
 
+    @Override
     public boolean endLevel(){
         return getMario().getX() >= map.getEndPoint().getX() + 320;
     }
 
+    @Override
     public void checkCollisions(GameEngine engine) {
         if (map == null) {
             return;
@@ -365,15 +378,18 @@ public class MapManager {
         }
     }
 
+    @Override
     public void addRevealedBrick(OrdinaryBrick ordinaryBrick) {
         map.addRevealedBrick(ordinaryBrick);
     }
 
+    @Override
     public void updateTime(){
         if(map != null)
             map.updateTime(1);
     }
 
+    @Override
     public int getRemainingTime() {
         return (int)map.getRemainingTime();
     }
