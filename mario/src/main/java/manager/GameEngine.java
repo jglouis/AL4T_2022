@@ -1,6 +1,7 @@
 package manager;
 
 import model.hero.Mario;
+import view.ImageLoader_I;
 import view.ImageLoader;
 import view.StartScreenSelection;
 import view.UIManager;
@@ -18,7 +19,7 @@ public class GameEngine implements Runnable {
     private GameStatus gameStatus;
     private boolean isRunning;
     private Camera camera;
-    private ImageLoader imageLoader;
+    private ImageLoader_I imageLoader;
     private Thread thread;
     private StartScreenSelection startScreenSelection = StartScreenSelection.START_GAME;
     private int selectedMap = 0;
@@ -255,7 +256,7 @@ public class GameEngine implements Runnable {
         return false;
     }
 
-    public ImageLoader getImageLoader() {
+    public ImageLoader_I getImageLoader() {
         return imageLoader;
     }
 

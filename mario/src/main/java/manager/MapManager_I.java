@@ -2,7 +2,7 @@ package manager;
 
 import model.brick.OrdinaryBrick;
 import model.hero.Mario;
-import view.ImageLoader;
+import view.ImageLoader_I;
 
 import java.awt.*;
 
@@ -12,7 +12,7 @@ public interface MapManager_I {
 
         void resetCurrentMap(GameEngine engine);
 
-        boolean createMap(ImageLoader loader, String path) ;
+        boolean createMap(ImageLoader_I loader, String path) ;
 
         void acquirePoints(int point);
 

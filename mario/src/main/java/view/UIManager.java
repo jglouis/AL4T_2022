@@ -26,7 +26,7 @@ public class UIManager extends JPanel{
         setMinimumSize(new Dimension(width, height));
 
         this.engine = engine;
-        ImageLoader loader = engine.getImageLoader();
+        ImageLoader_I loader = engine.getImageLoader();
 
         mapSelection = new MapSelection();
 

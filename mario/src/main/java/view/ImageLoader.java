@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class ImageLoader {
+public class ImageLoader implements ImageLoader_I{
 
     private BufferedImage marioForms;
     private BufferedImage brickAnimation;
@@ -15,6 +15,7 @@ public class ImageLoader {
         brickAnimation = loadImage("/brick-animation.png");
     }
 
+    @Override
     public BufferedImage loadImage(String path){
         BufferedImage imageToReturn = null;
 
@@ -27,6 +28,7 @@ public class ImageLoader {
         return imageToReturn;
     }
 
+    @Override
     public BufferedImage loadImage(File file){
         BufferedImage imageToReturn = null;
 
@@ -39,6 +41,7 @@ public class ImageLoader {
         return imageToReturn;
     }
 
+    @Override
     public BufferedImage getSubImage(BufferedImage image, int col, int row, int w, int h){
         if((col == 1 || col == 4) && row == 3){ //koopa
             return image.getSubimage((col-1)*48, 128, w, h);
@@ -46,6 +49,7 @@ public class ImageLoader {
         return image.getSubimage((col-1)*48, (row-1)*48, w, h);
     }
 
+    @Override
     public BufferedImage[] getLeftFrames(int marioForm){
         BufferedImage[] leftFrames = new BufferedImage[5];
         int col = 1;
@@ -68,6 +72,7 @@ public class ImageLoader {
         return leftFrames;
     }
 
+    @Override
     public BufferedImage[] getRightFrames(int marioForm){
         BufferedImage[] rightFrames = new BufferedImage[5];
         int col = 2;
@@ -90,6 +95,7 @@ public class ImageLoader {
         return rightFrames;
     }
 
+    @Override
     public BufferedImage[] getBrickFrames() {
         BufferedImage[] frames = new BufferedImage[4];
         for(int i = 0; i < 4; i++){
