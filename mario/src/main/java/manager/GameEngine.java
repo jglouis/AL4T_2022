@@ -12,7 +12,7 @@ public class GameEngine implements Runnable {
 
     private final static int WIDTH = 1268, HEIGHT = 708;
 
-    private MapManager mapManager;
+    private MapManager_I mapManager;
     private UIManager uiManager;
     private SoundManager soundManager;
     private GameStatus gameStatus;
@@ -331,7 +331,7 @@ public class GameEngine implements Runnable {
         soundManager.playStomp();
     }
 
-    public MapManager getMapManager() {
+    public MapManager_I getMapManager() {
         return mapManager;
     }
 

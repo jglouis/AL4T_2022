@@ -1,7 +1,7 @@
 package model.brick;
 
 import manager.GameEngine;
-import manager.MapManager;
+import manager.MapManager_I;
 import model.Map;
 import model.prize.Prize;
 import view.Animation;
@@ -35,7 +35,7 @@ public class OrdinaryBrick extends Brick {
 
     @Override
     public Prize reveal(GameEngine engine){
-        MapManager manager = engine.getMapManager();
+        MapManager_I manager = engine.getMapManager();
         if(!manager.getMario().isSuper())
             return null;
 
