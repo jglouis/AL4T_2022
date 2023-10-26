@@ -11,13 +11,7 @@ public class Main {
                 .setTo("claco@ecam.be")
                 .setContentType(MimeType.TEXT_PLAIN)
                 .setBody("""
-                        Dear claco interface,
-                        
-                        I hope you die an horrible death.
-                        
-                        Sincerely yours,
-                        
-                        Mr Louis
+                        Hello world!
                         """)
                 .build();
         System.out.println("--- EMail ---");
