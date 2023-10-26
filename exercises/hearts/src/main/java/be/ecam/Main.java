@@ -52,7 +52,7 @@ public class Main {
                     // ... and points
                     Arrays.fill(points, 0);
 
-                    Deck deck = new Deck();
+                    Deck deck = new Deck(new DefaultShuffler());
                     deck.shuffle();
 
                     // deal hands
