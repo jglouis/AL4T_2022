@@ -3,10 +3,15 @@ package be.ecam;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-import java.util.Scanner;
+
+
+
 
 public class Main {
-
+private static Input scanner;
+    public Main(Input scanner) {
+        Main.scanner = scanner;
+    }
     // Each array is indexed by player number.
     // Player 0 is the human player.
     private static final Hand[] hands = new Hand[]{new Hand(), new Hand(), new Hand(), new Hand()};
@@ -16,7 +21,8 @@ public class Main {
     private static Suit currentSuit = null;
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        final Input input = new Input(); // Créez une instance d'Input
+        Main main = new Main(input);
         int Round = 0;
 
         while (true) {
