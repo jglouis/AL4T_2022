@@ -24,18 +24,14 @@ public class GameEngine implements Runnable {
     private StartScreenSelection startScreenSelection = StartScreenSelection.START_GAME;
     private int selectedMap = 0;
 
-    private GameEngine() {
-        init();
-    }
-
-    private void init() {
-        imageLoader = new ImageLoader();
+    private GameEngine(ImageLoader_I imageLoader, SoundManager_I soundManager,MapManager_I mapManager) {
+        this.imageLoader = imageLoader;
         InputManager inputManager = new InputManager(this);
         gameStatus = GameStatus.START_SCREEN;
         camera = new Camera();
         uiManager = new UIManager(this, WIDTH, HEIGHT);
-        soundManager = new SoundManager();
-        mapManager = new MapManager();
+        this.soundManager = soundManager;
+        this.mapManager = mapManager;
 
         JFrame frame = new JFrame("Super Mario Bros.");
         frame.add(uiManager);
@@ -337,7 +333,7 @@ public class GameEngine implements Runnable {
     }
 
     public static void main(String... args) {
-        new GameEngine();
+        new GameEngine(new ImageLoader(),new SoundManager(), new MapManager());
     }
 
     public int getRemainingTime() {
