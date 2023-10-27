@@ -25,7 +25,7 @@ public class Main {
         System.out.println("│         │");
         System.out.println("│    " + suits[suit.ordinal()] + "    │"); // se base sur l'odre dans la liste
         System.out.println("│         │");
-        System.out.println("│   " + ranks[rank] + "     │");
+        System.out.println("│  " + ranks[rank] + "      │");
         System.out.println("└─────────┘");
     }
 }

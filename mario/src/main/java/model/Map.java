@@ -4,6 +4,7 @@ import model.brick.Brick;
 import model.brick.OrdinaryBrick;
 import model.enemy.Enemy;
 import model.hero.Fireball;
+import model.hero.FireballImpl;
 import model.hero.Mario;
 import model.prize.BoostItem;
 import model.prize.Coin;
@@ -28,13 +29,12 @@ public class Map {
     private BufferedImage backgroundImage;
     private double bottomBorder = 720 - 96;
     private String path;
-
+    private FireballImpl fireballImpl;
 
     public Map(double remainingTime, BufferedImage backgroundImage) {
         this.backgroundImage = backgroundImage;
         this.remainingTime = remainingTime;
     }
-
 
     public Mario getMario() {
         return mario;
@@ -58,10 +58,8 @@ public class Map {
 
     public ArrayList<Brick> getAllBricks() {
         ArrayList<Brick> allBricks = new ArrayList<>();
-
         allBricks.addAll(bricks);
         allBricks.addAll(groundBricks);
-
         return allBricks;
     }
 
@@ -77,7 +75,7 @@ public class Map {
         this.enemies.add(enemy);
     }
 
-    public void drawMap(Graphics2D g2){
+    public void drawMap(Graphics2D g2) {
         drawBackground(g2);
         drawPrizes(g2);
         drawBricks(g2);
@@ -88,40 +86,39 @@ public class Map {
     }
 
     private void drawFireballs(Graphics2D g2) {
-        for(Fireball fireball : fireballs){
+        for (Fireball fireball : fireballs) {
             fireball.draw(g2);
         }
     }
 
     private void drawPrizes(Graphics2D g2) {
-        for(Prize prize : revealedPrizes){
-            if(prize instanceof Coin){
+        for (Prize prize : revealedPrizes) {
+            if (prize instanceof Coin) {
                 ((Coin) prize).draw(g2);
-            }
-            else if(prize instanceof  BoostItem){
+            } else if (prize instanceof BoostItem) {
                 ((BoostItem) prize).draw(g2);
             }
         }
     }
 
-    private void drawBackground(Graphics2D g2){
+    private void drawBackground(Graphics2D g2) {
         g2.drawImage(backgroundImage, 0, 0, null);
     }
 
     private void drawBricks(Graphics2D g2) {
-        for(Brick brick : bricks){
-            if(brick != null)
+        for (Brick brick : bricks) {
+            if (brick != null)
                 brick.draw(g2);
         }
 
-        for(Brick brick : groundBricks){
+        for (Brick brick : groundBricks) {
             brick.draw(g2);
         }
     }
 
     private void drawEnemies(Graphics2D g2) {
-        for(Enemy enemy : enemies){
-            if(enemy != null)
+        for (Enemy enemy : enemies) {
+            if (enemy != null)
                 enemy.draw(g2);
         }
     }
@@ -132,31 +129,30 @@ public class Map {
 
     public void updateLocations() {
         mario.updateLocation();
-        for(Enemy enemy : enemies){
+        for (Enemy enemy : enemies) {
             enemy.updateLocation();
         }
 
-        for(Iterator<Prize> prizeIterator = revealedPrizes.iterator(); prizeIterator.hasNext();){
+        for (Iterator<Prize> prizeIterator = revealedPrizes.iterator(); prizeIterator.hasNext(); ) {
             Prize prize = prizeIterator.next();
-            if(prize instanceof Coin){
+            if (prize instanceof Coin) {
                 ((Coin) prize).updateLocation();
-                if(((Coin) prize).getRevealBoundary() > ((Coin) prize).getY()){
+                if (((Coin) prize).getRevealBoundary() > ((Coin) prize).getY()) {
                     prizeIterator.remove();
                 }
-            }
-            else if(prize instanceof BoostItem){
+            } else if (prize instanceof BoostItem) {
                 ((BoostItem) prize).updateLocation();
             }
         }
 
-        for (Fireball fireball: fireballs) {
+        for (Fireball fireball : fireballs) {
             fireball.updateLocation();
         }
 
-        for(Iterator<Brick> brickIterator = revealedBricks.iterator(); brickIterator.hasNext();){
-            OrdinaryBrick brick = (OrdinaryBrick)brickIterator.next();
+        for (Iterator<Brick> brickIterator = revealedBricks.iterator(); brickIterator.hasNext(); ) {
+            OrdinaryBrick brick = (OrdinaryBrick) brickIterator.next();
             brick.animate();
-            if(brick.getFrames() < 0){
+            if (brick.getFrames() < 0) {
                 bricks.remove(brick);
                 brickIterator.remove();
             }
@@ -174,6 +170,7 @@ public class Map {
     }
 
     public void addFireball(Fireball fireball) {
+        fireball.setFireballImpl(fireballImpl);
         fireballs.add(fireball);
     }
 
@@ -209,15 +206,19 @@ public class Map {
         this.path = path;
     }
 
-    public void updateTime(double passed){
+    public void updateTime(double passed) {
         remainingTime = remainingTime - passed;
     }
 
-    public boolean isTimeOver(){
+    public boolean isTimeOver() {
         return remainingTime <= 0;
     }
 
     public double getRemainingTime() {
         return remainingTime;
+    }
+
+    public void setFireballImpl(FireballImpl fireballImpl) {
+        this.fireballImpl = fireballImpl;
     }
 }
