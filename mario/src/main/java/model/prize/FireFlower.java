@@ -1,6 +1,6 @@
 package model.prize;
 
-import manager.GameEngine;
+import manager.SoundManager;
 import model.hero.Mario;
 import model.hero.MarioForm;
 import view.Animation;
@@ -9,32 +9,31 @@ import view.ImageLoader;
 import java.awt.image.BufferedImage;
 
 public class FireFlower extends BoostItem {
+    private static final int POINTS = 150;
+    private final ImageLoader imageLoader;
 
-    public FireFlower(double x, double y, BufferedImage style) {
+    public FireFlower(double x, double y, BufferedImage style, ImageLoader imageLoader) {
         super(x, y, style);
-        setPoint(150);
+        this.imageLoader = imageLoader;
+        setPoint(POINTS);
     }
 
     @Override
-    public void onTouch(Mario mario, GameEngine engine) {
+    public void onTouch(Mario mario, SoundManager sound) {
         mario.acquirePoints(getPoint());
-
-        ImageLoader imageLoader = new ImageLoader();
-
-        if(!mario.getMarioForm().isFire()){
-            BufferedImage[] leftFrames = imageLoader.getLeftFrames(MarioForm.FIRE);
-            BufferedImage[] rightFrames = imageLoader.getRightFrames(MarioForm.FIRE);
-
-            Animation animation = new Animation(leftFrames, rightFrames);
-            MarioForm newForm = new MarioForm(animation, true, true);
-            mario.setMarioForm(newForm);
-            mario.setDimension(48, 96);
-
-            engine.playFireFlower();
+        if (!mario.getMarioForm().isSuper()) {
+            transformMarioToFire(mario, sound);
         }
     }
 
-    @Override
-    public void updateLocation(){}
+    private void transformMarioToFire(Mario mario, SoundManager sound) {
+        MarioForm fireMarioForm = new MarioForm(null, false, false);
+        transformMario(mario, fireMarioForm, "superMushroom", sound);
 
+        BufferedImage[] leftFrames = imageLoader.getFrames(fireMarioForm, true);
+        BufferedImage[] rightFrames = imageLoader.getFrames(fireMarioForm, false);
+
+        Animation animation = new Animation(leftFrames, rightFrames);
+        fireMarioForm.setAnimation(animation);
+    }
 }

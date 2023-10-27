@@ -2,6 +2,7 @@ package model.hero;
 
 import manager.Camera;
 import manager.GameEngine;
+import manager.SoundManager;
 import view.Animation;
 import model.GameObject;
 import view.ImageLoader;
@@ -28,10 +29,15 @@ public class Mario extends GameObject{
         invincibilityTimer = 0;
 
         ImageLoader imageLoader = new ImageLoader();
-        BufferedImage[] leftFrames = imageLoader.getLeftFrames(MarioForm.SMALL);
-        BufferedImage[] rightFrames = imageLoader.getRightFrames(MarioForm.SMALL);
+
+        MarioForm smallMarioForm = new MarioForm(null, false, false);
+
+        BufferedImage[] leftFrames = imageLoader.getFrames(smallMarioForm, true);
+        BufferedImage[] rightFrames = imageLoader.getFrames(smallMarioForm, false);
 
         Animation animation = new Animation(leftFrames, rightFrames);
+        smallMarioForm.setAnimation(animation);
+
         marioForm = new MarioForm(animation, false, false);
         setStyle(marioForm.getCurrentStyle(toRight, false, false));
     }
@@ -46,11 +52,11 @@ public class Mario extends GameObject{
         super.draw(g);
     }
 
-    public void jump(GameEngine engine) {
+    public void jump(SoundManager sound) {
         if(!isJumping() && !isFalling()){
             setJumping(true);
             setVelY(10);
-            engine.playJump();
+            sound.playSound("jump");
         }
     }
 
@@ -65,11 +71,11 @@ public class Mario extends GameObject{
         this.toRight = toRight;
     }
 
-    public boolean onTouchEnemy(GameEngine engine){
+    public boolean onTouchEnemy(GameEngine engine, SoundManager sound){
 
         if(!marioForm.isSuper() && !marioForm.isFire()){
             remainingLives--;
-            engine.playMarioDies();
+            sound.playSound("marioDies");
             return true;
         }
         else{

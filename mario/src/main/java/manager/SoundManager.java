@@ -15,9 +15,9 @@ public class SoundManager {
         background = getClip(loadAudio("background"));
     }
 
-    private AudioInputStream loadAudio(String url) {
+    private AudioInputStream loadAudio(String soundName) {
         try {
-            InputStream audioSrc = getClass().getResourceAsStream("/media/audio/" + url + ".wav");
+            InputStream audioSrc = getClass().getResourceAsStream("/media/audio/" + soundName + ".wav");
             InputStream bufferedIn = new BufferedInputStream(audioSrc);
             return AudioSystem.getAudioInputStream(bufferedIn);
 
@@ -40,12 +40,12 @@ public class SoundManager {
         return null;
     }
 
-    public void resumeBackground(){
+    public void resumeBackground() {
         background.setMicrosecondPosition(clipTime);
         background.start();
     }
 
-    public void pauseBackground(){
+    public void pauseBackground() {
         clipTime = background.getMicrosecondPosition();
         background.stop();
     }
@@ -55,57 +55,10 @@ public class SoundManager {
         resumeBackground();
     }
 
-    public void playJump() {
-        Clip clip = getClip(loadAudio("jump"));
-        clip.start();
-
-    }
-
-    public void playCoin() {
-        Clip clip = getClip(loadAudio("coin"));
-        clip.start();
-
-    }
-
-    public void playFireball() {
-        Clip clip = getClip(loadAudio("fireball"));
-        clip.start();
-
-    }
-
-    public void playGameOver() {
-        Clip clip = getClip(loadAudio("gameOver"));
-        clip.start();
-
-    }
-
-    public void playStomp() {
-        Clip clip = getClip(loadAudio("stomp"));
-        clip.start();
-
-    }
-
-    public void playOneUp() {
-        Clip clip = getClip(loadAudio("oneUp"));
-        clip.start();
-
-    }
-
-    public void playSuperMushroom() {
-
-        Clip clip = getClip(loadAudio("superMushroom"));
-        clip.start();
-
-    }
-
-    public void playMarioDies() {
-
-        Clip clip = getClip(loadAudio("marioDies"));
-        clip.start();
-
-    }
-
-    public void playFireFlower() {
-
+    public void playSound(String soundName) {
+        Clip clip = getClip(loadAudio(soundName));
+        if (clip != null) {
+            clip.start();
+        }
     }
 }

@@ -6,7 +6,6 @@ import manager.GameStatus;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -30,14 +29,14 @@ public class UIManager extends JPanel{
 
         mapSelection = new MapSelection();
 
-        BufferedImage sprite = loader.loadImage("/sprite.png");
-        this.heartIcon = loader.loadImage("/heart-icon.png");
+        BufferedImage sprite = loader.loadImageFromPath("/sprite.png");
+        this.heartIcon = loader.loadImageFromPath("/heart-icon.png");
         this.coinIcon = loader.getSubImage(sprite, 1, 5, 48, 48);
-        this.selectIcon = loader.loadImage("/select-icon.png");
-        this.startScreenImage = loader.loadImage("/start-screen.png");
-        this.helpScreenImage = loader.loadImage("/help-screen.png");
-        this.aboutScreenImage = loader.loadImage("/about-screen.png");
-        this.gameOverScreen = loader.loadImage("/game-over.png");
+        this.selectIcon = loader.loadImageFromPath("/select-icon.png");
+        this.startScreenImage = loader.loadImageFromPath("/start-screen.png");
+        this.helpScreenImage = loader.loadImageFromPath("/help-screen.png");
+        this.aboutScreenImage = loader.loadImageFromPath("/about-screen.png");
+        this.gameOverScreen = loader.loadImageFromPath("/game-over.png");
 
         try {
             InputStream in = getClass().getResourceAsStream("/media/font/mario-font.ttf");

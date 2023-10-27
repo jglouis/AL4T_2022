@@ -31,7 +31,7 @@ public class MapManager {
     public void resetCurrentMap(GameEngine engine) {
         Mario mario = getMario();
         mario.resetLocation();
-        engine.resetCamera();
+        engine.reset();
         createMap(engine.getImageLoader(), map.getPath());
         map.setMario(mario);
     }
@@ -51,11 +51,11 @@ public class MapManager {
         return map.getMario();
     }
 
-    public void fire(GameEngine engine) {
+    public void fire(SoundManager sound) {
         Fireball fireball = getMario().fire();
         if (fireball != null) {
             map.addFireball(fireball);
-            engine.playFireball();
+            sound.playSound("fireball");
         }
     }
 
@@ -93,21 +93,21 @@ public class MapManager {
         return getMario().getX() >= map.getEndPoint().getX() + 320;
     }
 
-    public void checkCollisions(GameEngine engine) {
+    public void checkCollisions(GameEngine engine,SoundManager sound) {
         if (map == null) {
             return;
         }
 
-        checkBottomCollisions(engine);
+        checkBottomCollisions(sound);
         checkTopCollisions(engine);
-        checkMarioHorizontalCollision(engine);
+        checkMarioHorizontalCollision(engine, sound);
         checkEnemyCollisions();
         checkPrizeCollision();
-        checkPrizeContact(engine);
+        checkPrizeContact(sound);
         checkFireballContact();
     }
 
-    private void checkBottomCollisions(GameEngine engine) {
+    private void checkBottomCollisions(SoundManager sound) {
         Mario mario = getMario();
         ArrayList<Brick> bricks = map.getAllBricks();
         ArrayList<Enemy> enemies = map.getEnemies();
@@ -132,7 +132,7 @@ public class MapManager {
             if (marioBottomBounds.intersects(enemyTopBounds)) {
                 mario.acquirePoints(100);
                 toBeRemoved.add(enemy);
-                engine.playStomp();
+                sound.playSound("stomp");
             }
         }
 
@@ -162,7 +162,7 @@ public class MapManager {
         }
     }
 
-    private void checkMarioHorizontalCollision(GameEngine engine){
+    private void checkMarioHorizontalCollision(GameEngine engine, SoundManager sound){
         Mario mario = getMario();
         ArrayList<Brick> bricks = map.getAllBricks();
         ArrayList<Enemy> enemies = map.getEnemies();
@@ -187,7 +187,7 @@ public class MapManager {
         for(Enemy enemy : enemies){
             Rectangle enemyBounds = !toRight ? enemy.getRightBounds() : enemy.getLeftBounds();
             if (marioBounds.intersects(enemyBounds)) {
-                marioDies = mario.onTouchEnemy(engine);
+                marioDies = mario.onTouchEnemy(engine, sound);
                 toBeRemoved.add(enemy);
             }
         }
@@ -301,7 +301,7 @@ public class MapManager {
         }
     }
 
-    private void checkPrizeContact(GameEngine engine) {
+    private void checkPrizeContact(SoundManager sound) {
         ArrayList<Prize> prizes = map.getRevealedPrizes();
         ArrayList<GameObject> toBeRemoved = new ArrayList<>();
 
@@ -309,10 +309,10 @@ public class MapManager {
         for(Prize prize : prizes){
             Rectangle prizeBounds = prize.getBounds();
             if (prizeBounds.intersects(marioBounds)) {
-                prize.onTouch(getMario(), engine);
+                prize.onTouch(getMario(), sound);
                 toBeRemoved.add((GameObject) prize);
             } else if(prize instanceof Coin){
-                prize.onTouch(getMario(), engine);
+                prize.onTouch(getMario(), sound);
             }
         }
 
