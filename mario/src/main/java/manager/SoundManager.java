@@ -6,7 +6,7 @@ import javax.sound.sampled.Clip;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 
-public class SoundManager {
+public class SoundManager implements ISoundManager {
 
     private Clip background;
     private long clipTime = 0;
@@ -40,57 +40,67 @@ public class SoundManager {
         return null;
     }
 
+    @Override
     public void resumeBackground(){
         background.setMicrosecondPosition(clipTime);
         background.start();
     }
 
+    @Override
     public void pauseBackground(){
         clipTime = background.getMicrosecondPosition();
         background.stop();
     }
 
+    @Override
     public void restartBackground() {
         clipTime = 0;
         resumeBackground();
     }
 
+    @Override
     public void playJump() {
         Clip clip = getClip(loadAudio("jump"));
         clip.start();
 
     }
 
+    @Override
     public void playCoin() {
         Clip clip = getClip(loadAudio("coin"));
         clip.start();
 
     }
 
+    @Override
     public void playFireball() {
         Clip clip = getClip(loadAudio("fireball"));
         clip.start();
 
     }
 
+    @Override
     public void playGameOver() {
         Clip clip = getClip(loadAudio("gameOver"));
         clip.start();
 
     }
 
+    @Override
     public void playStomp() {
         Clip clip = getClip(loadAudio("stomp"));
         clip.start();
 
     }
 
+    @Override
     public void playOneUp() {
         Clip clip = getClip(loadAudio("oneUp"));
         clip.start();
 
     }
 
+    @Override
     public void playSuperMushroom() {
 
         Clip clip = getClip(loadAudio("superMushroom"));
@@ -98,6 +108,7 @@ public class SoundManager {
 
     }
 
+    @Override
     public void playMarioDies() {
 
         Clip clip = getClip(loadAudio("marioDies"));
@@ -105,6 +116,7 @@ public class SoundManager {
 
     }
 
+    @Override
     public void playFireFlower() {
 
     }

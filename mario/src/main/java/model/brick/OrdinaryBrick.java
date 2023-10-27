@@ -1,13 +1,11 @@
 package model.brick;
 
 import manager.GameEngine;
-import manager.MapManager;
-import model.Map;
+import manager.IMapManager;
 import model.prize.Prize;
 import view.Animation;
 import view.ImageLoader;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class OrdinaryBrick extends Brick {
@@ -35,7 +33,7 @@ public class OrdinaryBrick extends Brick {
 
     @Override
     public Prize reveal(GameEngine engine){
-        MapManager manager = engine.getMapManager();
+        IMapManager manager = engine.getMapManager();
         if(!manager.getMario().isSuper())
             return null;
 

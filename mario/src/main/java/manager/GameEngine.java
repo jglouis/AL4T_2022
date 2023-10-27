@@ -1,6 +1,7 @@
 package manager;
 
 import model.hero.Mario;
+import view.IImageLoader;
 import view.ImageLoader;
 import view.StartScreenSelection;
 import view.UIManager;
@@ -12,30 +13,26 @@ public class GameEngine implements Runnable {
 
     private final static int WIDTH = 1268, HEIGHT = 708;
 
-    private MapManager mapManager;
+    private IMapManager mapManager;
     private UIManager uiManager;
-    private SoundManager soundManager;
+    private ISoundManager soundManager;
     private GameStatus gameStatus;
     private boolean isRunning;
     private CameraInterface camera;
-    private ImageLoader imageLoader;
+    private IImageLoader imageLoader;
     private Thread thread;
     private StartScreenSelection startScreenSelection = StartScreenSelection.START_GAME;
     private int selectedMap = 0;
 
-    private GameEngine(CameraInterface camera) {
+    private GameEngine(CameraInterface camera, IImageLoader imageLoader, ISoundManager soundManager, IMapManager mapManager) {
+        this.imageLoader = imageLoader;
         this.camera = camera;
-        init();
-    }
-
-    private void init() {
-        imageLoader = new ImageLoader();
         InputManager inputManager = new InputManager(this);
         gameStatus = GameStatus.START_SCREEN;
         camera = new Camera();
         uiManager = new UIManager(this, WIDTH, HEIGHT);
-        soundManager = new SoundManager();
-        mapManager = new MapManager();
+        this.soundManager = soundManager;
+        this.mapManager = mapManager;
 
         JFrame frame = new JFrame("Super Mario Bros.");
         frame.add(uiManager);
@@ -256,7 +253,7 @@ public class GameEngine implements Runnable {
         return false;
     }
 
-    public ImageLoader getImageLoader() {
+    public IImageLoader getImageLoader() {
         return imageLoader;
     }
 
@@ -332,13 +329,13 @@ public class GameEngine implements Runnable {
         soundManager.playStomp();
     }
 
-    public MapManager getMapManager() {
+    public IMapManager getMapManager() {
         return mapManager;
     }
 
     public static void main(String... args) {
-        CameraInterface camera = new Camera();
-        new GameEngine(camera);
+
+        new GameEngine(new Camera(),new ImageLoader(),new SoundManager(), new MapManager());
     }
 
     public int getRemainingTime() {
