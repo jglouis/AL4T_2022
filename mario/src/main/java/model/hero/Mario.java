@@ -1,6 +1,6 @@
 package model.hero;
 
-import manager.Camera;
+import manager.CameraInterface;
 import manager.GameEngine;
 import view.Animation;
 import model.GameObject;
@@ -54,7 +54,7 @@ public class Mario extends GameObject{
         }
     }
 
-    public void move(boolean toRight, Camera camera) {
+    public void move(boolean toRight, CameraInterface camera) {
         if(toRight){
             setVelX(5);
         }

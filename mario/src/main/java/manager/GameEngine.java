@@ -17,13 +17,14 @@ public class GameEngine implements Runnable {
     private SoundManager soundManager;
     private GameStatus gameStatus;
     private boolean isRunning;
-    private Camera camera;
+    private CameraInterface camera;
     private ImageLoader imageLoader;
     private Thread thread;
     private StartScreenSelection startScreenSelection = StartScreenSelection.START_GAME;
     private int selectedMap = 0;
 
-    private GameEngine() {
+    private GameEngine(CameraInterface camera) {
+        this.camera = camera;
         init();
     }
 
@@ -336,7 +337,8 @@ public class GameEngine implements Runnable {
     }
 
     public static void main(String... args) {
-        new GameEngine();
+        CameraInterface camera = new Camera();
+        new GameEngine(camera);
     }
 
     public int getRemainingTime() {
