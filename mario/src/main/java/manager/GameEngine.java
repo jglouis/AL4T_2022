@@ -301,35 +301,35 @@ public class GameEngine implements Runnable {
     }
 
     public void playCoin() {
-        soundManager.playCoin();
+        soundManager.audioPlayer("coin");
     }
 
     public void playOneUp() {
-        soundManager.playOneUp();
+        soundManager.audioPlayer("oneUp");
     }
 
     public void playSuperMushroom() {
-        soundManager.playSuperMushroom();
+        soundManager.audioPlayer("superMushroom");
     }
 
     public void playMarioDies() {
-        soundManager.playMarioDies();
+        soundManager.audioPlayer("marioDies");
     }
 
     public void playJump() {
-        soundManager.playJump();
+        soundManager.audioPlayer("jump");
     }
 
     public void playFireFlower() {
-        soundManager.playFireFlower();
+        //soundManager.playFireFlower();
     }
 
     public void playFireball() {
-        soundManager.playFireball();
+        soundManager.audioPlayer("fireball");
     }
 
     public void playStomp() {
-        soundManager.playStomp();
+        soundManager.audioPlayer("stomp");
     }
 
     public MapManager getMapManager() {

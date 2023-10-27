@@ -55,57 +55,8 @@ public class SoundManager {
         resumeBackground();
     }
 
-    public void playJump() {
-        Clip clip = getClip(loadAudio("jump"));
+    public void audioPlayer(String url){
+        Clip clip = getClip(loadAudio(url));
         clip.start();
-
-    }
-
-    public void playCoin() {
-        Clip clip = getClip(loadAudio("coin"));
-        clip.start();
-
-    }
-
-    public void playFireball() {
-        Clip clip = getClip(loadAudio("fireball"));
-        clip.start();
-
-    }
-
-    public void playGameOver() {
-        Clip clip = getClip(loadAudio("gameOver"));
-        clip.start();
-
-    }
-
-    public void playStomp() {
-        Clip clip = getClip(loadAudio("stomp"));
-        clip.start();
-
-    }
-
-    public void playOneUp() {
-        Clip clip = getClip(loadAudio("oneUp"));
-        clip.start();
-
-    }
-
-    public void playSuperMushroom() {
-
-        Clip clip = getClip(loadAudio("superMushroom"));
-        clip.start();
-
-    }
-
-    public void playMarioDies() {
-
-        Clip clip = getClip(loadAudio("marioDies"));
-        clip.start();
-
-    }
-
-    public void playFireFlower() {
-
     }
 }
