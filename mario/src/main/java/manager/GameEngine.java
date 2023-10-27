@@ -18,7 +18,6 @@ public class GameEngine implements Runnable {
     private ISoundManager soundManager;
     private GameStatus gameStatus;
     private boolean isRunning;
-    private Camera camera;
     private CameraInterface camera;
     private IImageLoader imageLoader;
     private Thread thread;
