@@ -10,12 +10,12 @@ import model.hero.Mario;
 import model.prize.BoostItem;
 import model.prize.Coin;
 import model.prize.Prize;
-import view.ImageLoader_I;
+import view.IImageLoader;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-public class MapManager implements MapManager_I{
+public class MapManager implements IMapManager {
 
     private Map map;
 
@@ -39,7 +39,7 @@ public class MapManager implements MapManager_I{
     }
 
     @Override
-    public boolean createMap(ImageLoader_I loader, String path) {
+    public boolean createMap(IImageLoader loader, String path) {
         MapCreator mapCreator = new MapCreator(loader);
         map = mapCreator.createMap("/maps/" + path, 400);
 

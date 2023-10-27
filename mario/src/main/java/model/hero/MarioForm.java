@@ -2,7 +2,7 @@ package model.hero;
 
 import view.Animation;
 import view.ImageLoader;
-import view.ImageLoader_I;
+import view.IImageLoader;
 
 import java.awt.image.BufferedImage;
 
@@ -19,7 +19,7 @@ public class MarioForm {
         this.isSuper = isSuper;
         this.isFire = isFire;
 
-        ImageLoader_I imageLoader = new ImageLoader();
+        IImageLoader imageLoader = new ImageLoader();
         BufferedImage fireball = imageLoader.loadImage("/sprite.png");
         fireballStyle = imageLoader.getSubImage(fireball, 3, 4, 24, 24);
     }
@@ -48,7 +48,7 @@ public class MarioForm {
         return style;
     }
 
-    public MarioForm onTouchEnemy(ImageLoader_I imageLoader) {
+    public MarioForm onTouchEnemy(IImageLoader imageLoader) {
         BufferedImage[] leftFrames = imageLoader.getLeftFrames(0);
         BufferedImage[] rightFrames= imageLoader.getRightFrames(0);
 

@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class ImageLoader implements ImageLoader_I{
+public class ImageLoader implements IImageLoader {
 
     private BufferedImage marioForms;
     private BufferedImage brickAnimation;

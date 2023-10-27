@@ -1,8 +1,6 @@
 package manager;
 
-import javax.sound.sampled.Clip;
-
-public interface SoundManager_I {
+public interface ISoundManager {
     void resumeBackground();
 
     void pauseBackground();

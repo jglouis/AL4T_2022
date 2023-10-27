@@ -2,17 +2,17 @@ package manager;
 
 import model.brick.OrdinaryBrick;
 import model.hero.Mario;
-import view.ImageLoader_I;
+import view.IImageLoader;
 
 import java.awt.*;
 
-public interface MapManager_I {
+public interface IMapManager {
 
         void updateLocations() ;
 
         void resetCurrentMap(GameEngine engine);
 
-        boolean createMap(ImageLoader_I loader, String path) ;
+        boolean createMap(IImageLoader loader, String path) ;
 
         void acquirePoints(int point);
 

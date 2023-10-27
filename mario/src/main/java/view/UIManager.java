@@ -6,7 +6,6 @@ import manager.GameStatus;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -26,7 +25,7 @@ public class UIManager extends JPanel{
         setMinimumSize(new Dimension(width, height));
 
         this.engine = engine;
-        ImageLoader_I loader = engine.getImageLoader();
+        IImageLoader loader = engine.getImageLoader();
 
         mapSelection = new MapSelection();
 

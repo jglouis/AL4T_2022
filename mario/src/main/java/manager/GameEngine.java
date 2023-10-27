@@ -1,7 +1,7 @@
 package manager;
 
 import model.hero.Mario;
-import view.ImageLoader_I;
+import view.IImageLoader;
 import view.ImageLoader;
 import view.StartScreenSelection;
 import view.UIManager;
@@ -13,19 +13,19 @@ public class GameEngine implements Runnable {
 
     private final static int WIDTH = 1268, HEIGHT = 708;
 
-    private MapManager_I mapManager;
+    private IMapManager mapManager;
     private UIManager uiManager;
-    private SoundManager_I soundManager;
+    private ISoundManager soundManager;
     private GameStatus gameStatus;
     private boolean isRunning;
     private Camera camera;
     private CameraInterface camera;
-    private ImageLoader_I imageLoader;
+    private IImageLoader imageLoader;
     private Thread thread;
     private StartScreenSelection startScreenSelection = StartScreenSelection.START_GAME;
     private int selectedMap = 0;
 
-    private GameEngine(CameraInterface camera, ImageLoader_I imageLoader, SoundManager_I soundManager,MapManager_I mapManager) {
+    private GameEngine(CameraInterface camera, IImageLoader imageLoader, ISoundManager soundManager, IMapManager mapManager) {
         this.imageLoader = imageLoader;
         this.camera = camera;
         InputManager inputManager = new InputManager(this);
@@ -254,7 +254,7 @@ public class GameEngine implements Runnable {
         return false;
     }
 
-    public ImageLoader_I getImageLoader() {
+    public IImageLoader getImageLoader() {
         return imageLoader;
     }
 
@@ -330,7 +330,7 @@ public class GameEngine implements Runnable {
         soundManager.playStomp();
     }
 
-    public MapManager_I getMapManager() {
+    public IMapManager getMapManager() {
         return mapManager;
     }
 

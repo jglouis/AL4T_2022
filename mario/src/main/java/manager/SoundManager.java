@@ -6,7 +6,7 @@ import javax.sound.sampled.Clip;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 
-public class SoundManager implements SoundManager_I{
+public class SoundManager implements ISoundManager {
 
     private Clip background;
     private long clipTime = 0;

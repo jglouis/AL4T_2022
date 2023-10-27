@@ -1,11 +1,9 @@
 package view;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
-public interface ImageLoader_I {
+public interface IImageLoader {
     BufferedImage loadImage(String path);
 
     BufferedImage loadImage(File file);

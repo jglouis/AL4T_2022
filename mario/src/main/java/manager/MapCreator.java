@@ -3,7 +3,7 @@ package manager;
 import model.EndFlag;
 import model.brick.*;
 import model.prize.*;
-import view.ImageLoader_I;
+import view.IImageLoader;
 import model.Map;
 import model.enemy.Enemy;
 import model.enemy.Goomba;
@@ -15,7 +15,7 @@ import java.awt.image.BufferedImage;
 
 class MapCreator {
 
-    private ImageLoader_I imageLoader;
+    private IImageLoader imageLoader;
 
     private BufferedImage backgroundImage;
     private BufferedImage superMushroom, oneUpMushroom, fireFlower, coin;
@@ -23,7 +23,7 @@ class MapCreator {
     private BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, endFlag;
 
 
-    MapCreator(ImageLoader_I imageLoader) {
+    MapCreator(IImageLoader imageLoader) {
 
         this.imageLoader = imageLoader;
         BufferedImage sprite = imageLoader.loadImage("/sprite.png");
