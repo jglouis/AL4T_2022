@@ -19,13 +19,15 @@ public class GameEngine implements Runnable {
     private GameStatus gameStatus;
     private boolean isRunning;
     private Camera camera;
+    private CameraInterface camera;
     private ImageLoader_I imageLoader;
     private Thread thread;
     private StartScreenSelection startScreenSelection = StartScreenSelection.START_GAME;
     private int selectedMap = 0;
 
-    private GameEngine(ImageLoader_I imageLoader, SoundManager_I soundManager,MapManager_I mapManager) {
+    private GameEngine(CameraInterface camera, ImageLoader_I imageLoader, SoundManager_I soundManager,MapManager_I mapManager) {
         this.imageLoader = imageLoader;
+        this.camera = camera;
         InputManager inputManager = new InputManager(this);
         gameStatus = GameStatus.START_SCREEN;
         camera = new Camera();
@@ -333,7 +335,8 @@ public class GameEngine implements Runnable {
     }
 
     public static void main(String... args) {
-        new GameEngine(new ImageLoader(),new SoundManager(), new MapManager());
+
+        new GameEngine(new Camera(),new ImageLoader(),new SoundManager(), new MapManager());
     }
 
     public int getRemainingTime() {

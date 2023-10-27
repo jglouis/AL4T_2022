@@ -19,7 +19,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'be.ecam.Main'
+    mainClass = 'be.ecam.Controller.Main'
 }
 
 run {

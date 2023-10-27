@@ -1,4 +1,4 @@
-package be.ecam;
+package be.ecam.Model;
 
 import org.jetbrains.annotations.NotNull;
 
