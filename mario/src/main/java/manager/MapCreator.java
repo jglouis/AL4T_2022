@@ -4,6 +4,7 @@ import model.EndFlag;
 import model.brick.*;
 import model.prize.*;
 import view.IImageLoader;
+import model.IMap;
 import model.Map;
 import model.enemy.Enemy;
 import model.enemy.Goomba;
@@ -13,7 +14,7 @@ import model.hero.Mario;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-class MapCreator {
+class MapCreator implements IMapCreator {
 
     private IImageLoader imageLoader;
 
@@ -45,7 +46,8 @@ class MapCreator {
 
     }
 
-    Map createMap(String mapPath, double timeLimit) {
+    @Override
+    public IMap createMap(String mapPath, double timeLimit) {
         BufferedImage mapImage = imageLoader.loadImage(mapPath);
 
         if (mapImage == null) {
