@@ -24,7 +24,8 @@ class MapCreator implements IMapCreator {
     private BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, endFlag;
 
 
-    MapCreator(IImageLoader imageLoader) {
+    MapCreator(){}
+    public void setMapCreator(IImageLoader imageLoader) {
 
         this.imageLoader = imageLoader;
         BufferedImage sprite = imageLoader.loadImage("/sprite.png");

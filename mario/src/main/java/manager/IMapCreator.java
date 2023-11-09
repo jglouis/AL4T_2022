@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public interface IMapCreator {
+    void setMapCreator(IImageLoader imageLoader);
     IMap createMap(String mapPath, double timeLimit) ;
 
     }

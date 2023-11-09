@@ -1,7 +1,7 @@
 package manager;
 
 import model.GameObject;
-import model.Map;
+import model.IMap;
 import model.brick.Brick;
 import model.brick.OrdinaryBrick;
 import model.enemy.Enemy;
@@ -17,9 +17,12 @@ import java.util.ArrayList;
 
 public class MapManager implements IMapManager {
 
-    private Map map;
+    private IMap map;
+    private IMapCreator mapCreator;
 
-    public MapManager() {}
+    public MapManager(IMapCreator mapCreator) {
+        this.mapCreator = mapCreator;
+    }
 
     @Override
     public void updateLocations() {
@@ -40,8 +43,8 @@ public class MapManager implements IMapManager {
 
     @Override
     public boolean createMap(IImageLoader loader, String path) {
-        MapCreator mapCreator = new MapCreator(loader);
-        map = mapCreator.createMap("/maps/" + path, 400);
+        this.mapCreator.setMapCreator(loader);
+        map = this.mapCreator.createMap("/maps/" + path, 400);
 
         return map != null;
     }
