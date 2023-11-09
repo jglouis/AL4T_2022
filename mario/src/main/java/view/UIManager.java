@@ -13,10 +13,7 @@ public class UIManager extends JPanel{
 
     private GameEngine engine;
     private Font gameFont;
-    private BufferedImage startScreenImage, aboutScreenImage, helpScreenImage, gameOverScreen;
-    private BufferedImage heartIcon;
-    private BufferedImage coinIcon;
-    private BufferedImage selectIcon;
+    private ImageResourceManager imageResourceManager;
     private MapSelection mapSelection;
 
     public UIManager(GameEngine engine, int width, int height) {
@@ -25,18 +22,9 @@ public class UIManager extends JPanel{
         setMinimumSize(new Dimension(width, height));
 
         this.engine = engine;
-        IImageLoader loader = engine.getImageLoader();
+        this.imageResourceManager = new ImageResourceManager(engine);
 
         mapSelection = new MapSelection();
-
-        BufferedImage sprite = loader.loadImage("/sprite.png");
-        this.heartIcon = loader.loadImage("/heart-icon.png");
-        this.coinIcon = loader.getSubImage(sprite, 1, 5, 48, 48);
-        this.selectIcon = loader.loadImage("/select-icon.png");
-        this.startScreenImage = loader.loadImage("/start-screen.png");
-        this.helpScreenImage = loader.loadImage("/help-screen.png");
-        this.aboutScreenImage = loader.loadImage("/about-screen.png");
-        this.gameOverScreen = loader.loadImage("/game-over.png");
 
         try {
             InputStream in = getClass().getResourceAsStream("/media/font/mario-font.ttf");
@@ -107,15 +95,15 @@ public class UIManager extends JPanel{
     }
 
     private void drawHelpScreen(Graphics2D g2) {
-        g2.drawImage(helpScreenImage, 0, 0, null);
+        g2.drawImage(imageResourceManager.getHelpScreenImage(), 0, 0, null);
     }
 
     private void drawAboutScreen(Graphics2D g2) {
-        g2.drawImage(aboutScreenImage, 0, 0, null);
+        g2.drawImage(imageResourceManager.getAboutScreenImage(), 0, 0, null);
     }
 
     private void drawGameOverScreen(Graphics2D g2) {
-        g2.drawImage(gameOverScreen, 0, 0, null);
+        g2.drawImage(imageResourceManager.getGameOverScreen(), 0, 0, null);
         g2.setFont(gameFont.deriveFont(50f));
         g2.setColor(new Color(130, 48, 48));
         String acquiredPoints = "Score: " + engine.getScore();
@@ -136,7 +124,7 @@ public class UIManager extends JPanel{
         g2.setFont(gameFont.deriveFont(30f));
         g2.setColor(Color.WHITE);
         String displayedStr = "" + engine.getCoins();
-        g2.drawImage(coinIcon, getWidth()-115, 10, null);
+        g2.drawImage(imageResourceManager.getCoinIcon(), getWidth()-115, 10, null);
         g2.drawString(displayedStr, getWidth()-65, 50);
     }
 
@@ -144,7 +132,7 @@ public class UIManager extends JPanel{
         g2.setFont(gameFont.deriveFont(30f));
         g2.setColor(Color.WHITE);
         String displayedStr = "" + engine.getRemainingLives();
-        g2.drawImage(heartIcon, 50, 10, null);
+        g2.drawImage(imageResourceManager.getHeartIcon(), 50, 10, null);
         g2.drawString(displayedStr, 100, 50);
     }
 
@@ -159,8 +147,8 @@ public class UIManager extends JPanel{
 
     private void drawStartScreen(Graphics2D g2){
         int row = engine.getStartScreenSelection().getLineNumber();
-        g2.drawImage(startScreenImage, 0, 0, null);
-        g2.drawImage(selectIcon, 375, row * 70 + 440, null);
+        g2.drawImage(imageResourceManager.getStartScreenImage(), 0, 0, null);
+        g2.drawImage(imageResourceManager.getSelectIcon(), 375, row * 70 + 440, null);
     }
 
     private void drawMapSelectionScreen(Graphics2D g2){
@@ -168,8 +156,8 @@ public class UIManager extends JPanel{
         g2.setColor(Color.WHITE);
         mapSelection.draw(g2);
         int row = engine.getSelectedMap();
-        int y_location = row*100+300-selectIcon.getHeight();
-        g2.drawImage(selectIcon, 375, y_location, null);
+        int y_location = row*100+300-imageResourceManager.getSelectIcon().getHeight();
+        g2.drawImage(imageResourceManager.getSelectIcon(), 375, y_location, null);
     }
 
     public String selectMapViaMouse(Point mouseLocation) {
