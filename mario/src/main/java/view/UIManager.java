@@ -2,10 +2,17 @@ package view;
 
 import manager.GameEngine;
 import manager.GameStatus;
+import view.screens.ScreenRenderer;
+import view.screens.StartScreenRenderer;
+import view.screens.MapSelectionScreenRenderer;
+import view.screens.AboutScreenRenderer;
+import view.screens.HelpScreenRenderer;
+import view.screens.GameOverScreenRenderer;
+import view.screens.PauseScreenRenderer;
+import view.screens.VictoryScreenRenderer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -14,6 +21,14 @@ public class UIManager extends JPanel{
     private GameEngine engine;
     private Font gameFont;
     private ImageResourceManager imageResourceManager;
+
+    private ScreenRenderer startScreenRenderer;
+    private ScreenRenderer mapSelectionScreenRenderer;
+    private ScreenRenderer aboutScreenRenderer;
+    private ScreenRenderer helpScreenRenderer;
+    private ScreenRenderer gameOverScreenRenderer;
+    private ScreenRenderer pauseScreenRenderer;
+    private ScreenRenderer victoryScreenRenderer;
     private MapSelection mapSelection;
 
     public UIManager(GameEngine engine, int width, int height) {
@@ -21,10 +36,18 @@ public class UIManager extends JPanel{
         setMaximumSize(new Dimension(width, height));
         setMinimumSize(new Dimension(width, height));
 
+
+        mapSelection = new MapSelection();
         this.engine = engine;
         this.imageResourceManager = new ImageResourceManager(engine);
 
-        mapSelection = new MapSelection();
+        this.startScreenRenderer = new StartScreenRenderer(this);
+        this.mapSelectionScreenRenderer = new MapSelectionScreenRenderer(this, mapSelection);
+        this.aboutScreenRenderer = new AboutScreenRenderer(this);
+        this.helpScreenRenderer = new HelpScreenRenderer(this);
+        this.gameOverScreenRenderer = new GameOverScreenRenderer(this);
+        this.pauseScreenRenderer = new PauseScreenRenderer(this);
+        this.victoryScreenRenderer = new VictoryScreenRenderer(this);
 
         try {
             InputStream in = getClass().getResourceAsStream("/media/font/mario-font.ttf");
@@ -42,41 +65,47 @@ public class UIManager extends JPanel{
         Graphics2D g2 = (Graphics2D) g.create();
         GameStatus gameStatus = engine.getGameStatus();
 
-        if(gameStatus == GameStatus.START_SCREEN){
-            drawStartScreen(g2);
+        switch(gameStatus) {
+            case START_SCREEN:
+                startScreenRenderer.render(g2);
+                break;
+            case MAP_SELECTION:
+                mapSelectionScreenRenderer.render(g2);
+                break;
+            case ABOUT_SCREEN:
+                aboutScreenRenderer.render(g2);
+                break;
+            case HELP_SCREEN:
+                helpScreenRenderer.render(g2);
+                break;
+            case GAME_OVER:
+                gameOverScreenRenderer.render(g2);
+                break;
+            default:
+                renderGamePlayScreen(g2);
+                break;
         }
-        else if(gameStatus == GameStatus.MAP_SELECTION){
-            drawMapSelectionScreen(g2);
-        }
-        else if(gameStatus == GameStatus.ABOUT_SCREEN){
-            drawAboutScreen(g2);
-        }
-        else if(gameStatus == GameStatus.HELP_SCREEN){
-            drawHelpScreen(g2);
-        }
-        else if(gameStatus == GameStatus.GAME_OVER){
-            drawGameOverScreen(g2);
-        }
-        else {
-            Point camLocation = engine.getCameraLocation();
-            g2.translate(-camLocation.x, -camLocation.y);
-            engine.drawMap(g2);
-            g2.translate(camLocation.x, camLocation.y);
 
-            drawPoints(g2);
-            drawRemainingLives(g2);
-            drawAcquiredCoins(g2);
-            drawRemainingTime(g2);
-
-            if(gameStatus == GameStatus.PAUSED){
-                drawPauseScreen(g2);
-            }
-            else if(gameStatus == GameStatus.MISSION_PASSED){
-                drawVictoryScreen(g2);
-            }
+        if(gameStatus == GameStatus.PAUSED){
+            pauseScreenRenderer.render(g2);
+        }
+        else if(gameStatus == GameStatus.MISSION_PASSED){
+            victoryScreenRenderer.render(g2);
         }
 
         g2.dispose();
+    }
+
+    private void renderGamePlayScreen(Graphics2D g2) {
+        Point camLocation = engine.getCameraLocation();
+        g2.translate(-camLocation.x, -camLocation.y);
+        engine.drawMap(g2);
+        g2.translate(camLocation.x, camLocation.y);
+
+        drawPoints(g2);
+        drawRemainingLives(g2);
+        drawAcquiredCoins(g2);
+        drawRemainingTime(g2);
     }
 
     private void drawRemainingTime(Graphics2D g2) {
@@ -84,40 +113,6 @@ public class UIManager extends JPanel{
         g2.setColor(Color.WHITE);
         String displayedStr = "TIME: " + engine.getRemainingTime();
         g2.drawString(displayedStr, 750, 50);
-    }
-
-    private void drawVictoryScreen(Graphics2D g2) {
-        g2.setFont(gameFont.deriveFont(50f));
-        g2.setColor(Color.WHITE);
-        String displayedStr = "YOU WON!";
-        int stringLength = g2.getFontMetrics().stringWidth(displayedStr);
-        g2.drawString(displayedStr, (getWidth()-stringLength)/2, getHeight()/2);
-    }
-
-    private void drawHelpScreen(Graphics2D g2) {
-        g2.drawImage(imageResourceManager.getHelpScreenImage(), 0, 0, null);
-    }
-
-    private void drawAboutScreen(Graphics2D g2) {
-        g2.drawImage(imageResourceManager.getAboutScreenImage(), 0, 0, null);
-    }
-
-    private void drawGameOverScreen(Graphics2D g2) {
-        g2.drawImage(imageResourceManager.getGameOverScreen(), 0, 0, null);
-        g2.setFont(gameFont.deriveFont(50f));
-        g2.setColor(new Color(130, 48, 48));
-        String acquiredPoints = "Score: " + engine.getScore();
-        int stringLength = g2.getFontMetrics().stringWidth(acquiredPoints);
-        int stringHeight = g2.getFontMetrics().getHeight();
-        g2.drawString(acquiredPoints, (getWidth()-stringLength)/2, getHeight()-stringHeight*2);
-    }
-
-    private void drawPauseScreen(Graphics2D g2) {
-        g2.setFont(gameFont.deriveFont(50f));
-        g2.setColor(Color.WHITE);
-        String displayedStr = "PAUSED";
-        int stringLength = g2.getFontMetrics().stringWidth(displayedStr);
-        g2.drawString(displayedStr, (getWidth()-stringLength)/2, getHeight()/2);
     }
 
     private void drawAcquiredCoins(Graphics2D g2) {
@@ -145,19 +140,16 @@ public class UIManager extends JPanel{
         g2.drawString(displayedStr, 300, 50);
     }
 
-    private void drawStartScreen(Graphics2D g2){
-        int row = engine.getStartScreenSelection().getLineNumber();
-        g2.drawImage(imageResourceManager.getStartScreenImage(), 0, 0, null);
-        g2.drawImage(imageResourceManager.getSelectIcon(), 375, row * 70 + 440, null);
+    public ImageResourceManager getImageResourceManager() {
+        return this.imageResourceManager;
     }
 
-    private void drawMapSelectionScreen(Graphics2D g2){
-        g2.setFont(gameFont.deriveFont(50f));
-        g2.setColor(Color.WHITE);
-        mapSelection.draw(g2);
-        int row = engine.getSelectedMap();
-        int y_location = row*100+300-imageResourceManager.getSelectIcon().getHeight();
-        g2.drawImage(imageResourceManager.getSelectIcon(), 375, y_location, null);
+    public GameEngine getGameEngine() {
+        return this.engine;
+    }
+
+    public Font getGameFont() {
+        return gameFont;
     }
 
     public String selectMapViaMouse(Point mouseLocation) {
