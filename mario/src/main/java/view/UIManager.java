@@ -96,50 +96,6 @@ public class UIManager extends JPanel{
         g2.dispose();
     }
 
-    private void renderGamePlayScreen(Graphics2D g2) {
-        Point camLocation = engine.getCameraLocation();
-        g2.translate(-camLocation.x, -camLocation.y);
-        engine.drawMap(g2);
-        g2.translate(camLocation.x, camLocation.y);
-
-        drawPoints(g2);
-        drawRemainingLives(g2);
-        drawAcquiredCoins(g2);
-        drawRemainingTime(g2);
-    }
-
-    private void drawRemainingTime(Graphics2D g2) {
-        g2.setFont(gameFont.deriveFont(25f));
-        g2.setColor(Color.WHITE);
-        String displayedStr = "TIME: " + engine.getRemainingTime();
-        g2.drawString(displayedStr, 750, 50);
-    }
-
-    private void drawAcquiredCoins(Graphics2D g2) {
-        g2.setFont(gameFont.deriveFont(30f));
-        g2.setColor(Color.WHITE);
-        String displayedStr = "" + engine.getCoins();
-        g2.drawImage(imageResourceManager.getCoinIcon(), getWidth()-115, 10, null);
-        g2.drawString(displayedStr, getWidth()-65, 50);
-    }
-
-    private void drawRemainingLives(Graphics2D g2) {
-        g2.setFont(gameFont.deriveFont(30f));
-        g2.setColor(Color.WHITE);
-        String displayedStr = "" + engine.getRemainingLives();
-        g2.drawImage(imageResourceManager.getHeartIcon(), 50, 10, null);
-        g2.drawString(displayedStr, 100, 50);
-    }
-
-    private void drawPoints(Graphics2D g2){
-        g2.setFont(gameFont.deriveFont(25f));
-        g2.setColor(Color.WHITE);
-        String displayedStr = "Points: " + engine.getScore();
-        int stringLength = g2.getFontMetrics().stringWidth(displayedStr);;
-        //g2.drawImage(coinIcon, 50, 10, null);
-        g2.drawString(displayedStr, 300, 50);
-    }
-
     public ImageResourceManager getImageResourceManager() {
         return this.imageResourceManager;
     }
@@ -150,6 +106,27 @@ public class UIManager extends JPanel{
 
     public Font getGameFont() {
         return gameFont;
+    }
+
+    private void renderGamePlayScreen(Graphics2D g2) {
+        Point camLocation = engine.getCameraLocation();
+        g2.translate(-camLocation.x, -camLocation.y);
+        engine.drawMap(g2);
+        g2.translate(camLocation.x, camLocation.y);
+
+        drawUIElement(g2, "TIME: " + engine.getRemainingTime(), 750, 50, 25f, null, 0, 0);
+        drawUIElement(g2, "" + engine.getCoins(), getWidth()-65, 50, 30f, imageResourceManager.getCoinIcon(), getWidth()-115, 10);
+        drawUIElement(g2, "" + engine.getRemainingLives(), 100, 50, 30f, imageResourceManager.getHeartIcon(), 50, 10);
+        drawUIElement(g2, "Points: " + engine.getScore(), 300, 50, 25f, null, 0, 0);
+    }
+
+    private void drawUIElement(Graphics2D g2, String text, int x, int y, float fontSize, Image icon, int iconX, int iconY) {
+        g2.setFont(gameFont.deriveFont(fontSize));
+        g2.setColor(Color.WHITE);
+        if (icon != null) {
+            g2.drawImage(icon, iconX, iconY, null);
+        }
+        g2.drawString(text, x, y);
     }
 
     public String selectMapViaMouse(Point mouseLocation) {
