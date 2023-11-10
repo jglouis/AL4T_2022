@@ -10,11 +10,9 @@ import java.awt.*;
 public class MapSelectionScreenRenderer implements ScreenRenderer {
 
     private UIManager uiManager;
-    private MapSelection mapSelection;
 
-    public MapSelectionScreenRenderer(UIManager uiManager, MapSelection mapSelection) {
+    public MapSelectionScreenRenderer(UIManager uiManager) {
         this.uiManager = uiManager;
-        this.mapSelection = mapSelection;
     }
 
     @Override
@@ -23,7 +21,7 @@ public class MapSelectionScreenRenderer implements ScreenRenderer {
 
         g2.setFont(uiManager.getGameFont().deriveFont(50f));
         g2.setColor(Color.WHITE);
-        mapSelection.draw(g2);
+        uiManager.mapSelectionRender(g2);
         int row = uiManager.selectedMap;
         int y_location = row*100+300-irm.getSelectIcon().getHeight();
         g2.drawImage(irm.getSelectIcon(), 375, y_location, null);

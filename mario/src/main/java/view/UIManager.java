@@ -57,7 +57,7 @@ public class UIManager extends JPanel{
         this.imageResourceManager = new ImageResourceManager(engine);
 
         this.startScreenRenderer = new StartScreenRenderer(this);
-        this.mapSelectionScreenRenderer = new MapSelectionScreenRenderer(this, mapSelection);
+        this.mapSelectionScreenRenderer = new MapSelectionScreenRenderer(this);
         this.aboutScreenRenderer = new AboutScreenRenderer(this);
         this.helpScreenRenderer = new HelpScreenRenderer(this);
         this.gameOverScreenRenderer = new GameOverScreenRenderer(this);
@@ -121,6 +121,10 @@ public class UIManager extends JPanel{
 
     public Font getGameFont() {
         return gameFont;
+    }
+
+    public void mapSelectionRender(Graphics2D g2) {
+        mapSelection.draw(g2);
     }
 
     private void renderGamePlayScreen(Graphics2D g2) {
