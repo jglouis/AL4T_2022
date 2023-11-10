@@ -1,7 +1,10 @@
 package view;
 
+import manager.ButtonAction;
 import manager.GameEngine;
 import manager.GameStatus;
+import manager.InputManager;
+import model.hero.Mario;
 import view.screens.ScreenRenderer;
 import view.screens.StartScreenRenderer;
 import view.screens.MapSelectionScreenRenderer;
@@ -21,7 +24,6 @@ public class UIManager extends JPanel{
     private GameEngine engine;
     private Font gameFont;
     private ImageResourceManager imageResourceManager;
-
     private ScreenRenderer startScreenRenderer;
     private ScreenRenderer mapSelectionScreenRenderer;
     private ScreenRenderer aboutScreenRenderer;
@@ -30,12 +32,25 @@ public class UIManager extends JPanel{
     private ScreenRenderer pauseScreenRenderer;
     private ScreenRenderer victoryScreenRenderer;
     private MapSelection mapSelection;
+    public int selectedMap = 0;
+    public StartScreenSelection startScreenSelection = StartScreenSelection.START_GAME;
 
     public UIManager(GameEngine engine, int width, int height) {
         setPreferredSize(new Dimension(width, height));
         setMaximumSize(new Dimension(width, height));
         setMinimumSize(new Dimension(width, height));
 
+        InputManager inputManager = new InputManager(engine);
+
+        JFrame frame = new JFrame("Super Mario Bros.");
+        frame.add(this);
+        frame.addKeyListener(inputManager);
+        frame.addMouseListener(inputManager);
+        frame.pack();
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
 
         mapSelection = new MapSelection();
         this.engine = engine;
@@ -129,15 +144,81 @@ public class UIManager extends JPanel{
         g2.drawString(text, x, y);
     }
 
-    public String selectMapViaMouse(Point mouseLocation) {
-        return mapSelection.selectMap(mouseLocation);
+    public void receiveInput(ButtonAction input) {
+
+        if (engine.gameStatus == GameStatus.START_SCREEN) {
+            if (input == ButtonAction.SELECT && startScreenSelection == StartScreenSelection.START_GAME) {
+                engine.startGame();
+            } else if (input == ButtonAction.SELECT && startScreenSelection == StartScreenSelection.VIEW_ABOUT) {
+                engine.setGameStatus(GameStatus.ABOUT_SCREEN);
+            } else if (input == ButtonAction.SELECT && startScreenSelection == StartScreenSelection.VIEW_HELP) {
+                engine.setGameStatus(GameStatus.HELP_SCREEN);
+            } else if (input == ButtonAction.GO_UP) {
+                selectOption(true);
+            } else if (input == ButtonAction.GO_DOWN) {
+                selectOption(false);
+            }
+        }
+        else if(engine.gameStatus == GameStatus.MAP_SELECTION){
+            if(input == ButtonAction.SELECT){
+                selectMapViaKeyboard();
+            }
+            else if(input == ButtonAction.GO_UP){
+                changeSelectedMap(true);
+            }
+            else if(input == ButtonAction.GO_DOWN){
+                changeSelectedMap(false);
+            }
+        } else if (engine.gameStatus == GameStatus.RUNNING) {
+            Mario mario = engine.mapManager.getMario();
+            if (input == ButtonAction.JUMP) {
+                mario.jump(engine);
+            } else if (input == ButtonAction.M_RIGHT) {
+                mario.move(true, engine.camera);
+            } else if (input == ButtonAction.M_LEFT) {
+                mario.move(false, engine.camera);
+            } else if (input == ButtonAction.ACTION_COMPLETED) {
+                mario.setVelX(0);
+            } else if (input == ButtonAction.FIRE) {
+                engine.mapManager.fire(engine);
+            } else if (input == ButtonAction.PAUSE_RESUME) {
+                engine.pauseGame();
+            }
+        } else if (engine.gameStatus == GameStatus.PAUSED) {
+            if (input == ButtonAction.PAUSE_RESUME) {
+                engine.pauseGame();
+            }
+        } else if(engine.gameStatus == GameStatus.GAME_OVER && input == ButtonAction.GO_TO_START_SCREEN){
+            engine.reset();
+        } else if(engine.gameStatus == GameStatus.MISSION_PASSED && input == ButtonAction.GO_TO_START_SCREEN){
+            engine.reset();
+        }
+
+        if(input == ButtonAction.GO_TO_START_SCREEN){
+            engine.setGameStatus(GameStatus.START_SCREEN);
+        }
     }
 
-    public String selectMapViaKeyboard(int index){
-        return mapSelection.selectMap(index);
+    private void selectOption(boolean selectUp) {
+        startScreenSelection = startScreenSelection.select(selectUp);
     }
 
-    public int changeSelectedMap(int index, boolean up){
-        return mapSelection.changeSelectedMap(index, up);
+    public void selectMapViaMouse() {
+        String path = mapSelection.selectMap(getMousePosition());
+        if (path != null) {
+            engine.createMap(path);
+        }
     }
+
+    public void selectMapViaKeyboard(){
+        String path = mapSelection.selectMap(selectedMap);
+        if (path != null) {
+            engine.createMap(path);
+        }
+    }
+
+    public void changeSelectedMap(boolean up){
+        selectedMap = mapSelection.changeSelectedMap(selectedMap, up);
+    }
+
 }

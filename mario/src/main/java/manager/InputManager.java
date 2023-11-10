@@ -10,7 +10,7 @@ public class InputManager implements KeyListener, MouseListener{
 
     private GameEngine engine;
 
-    InputManager(GameEngine engine) {
+    public InputManager(GameEngine engine) {
         this.engine = engine; }
 
     @Override
@@ -56,7 +56,7 @@ public class InputManager implements KeyListener, MouseListener{
     @Override
     public void mousePressed(MouseEvent e) {
         if(engine.getGameStatus() == GameStatus.MAP_SELECTION){
-            engine.selectMapViaMouse();
+            engine.uiManager.selectMapViaMouse();
         }
     }
 
@@ -68,7 +68,7 @@ public class InputManager implements KeyListener, MouseListener{
 
     private void notifyInput(ButtonAction action) {
         if(action != ButtonAction.NO_ACTION)
-            engine.receiveInput(action);
+            engine.uiManager.receiveInput(action);
     }
 
     @Override

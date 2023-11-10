@@ -17,9 +17,8 @@ public class StartScreenRenderer implements ScreenRenderer {
     @Override
     public void render(Graphics2D g2) {
         ImageResourceManager irm = uiManager.getImageResourceManager();
-        GameEngine engine = uiManager.getGameEngine();
 
-        int row = engine.getStartScreenSelection().getLineNumber();
+        int row = uiManager.startScreenSelection.getLineNumber();
         g2.drawImage(irm.getStartScreenImage(), 0, 0, null);
         g2.drawImage(irm.getSelectIcon(), 375, row * 70 + 440, null);
     }
