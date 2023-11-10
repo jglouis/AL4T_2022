@@ -3,15 +3,9 @@ package be.ecam;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-
-
-
+import java.util.Scanner;
 
 public class Main {
-private static Input scanner;
-    public Main(Input scanner) {
-        Main.scanner = scanner;
-    }
     // Each array is indexed by player number.
     // Player 0 is the human player.
     private static final Hand[] hands = new Hand[]{new Hand(), new Hand(), new Hand(), new Hand()};
@@ -21,19 +15,16 @@ private static Input scanner;
     private static Suit currentSuit = null;
 
     public static void main(String[] args) {
-        final Input input = new Input(); // Créez une instance d'Input
-        Main main = new Main(input);
-        int Round = 0;
+        Scanner scanner = new Scanner(System.in);
 
         while (true) {
             runAiOpponents();
-            if (hasGameEnded() & Round != 0) {
-                System.out.println("Game has ended \n ");
+            if (hasGameEnded()) {
+                System.out.println("Game has ended  ");
             }
 
 
             // print your hand and every one score
-            System.out.printf("Round : " + Round);
             System.out.printf("\nYour score: %d\n", points[0]);
             System.out.printf("score adversary 1: %d\n", points[1]);
             System.out.printf("score adversary 2: %d\n", points[2]);
@@ -44,14 +35,8 @@ private static Input scanner;
             System.out.println();
 
             // Show cards played
-            for (int i = 1; i < currentTrick.length; i++) {
+            for (int i = 0; i < currentTrick.length; i++) {
                 System.out.printf("Card played by player %d: %s \n", i, currentTrick[i]);
-            }
-            if (Round == 0){
-                System.out.print("Write 'start' to start the game or 'exit' to quit the game \n");
-            }
-            if (Round !=0){
-                System.out.print("Write 'play' and specify the index of the card you want to play \n");
             }
 
             String userInput = scanner.nextLine();
@@ -86,7 +71,7 @@ private static Input scanner;
                     }
                     // sort your hand
                     hands[0].sort();
-                    Round+=1;
+
 
                 }
                 case "play" -> {
@@ -104,7 +89,7 @@ private static Input scanner;
                         playToTrick(playedCard, 0);
                         checkForTrickEnd();
                         runAiOpponents();
-                        Round+=1;
+
                     } catch (NumberFormatException e) {
                         System.out.printf("Could not parse %s to an integer.\n", split[1]);
                     } catch (IndexOutOfBoundsException e) {
