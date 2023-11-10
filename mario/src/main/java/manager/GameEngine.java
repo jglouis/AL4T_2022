@@ -335,7 +335,7 @@ public class GameEngine implements Runnable {
 
     public static void main(String... args) {
 
-        new GameEngine(new Camera(),new ImageLoader(),new SoundManager(), new MapManager());
+        new GameEngine(new Camera(),new ImageLoader(),new SoundManager(), new MapManager(new MapCreator()));
     }
 
     public int getRemainingTime() {
