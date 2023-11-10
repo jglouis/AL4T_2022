@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Map {
+public class Map implements IMap {
 
     private double remainingTime;
     private Mario mario;
@@ -36,26 +36,32 @@ public class Map {
     }
 
 
+    @Override
     public Mario getMario() {
         return mario;
     }
 
+    @Override
     public void setMario(Mario mario) {
         this.mario = mario;
     }
 
+    @Override
     public ArrayList<Enemy> getEnemies() {
         return enemies;
     }
 
+    @Override
     public ArrayList<Fireball> getFireballs() {
         return fireballs;
     }
 
+    @Override
     public ArrayList<Prize> getRevealedPrizes() {
         return revealedPrizes;
     }
 
+    @Override
     public ArrayList<Brick> getAllBricks() {
         ArrayList<Brick> allBricks = new ArrayList<>();
 
@@ -65,18 +71,22 @@ public class Map {
         return allBricks;
     }
 
+    @Override
     public void addBrick(Brick brick) {
         this.bricks.add(brick);
     }
 
+    @Override
     public void addGroundBrick(Brick brick) {
         this.groundBricks.add(brick);
     }
 
+    @Override
     public void addEnemy(Enemy enemy) {
         this.enemies.add(enemy);
     }
 
+    @Override
     public void drawMap(Graphics2D g2){
         drawBackground(g2);
         drawPrizes(g2);
@@ -130,6 +140,7 @@ public class Map {
         mario.draw(g2);
     }
 
+    @Override
     public void updateLocations() {
         mario.updateLocation();
         for(Enemy enemy : enemies){
@@ -165,58 +176,72 @@ public class Map {
         endPoint.updateLocation();
     }
 
+    @Override
     public double getBottomBorder() {
         return bottomBorder;
     }
 
+    @Override
     public void addRevealedPrize(Prize prize) {
         revealedPrizes.add(prize);
     }
 
+    @Override
     public void addFireball(Fireball fireball) {
         fireballs.add(fireball);
     }
 
+    @Override
     public void setEndPoint(EndFlag endPoint) {
         this.endPoint = endPoint;
     }
 
+    @Override
     public EndFlag getEndPoint() {
         return endPoint;
     }
 
+    @Override
     public void addRevealedBrick(OrdinaryBrick ordinaryBrick) {
         revealedBricks.add(ordinaryBrick);
     }
 
+    @Override
     public void removeFireball(Fireball object) {
         fireballs.remove(object);
     }
 
+    @Override
     public void removeEnemy(Enemy object) {
         enemies.remove(object);
     }
 
+    @Override
     public void removePrize(Prize object) {
         revealedPrizes.remove(object);
     }
 
+    @Override
     public String getPath() {
         return path;
     }
 
+    @Override
     public void setPath(String path) {
         this.path = path;
     }
 
+    @Override
     public void updateTime(double passed){
         remainingTime = remainingTime - passed;
     }
 
+    @Override
     public boolean isTimeOver(){
         return remainingTime <= 0;
     }
 
+    @Override
     public double getRemainingTime() {
         return remainingTime;
     }
