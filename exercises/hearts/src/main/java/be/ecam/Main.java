@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
+
     // Each array is indexed by player number.
     // Player 0 is the human player.
     private static final Hand[] hands = new Hand[]{new Hand(), new Hand(), new Hand(), new Hand()};
@@ -20,7 +21,7 @@ public class Main {
         while (true) {
             runAiOpponents();
             if (hasGameEnded()) {
-                System.out.println("Game has ended  ");
+                System.out.println("Game has ended");
             }
 
 
@@ -72,7 +73,6 @@ public class Main {
                     // sort your hand
                     hands[0].sort();
 
-
                 }
                 case "play" -> {
                     if (split.length < 2) {
@@ -89,13 +89,11 @@ public class Main {
                         playToTrick(playedCard, 0);
                         checkForTrickEnd();
                         runAiOpponents();
-
                     } catch (NumberFormatException e) {
                         System.out.printf("Could not parse %s to an integer.\n", split[1]);
                     } catch (IndexOutOfBoundsException e) {
                         System.out.printf("%d is not a valid index.\n", Integer.parseInt(split[1]));
                     }
-
                 }
                 case "exit" -> // exit program
                         System.exit(0);
