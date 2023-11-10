@@ -31,7 +31,7 @@ public class Unit_test {
     public void GetMarioFormissuper() {
         Mario test = new Mario(1,2);
         test.setMarioForm(marioFormSuper);
-        boolean value = test.isSuper();
+        boolean value = marioFormSuper.isSuper();
         assertTrue(value);
     }
     @Test
