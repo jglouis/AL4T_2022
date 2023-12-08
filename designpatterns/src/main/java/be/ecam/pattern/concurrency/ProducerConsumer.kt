@@ -6,16 +6,17 @@ import kotlinx.coroutines.channels.Channel
 val channel = Channel<Int>()
 
 fun main() = runBlocking {
-    launch { // launch a coroutine to act as a producer
+    val producerJob = launch { // launch a coroutine to act as a producer
         producer()
     }
 
-    launch { // launch a coroutine to act as a consumer
+    val consumerJob = launch { // launch a coroutine to act as a consumer
         consumer()
     }
 
     // Ensure that the main function does not exit until both producer and consumer coroutines are done
-    delay(6000)
+    producerJob.join()
+    consumerJob.join()
 }
 
 suspend fun producer() {
