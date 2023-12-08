@@ -6,11 +6,11 @@ import kotlinx.coroutines.channels.Channel
 val channel = Channel<Int>()
 
 fun main() = runBlocking {
-    val producerJob = launch { // launch a coroutine to act as a producer
+    val producerJob = launch(Dispatchers.IO) { // launch a coroutine to act as a producer
         producer()
     }
 
-    val consumerJob = launch { // launch a coroutine to act as a consumer
+    val consumerJob = launch(Dispatchers.Main) { // launch a coroutine to act as a consumer
         consumer()
     }
 
