@@ -16,6 +16,11 @@ The `basics` module is an introduction to the Java programming language.
 The `basics` module uses the `application` gradle plugin.
 Running is done by running the `run` task, like so `./gradlew :basics:run`
 
+## `traffic` module
+
+This module features some code found on GitHub. It serves as an exercises for detecting
+and eliminating code smells.
+
 ## `mario` module
 
 This module features an implementation of Super Mario Bros in Java found on Github.
