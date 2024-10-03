@@ -14,7 +14,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 application {
-     mainClassName = "trafficsim.Simulation"
+     mainClass = "trafficsim.Simulation"
 }
 tasks.test {
     useJUnitPlatform()
