@@ -10,8 +10,8 @@ public class SoundManager{
 	Clip driftClip;
 	public SoundManager(){
 	 try{
-	        AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File("Traffic Sounds - Free Sound Effects - Traffic Sound Clips - Sound Bites.wav"));
-	        AudioInputStream driftStream = AudioSystem.getAudioInputStream(new File("drift.wav"));
+	        AudioInputStream inputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("/Traffic Sounds - Free Sound Effects - Traffic Sound Clips - Sound Bites.wav"));
+	        AudioInputStream driftStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("/drift.wav"));
 	        clip = AudioSystem.getClip();
 	        driftClip = AudioSystem.getClip();
 	        clip.open(inputStream);
