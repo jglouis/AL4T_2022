@@ -40,7 +40,6 @@ public class Simulation extends JPanel implements ActionListener {
         LEFT, UP, RIGHT, DOWN
     }
 
-    private final Vehicle v1, v2, v3, v4;
     float move = 0;
 
     public void paintComponent(Graphics g) {
@@ -48,7 +47,6 @@ public class Simulation extends JPanel implements ActionListener {
         Graphics2D g2D = (Graphics2D) g;
 
         g2D.drawImage(mTerrain, 0, 0, this);
-        g2D.drawImage(v1.getImage(), v1.getTrans(), this);
 
         //displays all cars going in the right direction
         ArrayList<Vehicle>[] allVehicles = new ArrayList[]{vehiclesRight, vehiclesLeft, vehiclesDown, vehiclesUp};
@@ -66,8 +64,6 @@ public class Simulation extends JPanel implements ActionListener {
 
         identity.setToTranslation(300, 200 + move);
         identity.rotate(Math.toRadians(mAngle), car1.getWidth(this), car1.getHeight(this));
-
-        g2D.drawImage(car1, identity, this);
 
 
         //Draw trafficLights
@@ -220,22 +216,12 @@ public class Simulation extends JPanel implements ActionListener {
         t4.setRight_light_pos(new Vector2(1145, 175 + 47));
         trafficLights.add(t4);
 
-        v1 = new Vehicle(getClass().getResourceAsStream("/car1.jpg"), 6, VehicleState.MOVE_X, VehicleDirection.RIGHT, trafficLights.get(1), this, null, 0);
-        v2 = new Vehicle(getClass().getResourceAsStream("/car1.jpg"), 5, VehicleState.MOVE_Y, VehicleDirection.DOWN, trafficLights.get(0), this, null, 0);
-        v3 = new Vehicle(getClass().getResourceAsStream("/car1.jpg"), 6, VehicleState.MOVE_X, VehicleDirection.LEFT, trafficLights.get(3), this, null, 0);
-        v4 = new Vehicle(getClass().getResourceAsStream("/car1.jpg"), 5, VehicleState.MOVE_Y, VehicleDirection.UP, trafficLights.get(2), this, null, 0);
-
         vehiclesRight = new ArrayList<>();
         vehiclesLeft = new ArrayList<>();
         vehiclesDown = new ArrayList<>();
         vehiclesUp = new ArrayList<>();
-        vehiclesRight.add(v1);
-        vehiclesDown.add(v2);
-        vehiclesLeft.add(v3);
-        vehiclesUp.add(v4);
-
-
         try {
+
             car1 = ImageIO.read(getClass().getResourceAsStream("/car1.jpg"));
             mTerrain = ImageIO.read(getClass().getResourceAsStream("/road1.jpg"));
         } catch (IOException e) {
