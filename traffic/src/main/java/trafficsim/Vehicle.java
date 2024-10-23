@@ -70,8 +70,6 @@ public class Vehicle implements ActionListener {
 	 * Sets current angle to 0
 	 * @param src Loads the vehicle image
 	 * @param vel Sets the vehicle max speed
-	 * @param x_pos Defines the x-position of the vehicle
-	 * @param y_pos Defines the y-position of the vehicle
 	 * */
 	
 	public Vehicle(InputStream src, int vel, VehicleState vehState, VehicleDirection vDir, TrafficLight tl, ImageObserver imObs, Vehicle vAhead, int index){
@@ -185,61 +183,21 @@ public class Vehicle implements ActionListener {
 		}
 	}
 	
-	public VehicleState getvState() {
-		return vState;
-	}
-
-	public void setvState(VehicleState vState) {
-		this.vState = vState;
-	}
-
-	public VehicleDirection getvDirection() {
-		return vDirection;
-	}
-
-	public void setvDirection(VehicleDirection vDirection) {
-		this.vDirection = vDirection;
-	}
-
-	/** 
+	/**
 	 * Getter for vehicle image
 	 * @return Image The vehicle image object*/
 
 	public Image getImage() {
 		return mImage;
 	}
-
-	public void setImage(Image image) {
-		mImage = image;
-	}
-
 	public float getSpeed() {
 		return velocity;
-	}
-
-	public void setSpeed(int speed) {
-		velocity = speed;
-	}
-
-	public float getCurAngle() {
-		return mCurAngle;
-	}
-
-	public boolean hasPassedTrafficLight() {
-		return passedTrafficLight;
-	}
-
-	public void setCurAngle(float curAngle) {
-		mCurAngle = curAngle;
 	}
 
 	public Vector2 getVehiclePosition() {
 		return vehiclePosition;
 	}
 
-	public void setVehiclePosition(Vector2 vehiclePosition) {
-		this.vehiclePosition = vehiclePosition;
-	}
 	
 	public AffineTransform getTrans(){
 		return trans;
@@ -276,11 +234,11 @@ public class Vehicle implements ActionListener {
 	/** 
 	 * @param angle the final angle you want the car to positioned at relative to the normal
 	 * @param time the time in seconds you want the car to take to position itself at "angle"*/
-	private void steerTowards(float angle, float t){
+	private void steerTowards(float angle, float time){
 		//first we calculate the angular velocity required to get the vehicle to angle in time t
-		float angularVel = angle/t;
+		float angularVel = angle/time;
 		if(angle == 0 || angle == 90 || angle == 270){
-			angularVel = (angle-mCurAngle)/t;
+			angularVel = (angle-mCurAngle)/time;
 		}
 		//if(Math.abs(mCurAngle) < Math.abs(angle))	
 			mCurAngle += angularVel;
@@ -290,9 +248,6 @@ public class Vehicle implements ActionListener {
 	
 	
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub	
-		
-		
 		if(vehicleAhead != null && !vehicleAhead.isInView()){
 			vehicleAhead = null;
 		}
@@ -650,7 +605,6 @@ public class Vehicle implements ActionListener {
 
 			break;
 		}
-			
 	}
 	
 }
