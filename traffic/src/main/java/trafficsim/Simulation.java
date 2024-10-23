@@ -1,5 +1,6 @@
 package trafficsim;
 
+import org.jetbrains.annotations.NotNull;
 import trafficsim.Vehicle.VehicleDirection;
 import trafficsim.Vehicle.VehicleState;
 
@@ -15,7 +16,6 @@ import java.util.Random;
 
 
 public class Simulation extends JPanel implements ActionListener {
-    private static final long serialVersionUID = 1L;
     private Image car1;
     private Image mTerrain;
     private final Timer tm = new Timer(1, this);
@@ -49,7 +49,6 @@ public class Simulation extends JPanel implements ActionListener {
 
         g2D.drawImage(mTerrain, 0, 0, this);
         g2D.drawImage(v1.getImage(), v1.getTrans(), this);
-        //g2D.drawImage(v2.getImage(), v2.getVehiclePosition().x, v2.getVehiclePosition().y, this);
 
         //displays all cars going in the right direction
         ArrayList<Vehicle>[] allVehicles = new ArrayList[]{vehiclesRight, vehiclesLeft, vehiclesDown, vehiclesUp};
@@ -99,22 +98,16 @@ public class Simulation extends JPanel implements ActionListener {
             tm.start();
     }
 
-
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
         carSpawnTimer++;
-
         if (x < 0 || x > 550)
             velX = -velX;
-
         x = x + velX;
-
         if (mAngle < 450)
             move += 0.2;
         else
             move += 2;
         steerTowards(450, 120);
-
 
         //This section is where cars are created, every 800s
         if (carSpawnTimer % 500 == 0) {
@@ -129,7 +122,7 @@ public class Simulation extends JPanel implements ActionListener {
         repaint();
     }
 
-    private void spawnCar(Direction direction) {
+    private void spawnCar(@NotNull Direction direction) {
         ArrayList<Vehicle> list;
         VehicleDirection vehicleDirection;
         VehicleState vehicleState;
@@ -169,25 +162,19 @@ public class Simulation extends JPanel implements ActionListener {
             }
             int carImageId = random.nextInt(carImages.length);
             //int spd = 7- random.nextInt(2);
-            if (!list.isEmpty() && vAheadID < list.size())
-                list.add(new Vehicle(
-                        getClass().getResourceAsStream(carImages[carImageId]),
-                        6,
-                        vehicleState,
-                        vehicleDirection,
-                        trafficLight,
-                        this,
-                        list.get(vAheadID),
-                        list.size()));
-            else
-                list.add(new Vehicle(getClass().getResourceAsStream(carImages[carImageId]),
-                        6,
-                        vehicleState,
-                        vehicleDirection,
-                        trafficLight,
-                        this,
-                        null,
-                        list.size()));
+            Vehicle vehicleAhead = null;
+            if (vAheadID < list.size()) {
+                vehicleAhead = list.get(vAheadID);
+            }
+            list.add(new Vehicle(
+                    getClass().getResourceAsStream(carImages[carImageId]),
+                    6,
+                    vehicleState,
+                    vehicleDirection,
+                    trafficLight,
+                    this,
+                    vehicleAhead,
+                    list.size()));
         }
     }
 
@@ -207,7 +194,6 @@ public class Simulation extends JPanel implements ActionListener {
     }
 
     public Simulation() {
-
         trafficLights = new ArrayList<>();
 
         TrafficLight t1 = new TrafficLight(getClass().getResourceAsStream("/trafficLight.png"), 349, 147, 180, 0, 1, this);
