@@ -15,9 +15,6 @@ import java.util.Random;
 
 
 public class Simulation extends JPanel implements ActionListener {
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private Image car1;
     private Image mTerrain;
@@ -36,9 +33,14 @@ public class Simulation extends JPanel implements ActionListener {
             "/ambulance.png", "/police.png", "/truck1.png", "/truck2.png"};
 
     private final ArrayList<TrafficLight> trafficLights;
-    private int carSpawnTimer = 0;                    //timer regulating the rate new cars are created
+    //timer regulating the rate new cars are created
+    private int carSpawnTimer = 0;
 
-    Vehicle v1, v2, v3, v4;
+    private enum Direction {
+        LEFT, UP, RIGHT, DOWN
+    }
+
+    private final Vehicle v1, v2, v3, v4;
     float move = 0;
 
     public void paintComponent(Graphics g) {
@@ -117,123 +119,76 @@ public class Simulation extends JPanel implements ActionListener {
         //This section is where cars are created, every 800s
         if (carSpawnTimer % 500 == 0) {
             //create new car objects over here
-
-            int carImageId = 0;
-            int vAheadID = 1000;
             for (int i = 0; i < 20; i++) {
-                if (vehiclesRight.size() < 30) {
-                    int line = (vehiclesRight.size()) / 3;
-                    //int laneID = vehiclesLeft.size()%3;
-                    if (line > 0) {
-                        vAheadID = vehiclesRight.size() - 3;
-                    }
-                    carImageId = random.nextInt(carImages.length);
-                    //int spd = 7- random.nextInt(2);
-                    if (!vehiclesRight.isEmpty() && vAheadID < vehiclesRight.size())
-                        vehiclesRight.add(new Vehicle(getClass().getResourceAsStream(carImages[carImageId]), 6, VehicleState.MOVE_X, VehicleDirection.RIGHT, trafficLights.get(1), this, vehiclesRight.get(vAheadID), vehiclesRight.size()));
-                    else
-                        vehiclesRight.add(new Vehicle(getClass().getResourceAsStream(carImages[carImageId]), 6, VehicleState.MOVE_X, VehicleDirection.RIGHT, trafficLights.get(1), this, null, vehiclesRight.size()));
-
-                }
-
-                if (vehiclesDown.size() < 20) {
-                    int line = (vehiclesDown.size()) / 3;
-                    int laneID = vehiclesDown.size() % 3;
-
-                    if (line > 0) {
-                        switch (laneID) {
-                            case 0:
-                                vAheadID = 3 * line - 3;
-                                break;
-                            case 1:
-                                vAheadID = 3 * line - 2;
-                                break;
-                            case 2:
-                                vAheadID = 3 * line - 1;
-                                break;
-                        }
-
-                        //vAheadID = vehiclesDown.size() - 3;
-                    }
-
-                    carImageId = random.nextInt(carImages.length);
-                    if (carImageId < 0) {
-                        carImageId = 0;
-                    }
-                    int spd = 7 - random.nextInt(2);
-                    //System.out.println("line: " +line + " vehicle: "+vehiclesDown.size() + "vAheadId: " +vAheadID);
-                    if (vehiclesDown.size() > 0 && vAheadID < vehiclesDown.size())
-                        vehiclesDown.add(new Vehicle(getClass().getResourceAsStream(carImages[carImageId]), spd, VehicleState.MOVE_Y, VehicleDirection.DOWN, trafficLights.get(0), this, vehiclesDown.get(vAheadID), vehiclesDown.size()));
-                    else
-                        vehiclesDown.add(new Vehicle(getClass().getResourceAsStream(carImages[carImageId]), spd, VehicleState.MOVE_Y, VehicleDirection.DOWN, trafficLights.get(0), this, null, vehiclesDown.size()));
-                }
-
-                if (vehiclesLeft.size() < 30) {
-                    int line = (vehiclesLeft.size()) / 3;
-                    int laneID = vehiclesLeft.size() % 3;
-
-                    if (line > 0) {
-                        switch (laneID) {
-                            case 0:
-                                vAheadID = 3 * line - 3;
-                                break;
-                            case 1:
-                                vAheadID = 3 * line - 2;
-                                break;
-                            case 2:
-                                vAheadID = 3 * line - 1;
-                                break;
-                        }
-
-                        //vAheadID = vehiclesLeft.size() - 3;
-                    }
-                    carImageId = random.nextInt(carImages.length);
-                    if (carImageId < 0) {
-                        carImageId = 0;
-                    }
-                    int spd = 7 - random.nextInt(2);
-                    //System.out.println("vAheadID: " +vAheadID + "carImageId: "+carImageId + "vehicles: " + vehiclesLeft.size());
-                    if (vehiclesLeft.size() > 0 && vAheadID < vehiclesLeft.size())
-                        vehiclesLeft.add(new Vehicle(getClass().getResourceAsStream(carImages[carImageId]), spd, VehicleState.MOVE_X, VehicleDirection.LEFT, trafficLights.get(3), this, vehiclesLeft.get(vAheadID), vehiclesLeft.size()));
-                    else
-                        vehiclesLeft.add(new Vehicle(getClass().getResourceAsStream(carImages[carImageId]), spd, VehicleState.MOVE_X, VehicleDirection.LEFT, trafficLights.get(3), this, null, vehiclesLeft.size()));
-                }
-
-                if (vehiclesUp.size() < 30) {
-                    int line = (vehiclesUp.size()) / 3;
-                    int laneID = vehiclesUp.size()%3;
-
-                    if (line > 0) {
-								switch(laneID){
-								case 0:
-									vAheadID = 3*line - 3;
-									break;
-								case 1:
-									vAheadID = 3*line - 2;
-									break;
-								case 2:
-									vAheadID = 3*line - 1;
-									break;
-								}
-
-//                        vAheadID = vehiclesUp.size() - 3;
-                    }
-                    carImageId = random.nextInt(carImages.length);
-                    if (carImageId < 0) {
-                        carImageId = 0;
-                    }
-                    int spd = 7 - random.nextInt(2);
-                    if (vehiclesUp.size() > 0 && vAheadID < vehiclesUp.size())
-                        vehiclesUp.add(new Vehicle(getClass().getResourceAsStream(carImages[carImageId]), spd, VehicleState.MOVE_Y, VehicleDirection.UP, trafficLights.get(2), this, vehiclesUp.get(vAheadID), vehiclesUp.size()));
-                    else
-                        vehiclesUp.add(new Vehicle(getClass().getResourceAsStream(carImages[carImageId]), spd, VehicleState.MOVE_Y, VehicleDirection.UP, trafficLights.get(2), this, null, vehiclesUp.size()));
+                for (Direction direction : Direction.values()) {
+                    spawnCar(direction);
                 }
             }
-
             carSpawnTimer = 0;
         }
-
         repaint();
+    }
+
+    private void spawnCar(Direction direction) {
+        ArrayList<Vehicle> list;
+        VehicleDirection vehicleDirection;
+        VehicleState vehicleState;
+        TrafficLight trafficLight;
+        switch (direction) {
+            case LEFT -> {
+                list = vehiclesLeft;
+                vehicleDirection = VehicleDirection.RIGHT;
+                vehicleState = VehicleState.MOVE_X;
+                trafficLight = trafficLights.get(3);
+            }
+            case UP -> {
+                list = vehiclesUp;
+                vehicleDirection = VehicleDirection.UP;
+                vehicleState = VehicleState.MOVE_Y;
+                trafficLight = trafficLights.get(2);
+            }
+            case RIGHT -> {
+                list = vehiclesRight;
+                vehicleDirection = VehicleDirection.RIGHT;
+                vehicleState = VehicleState.MOVE_X;
+                trafficLight = trafficLights.get(1);
+            }
+            case DOWN -> {
+                list = vehiclesDown;
+                vehicleDirection = VehicleDirection.DOWN;
+                vehicleState = VehicleState.MOVE_Y;
+                trafficLight = trafficLights.get(0);
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + direction);
+        }
+        if (list.size() < 30) {
+            int line = (list.size()) / 3;
+            int vAheadID = 1000;
+            if (line > 0) {
+                vAheadID = list.size() - 3;
+            }
+            int carImageId = random.nextInt(carImages.length);
+            //int spd = 7- random.nextInt(2);
+            if (!list.isEmpty() && vAheadID < list.size())
+                list.add(new Vehicle(
+                        getClass().getResourceAsStream(carImages[carImageId]),
+                        6,
+                        vehicleState,
+                        vehicleDirection,
+                        trafficLight,
+                        this,
+                        list.get(vAheadID),
+                        list.size()));
+            else
+                list.add(new Vehicle(getClass().getResourceAsStream(carImages[carImageId]),
+                        6,
+                        vehicleState,
+                        vehicleDirection,
+                        trafficLight,
+                        this,
+                        null,
+                        list.size()));
+        }
     }
 
     //simple function to test our steering
