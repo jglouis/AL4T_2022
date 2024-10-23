@@ -126,7 +126,7 @@ public class Simulation extends JPanel implements ActionListener {
         switch (direction) {
             case LEFT -> {
                 list = vehiclesLeft;
-                vehicleDirection = VehicleDirection.RIGHT;
+                vehicleDirection = VehicleDirection.LEFT;
                 vehicleState = VehicleState.MOVE_X;
                 trafficLight = trafficLights.get(3);
             }
