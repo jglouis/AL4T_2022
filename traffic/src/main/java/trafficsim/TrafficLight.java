@@ -9,22 +9,23 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TrafficLight implements ActionListener{
 	
 	private Image layoutImg;	//the layout image of the traffic light which would have transparent hole for light
-	private Timer tm;
-	private Vector2 position;
+    private Vector2 position;
 	private AffineTransform trans;
-	private ImageObserver imObs;
-	private int id, timer =0;
-	private Color[] currentLightColor;
+    private final int id;
+    private int timer =0;
+	private final Color[] currentLightColor;
 	//Individual light positions
 	private Vector2 left_light_pos;
 	private Vector2 right_light_pos;
 	private Vector2 forward_pos;
-	private int trafficTime = 5;
-	private int orientation; // 0 -Horizontal, 1-Vertical
+    private final int orientation; // 0 -Horizontal, 1-Vertical
+	private static final Logger logger = Logger.getLogger(TrafficLight.class.getName());
 	public Vector2 getLeft_light_pos() {
 		return left_light_pos;
 	}
@@ -64,13 +65,12 @@ public class TrafficLight implements ActionListener{
 	 * */
 	
 	public TrafficLight(InputStream imgSrc, int x, int y, int angle, int orient, int id, ImageObserver iObs){
-		imObs = iObs;
-		trans = new AffineTransform();
+        trans = new AffineTransform();
 		orientation = orient;
 		leftGo = false;
 		forwardGo = false;
 		rightGo = false;
-		tm = new Timer(1, this);
+        Timer tm = new Timer(1, this);
 		this.id = id;
 		currentLightColor = new Color[3]; //index 0-Left, 1-forward, 2-right
 		currentLightColor[0] = Color.red; currentLightColor[1] = Color.red; currentLightColor[2] = Color.red;
@@ -80,10 +80,11 @@ public class TrafficLight implements ActionListener{
 			tm = new Timer(1, this);
 			position = new Vector2(x,y);
 			trans.setToTranslation(position.x, position.y);
-			trans.rotate(Math.toRadians(angle), layoutImg.getWidth(imObs)/2, layoutImg.getHeight(imObs)/2);
+			double width = layoutImg.getWidth(iObs);
+			double height = layoutImg.getHeight(iObs);
+			trans.rotate(Math.toRadians(angle), width /2, height/2);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Error loading traffic light image", e);
 		}
 		
 		tm.start();
@@ -129,10 +130,10 @@ public class TrafficLight implements ActionListener{
 
 	
 	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
 		timer++;
-		if(id == 1){
-			if(timer >550 && timer < (trafficTime*1000)-700){
+        int trafficTime = 5;
+        if(id == 1){
+			if(timer >550 && timer < (trafficTime *1000)-700){
 				leftGo = true;
 				forwardGo = true;
 				rightGo=false;
@@ -140,29 +141,29 @@ public class TrafficLight implements ActionListener{
 			/* if(timer > 1000 && timer < ){
 				
 			}*/
-			if(timer < trafficTime*1000 && timer >(trafficTime*1000)-499){
+			if(timer < trafficTime *1000 && timer >(trafficTime *1000)-499){
 				leftGo = false;
 				forwardGo = false;
 				currentLightColor[0] = Color.yellow;
 				currentLightColor[1] = Color.yellow;
 			}
-			if(timer > trafficTime*1000){
+			if(timer > trafficTime *1000){
 				currentLightColor[0] = Color.red;
 				currentLightColor[1] = Color.red;
 			}
-			if(timer > (trafficTime+4)*1000){
+			if(timer > (trafficTime +4)*1000){
 				timer = 0;
 			}
 		}
 		
 		if(id == 2){
-			if(timer > trafficTime*1000 && timer < ((trafficTime+4)*1000)-500){
+			if(timer > trafficTime *1000 && timer < ((trafficTime +4)*1000)-500){
 				forwardGo = true;
 				rightGo = true;
 				leftGo = false;
 			}
 			
-			if(timer < (trafficTime+4)*1000 && timer > ((trafficTime+4)*1000)-499){
+			if(timer < (trafficTime +4)*1000 && timer > ((trafficTime +4)*1000)-499){
 				forwardGo = false;
 				rightGo = false;
 				
@@ -170,11 +171,11 @@ public class TrafficLight implements ActionListener{
 				currentLightColor[1] = Color.yellow;
 			}
 			
-			if(timer > (trafficTime+4)*1000){
+			if(timer > (trafficTime +4)*1000){
 				currentLightColor[2] = Color.red;
 				currentLightColor[1] = Color.red;
 			}
-			if(timer > (trafficTime+4)*1000){
+			if(timer > (trafficTime +4)*1000){
 				timer = 0;
 			}
 		}
@@ -184,37 +185,37 @@ public class TrafficLight implements ActionListener{
 				currentLightColor[2] = Color.yellow;
 				currentLightColor[1] = Color.yellow;
 			}*/
-			 if(timer > 550 && timer < (trafficTime*1000)-700){
+			 if(timer > 550 && timer < (trafficTime *1000)-700){
 				leftGo = false;
 				forwardGo = true;
 				rightGo=true;
 			}
-			if(timer < trafficTime*1000 && timer >(trafficTime*1000)-499){
+			if(timer < trafficTime *1000 && timer >(trafficTime *1000)-499){
 				rightGo = false;
 				forwardGo = false;
 				currentLightColor[2] = Color.yellow;
 				currentLightColor[1] = Color.yellow;
 			}
-			if(timer > trafficTime*1000){
+			if(timer > trafficTime *1000){
 				rightGo = false;
 				forwardGo = false;
 				currentLightColor[2] = Color.red;
 				currentLightColor[1] = Color.red;
 			}
-			if(timer > (trafficTime+4)*1000){
+			if(timer > (trafficTime +4)*1000){
 				timer = 0;
 			}
 		}
 		
 		if(id == 4){
 						
-			if(timer > trafficTime*1000 && timer < ((trafficTime+4)*1000)-500){
+			if(timer > trafficTime *1000 && timer < ((trafficTime +4)*1000)-500){
 				forwardGo = true;
 				rightGo = false;
 				leftGo = true;
 			}
 			
-			if(timer < (trafficTime+4)*1000 && timer > ((trafficTime+4)*1000)-499){
+			if(timer < (trafficTime +4)*1000 && timer > ((trafficTime +4)*1000)-499){
 				forwardGo = false;
 				leftGo = false;
 				
@@ -222,7 +223,7 @@ public class TrafficLight implements ActionListener{
 				currentLightColor[1] = Color.yellow;
 			}
 			
-			if(timer > (trafficTime+4)*1000){
+			if(timer > (trafficTime +4)*1000){
 				currentLightColor[0] = Color.red;
 				currentLightColor[1] = Color.red;
 				timer =0;
