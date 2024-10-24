@@ -1,11 +1,6 @@
 
-# Modifications du fichier `Simulation.java`
+# Changement sur le fichier `Simulation.java`
 
-## Contexte
-
-Le projet consistait à simuler la circulation des véhicules avec des feux de signalisation. Il y avait quelques erreurs dans le code qui empêchaient le bon fonctionnement. Voici les modifications faites rapidement pour corriger le tout.
-
-## Changements
 
 ### 1. Initialisation des listes de véhicules
 
@@ -69,6 +64,3 @@ try {
 }
 ```
 
-## Conclusion
-
-J'ai fait quelques corrections rapides pour que tout fonctionne sans erreurs. Les listes sont bien initialisées, et les doublons ont été supprimés.
