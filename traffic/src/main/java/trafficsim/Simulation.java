@@ -61,18 +61,18 @@ public class Simulation extends JPanel implements ActionListener {
             Color[] colors = t.getCurrentLightColor();
             if (t.getOrientation() == 0) {
                 g2D.setColor(colors[1]);
-                g2D.fillRect(t.getForward_pos().x, t.getForward_pos().y, 21, 29);
+                g2D.fillRect(t.getForwardPosition().x, t.getForwardPosition().y, 21, 29);
                 g2D.setColor(colors[0]);
-                g2D.fillRect(t.getLeft_light_pos().x, t.getLeft_light_pos().y, 20, 29);
+                g2D.fillRect(t.getLeftLightPosition().x, t.getLeftLightPosition().y, 20, 29);
                 g2D.setColor(colors[2]);
-                g2D.fillRect(t.getRight_light_pos().x, t.getRight_light_pos().y, 20, 29);
+                g2D.fillRect(t.getRightLightPosition().x, t.getRightLightPosition().y, 20, 29);
             } else {
                 g2D.setColor(colors[1]);
-                g2D.fillRect(t.getForward_pos().x, t.getForward_pos().y, 29, 22);
+                g2D.fillRect(t.getForwardPosition().x, t.getForwardPosition().y, 29, 22);
                 g2D.setColor(colors[0]);
-                g2D.fillRect(t.getLeft_light_pos().x, t.getLeft_light_pos().y, 29, 22);
+                g2D.fillRect(t.getLeftLightPosition().x, t.getLeftLightPosition().y, 29, 22);
                 g2D.setColor(colors[2]);
-                g2D.fillRect(t.getRight_light_pos().x, t.getRight_light_pos().y, 29, 22);
+                g2D.fillRect(t.getRightLightPosition().x, t.getRightLightPosition().y, 29, 22);
             }
             g2D.drawImage(t.getLayoutImg(), t.getTrans(), this);
 
@@ -185,9 +185,9 @@ public class Simulation extends JPanel implements ActionListener {
     private void addTrafficLight(int x, int y, int rotation, int signalType, int id,
                                  Vector2 leftPos, Vector2 forwardPos, Vector2 rightPos) {
         TrafficLight t = new TrafficLight(getClass().getResourceAsStream("/trafficLight.png"), x, y, rotation, signalType, id, this);
-        t.setLeft_light_pos(leftPos);
-        t.setForward_pos(forwardPos);
-        t.setRight_light_pos(rightPos);
+        t.setLeftLightPosition(leftPos);
+        t.setForwardPosition(forwardPos);
+        t.setRightLightPosition(rightPos);
         trafficLights.add(t);
     }
 }
