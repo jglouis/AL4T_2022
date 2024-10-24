@@ -262,18 +262,16 @@ public class Vehicle implements ActionListener {
                 turning();
                 break;
             case MOVE_X:
-                moveX();
-                break;
             case MOVE_Y:
-                moveY();
+                move();
                 break;
         }
     }
 
-    private void moveY() {
+    private void move() {
         velocity = vehVelo;
         switch (vDirection) {
-            case UP:
+            case UP -> {
                 //In any case in which our vehicleAhead has changed states, we forget that vehicle
                 if (vehicleAhead != null && vehicleAhead.vState != this.vState) {
                     velocity = vehicleAhead.velocity;
@@ -302,10 +300,8 @@ public class Vehicle implements ActionListener {
                     accelerate(vehiclePosition.y, vehicleAhead.vehiclePosition.y + 130);
                     velocity += acceleration;
                 }
-                break;
-
-            case DOWN:
-
+            }
+            case DOWN -> {
                 if (!passedTrafficLight && !trafficLight.forwardGo)
                     vState = VehicleState.BRAKE;
 
@@ -335,72 +331,68 @@ public class Vehicle implements ActionListener {
                     velocity = vehicleAhead.velocity;
                     vehicleAhead = null;
                 }
-                break;
-            default:
-                break;
-
-        }
-        this.vehiclePosition.y += (int) velocity;
-        this.trans.setToTranslation(vehiclePosition.x, vehiclePosition.y);
-        this.trans.rotate(Math.toRadians(mCurAngle), (double) mImage.getWidth(imgObserve) / 2, (double) mImage.getHeight(imgObserve) / 2);
-    }
-
-    private void moveX() {
-        velocity = vehVelo;        //velocity should be a function of acceleration
-
-        if (vDirection == VehicleDirection.LEFT) {
-            if (!passedTrafficLight && !trafficLight.forwardGo)
-                vState = VehicleState.BRAKE;
-
-            if (vehiclePosition.x < movingLeftPos && !turn) {
-                passedTrafficLight = true;
-                if (command == Command.TURN_LEFT) {
-                    vDirection = VehicleDirection.LEFT_UP;
-                    vState = VehicleState.TURNING;
-                    turn = true;
-                }
-            }
-            if (velocity > 0) {
-                velocity *= -1;
-                mCurAngle = 180;
-            }
-            if (vehicleAhead != null) {
-                accelerate(vehiclePosition.x, vehicleAhead.vehiclePosition.x + 120);
-                if (acceleration > 0) {
-                    acceleration = 0;
-                    velocity = vehicleAhead.getSpeed();
-                }
-                velocity += acceleration;
-            }
-
-        } else if (vDirection == VehicleDirection.RIGHT) {
-            if (!passedTrafficLight && !trafficLight.forwardGo)
-                vState = VehicleState.BRAKE;
-
-            if (vehiclePosition.x > movingRightPos) {
-                passedTrafficLight = true;
-
-                if (command == Command.TURN_RIGHT) {
-                    vDirection = VehicleDirection.RIGHT_DOWN;
-                    vState = VehicleState.TURNING;
-                    turn = true;
-                }
-            }
-            if (velocity < 0) {
-                velocity *= -1;
-                mCurAngle = 0;
-            }
-            if (vehicleAhead != null) {
-                if (acceleration > 0)
-                    accelerate(vehiclePosition.x, vehicleAhead.vehiclePosition.x - 150);
-                else
-                    acceleration = 0;
-                acceleration *= -1;
-                velocity += acceleration;
             }
         }
 
-        this.vehiclePosition.x += (int) velocity;
+        switch (vDirection) {
+            case LEFT -> {
+                if (!passedTrafficLight && !trafficLight.forwardGo)
+                    vState = VehicleState.BRAKE;
+
+                if (vehiclePosition.x < movingLeftPos && !turn) {
+                    passedTrafficLight = true;
+                    if (command == Command.TURN_LEFT) {
+                        vDirection = VehicleDirection.LEFT_UP;
+                        vState = VehicleState.TURNING;
+                        turn = true;
+                    }
+                }
+                if (velocity > 0) {
+                    velocity *= -1;
+                    mCurAngle = 180;
+                }
+                if (vehicleAhead != null) {
+                    accelerate(vehiclePosition.x, vehicleAhead.vehiclePosition.x + 120);
+                    if (acceleration > 0) {
+                        acceleration = 0;
+                        velocity = vehicleAhead.getSpeed();
+                    }
+                    velocity += acceleration;
+                }
+            }
+            case RIGHT -> {
+                if (!passedTrafficLight && !trafficLight.forwardGo)
+                    vState = VehicleState.BRAKE;
+
+                if (vehiclePosition.x > movingRightPos) {
+                    passedTrafficLight = true;
+
+                    if (command == Command.TURN_RIGHT) {
+                        vDirection = VehicleDirection.RIGHT_DOWN;
+                        vState = VehicleState.TURNING;
+                        turn = true;
+                    }
+                }
+                if (velocity < 0) {
+                    velocity *= -1;
+                    mCurAngle = 0;
+                }
+                if (vehicleAhead != null) {
+                    if (acceleration > 0)
+                        accelerate(vehiclePosition.x, vehicleAhead.vehiclePosition.x - 150);
+                    else
+                        acceleration = 0;
+                    acceleration *= -1;
+                    velocity += acceleration;
+                }
+            }
+        }
+
+        if (vDirection == VehicleDirection.UP || vDirection == VehicleDirection.DOWN) {
+            this.vehiclePosition.y += (int) velocity;
+        } else {
+            this.vehiclePosition.x += (int) velocity;
+        }
         this.trans.setToTranslation(vehiclePosition.x, vehiclePosition.y);
         this.trans.rotate(Math.toRadians(mCurAngle), (double) mImage.getWidth(imgObserve) / 2, (double) mImage.getHeight(imgObserve) / 2);
     }
@@ -408,7 +400,7 @@ public class Vehicle implements ActionListener {
     private void turning() {
         this.trafficLight = null;
         switch (command) {
-            case TURN_LEFT:
+            case TURN_LEFT -> {
                 switch (vDirection) {
                     case DOWN:
                         if (mCurAngle == 180) {                        //if we reach the angle 180, we have to change the vehicle State
@@ -450,9 +442,8 @@ public class Vehicle implements ActionListener {
 
                 }
                 //System.out.println("Should be turning");
-                break;
-
-            case TURN_RIGHT:
+            }
+            case TURN_RIGHT -> {
                 switch (vDirection) {
                     case UP_RIGHT:
                         if (mCurAngle == 0) {                        //if we reach the angle 180, we have to change the vehicle State
@@ -489,12 +480,10 @@ public class Vehicle implements ActionListener {
                     default:
                         break;
                 }
-                break;
-
-            default:
-                break;
+            }
+            default -> {
+            }
         }
-        //nothing for now
     }
 
     private void brake() {
