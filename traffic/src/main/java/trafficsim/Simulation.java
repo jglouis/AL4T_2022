@@ -24,10 +24,10 @@ public class Simulation extends JPanel implements ActionListener {
 
     private final Random random = new Random();
     //Arrays of vehicles in each direction
-    private final ArrayList<Vehicle> vehiclesRight;
-    private final ArrayList<Vehicle> vehiclesDown;
-    private final ArrayList<Vehicle> vehiclesLeft;
-    private final ArrayList<Vehicle> vehiclesUp;
+    private final ArrayList<Vehicle> vehiclesRight = new ArrayList<>();
+    private final ArrayList<Vehicle> vehiclesDown = new ArrayList<>();
+    private final ArrayList<Vehicle> vehiclesLeft = new ArrayList<>();
+    private final ArrayList<Vehicle> vehiclesUp = new ArrayList<>();
 
     private final String[] carImages = {"/car1.png", "/car2.png", "/car3.png", "/car4.png",
             "/ambulance.png", "/police.png", "/truck1.png", "/truck2.png"};
@@ -191,42 +191,41 @@ public class Simulation extends JPanel implements ActionListener {
 
     public Simulation() {
         trafficLights = new ArrayList<>();
+        addTrafficLight(349, 147, 180, 0, 1,
+                new Vector2(349, 147),
+                new Vector2(349 + 23, 147),
+                new Vector2(349 + 47, 147));
 
-        TrafficLight t1 = new TrafficLight(getClass().getResourceAsStream("/trafficLight.png"), 349, 147, 180, 0, 1, this);
-        t1.setLeft_light_pos(new Vector2(349, 147));
-        t1.setForward_pos(new Vector2(349 + 23, 147));
-        t1.setRight_light_pos(new Vector2(349 + 47, 147));
-        trafficLights.add(t1);
+        addTrafficLight(302, 530, 90, 1, 2,
+                new Vector2(322, 511),
+                new Vector2(322, 533),
+                new Vector2(322, 558));
 
-        TrafficLight t2 = new TrafficLight(getClass().getResourceAsStream("/trafficLight.png"), 302, 530, 90, 1, 2, this);
-        t2.setLeft_light_pos(new Vector2(322, 511));
-        t2.setForward_pos(new Vector2(322, 533));
-        t2.setRight_light_pos(new Vector2(322, 558));
-        trafficLights.add(t2);
+        addTrafficLight(1077, 585, 0, 0, 3,
+                new Vector2(1079, 585),
+                new Vector2(1077 + 25, 585),
+                new Vector2(1077 + 48, 585));
 
-        TrafficLight t3 = new TrafficLight(getClass().getResourceAsStream("/trafficLight.png"), 1077, 585, 0, 0, 3, this);
-        t3.setLeft_light_pos(new Vector2(1079, 585));
-        t3.setForward_pos(new Vector2(1077 + 25, 585));
-        t3.setRight_light_pos(new Vector2(1077 + 48, 585));
-        trafficLights.add(t3);
+        addTrafficLight(1125, 195, -90, 1, 4,
+                new Vector2(1145, 175),
+                new Vector2(1145, 175 + 25),
+                new Vector2(1145, 175 + 47));
 
-        TrafficLight t4 = new TrafficLight(getClass().getResourceAsStream("/trafficLight.png"), 1125, 195, -90, 1, 4, this);
-        t4.setLeft_light_pos(new Vector2(1145, 175));
-        t4.setForward_pos(new Vector2(1145, 175 + 25));
-        t4.setRight_light_pos(new Vector2(1145, 175 + 47));
-        trafficLights.add(t4);
-
-        vehiclesRight = new ArrayList<>();
-        vehiclesLeft = new ArrayList<>();
-        vehiclesDown = new ArrayList<>();
-        vehiclesUp = new ArrayList<>();
         try {
-
             car1 = ImageIO.read(getClass().getResourceAsStream("/car1.jpg"));
             mTerrain = ImageIO.read(getClass().getResourceAsStream("/road1.jpg"));
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    private void addTrafficLight(int x, int y, int rotation, int signalType, int id,
+                                 Vector2 leftPos, Vector2 forwardPos, Vector2 rightPos) {
+        TrafficLight t = new TrafficLight(getClass().getResourceAsStream("/trafficLight.png"), x, y, rotation, signalType, id, this);
+        t.setLeft_light_pos(leftPos);
+        t.setForward_pos(forwardPos);
+        t.setRight_light_pos(rightPos);
+        trafficLights.add(t);
     }
 }
