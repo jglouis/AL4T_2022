@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 
@@ -69,7 +70,7 @@ public class Simulation extends JPanel implements ActionListener {
         //Draw trafficLights
         for (TrafficLight t : trafficLights) {
             //Draw the lights
-            Color colors[] = t.getCurrentLightColor();
+            Color[] colors = t.getCurrentLightColor();
             if (t.getOrientation() == 0) {
                 g2D.setColor(colors[1]);
                 g2D.fillRect(t.getForward_pos().x, t.getForward_pos().y, 21, 29);
@@ -212,11 +213,10 @@ public class Simulation extends JPanel implements ActionListener {
                 new Vector2(1145, 175 + 47));
 
         try {
-            car1 = ImageIO.read(getClass().getResourceAsStream("/car1.jpg"));
-            mTerrain = ImageIO.read(getClass().getResourceAsStream("/road1.jpg"));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            car1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/car1.jpg")));
+            mTerrain = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/road1.jpg")));
+        } catch (IOException | NullPointerException e) {
+            System.exit(1);
         }
     }
 
