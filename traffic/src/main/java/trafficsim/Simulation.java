@@ -9,19 +9,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
 
 
 public class Simulation extends JPanel implements ActionListener {
-    private Image car1;
     private Image mTerrain;
     private final Timer tm = new Timer(1, this);
-    private int x = 0, velX = 2;
-    private float mAngle = 0;
 
     private final Random random = new Random();
     //Arrays of vehicles in each direction
@@ -41,8 +38,6 @@ public class Simulation extends JPanel implements ActionListener {
         LEFT, UP, RIGHT, DOWN
     }
 
-    float move = 0;
-
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D) g;
@@ -50,8 +45,7 @@ public class Simulation extends JPanel implements ActionListener {
         g2D.drawImage(mTerrain, 0, 0, this);
 
         //displays all cars going in the right direction
-        ArrayList<Vehicle>[] allVehicles = new ArrayList[]{vehiclesRight, vehiclesLeft, vehiclesDown, vehiclesUp};
-        for (ArrayList<Vehicle> list : allVehicles)
+        for (ArrayList<Vehicle> list : Arrays.asList(vehiclesRight, vehiclesLeft, vehiclesDown, vehiclesUp))
             for (int i = 0; i < list.size(); i++) {
                 Vehicle v = list.get(i);
                 if (v.isInView())
@@ -60,12 +54,6 @@ public class Simulation extends JPanel implements ActionListener {
                     list.remove(v);
                 }
             }
-
-        AffineTransform identity = g2D.getTransform();
-
-        identity.setToTranslation(300, 200 + move);
-        identity.rotate(Math.toRadians(mAngle), car1.getWidth(this), car1.getHeight(this));
-
 
         //Draw trafficLights
         for (TrafficLight t : trafficLights) {
@@ -89,22 +77,12 @@ public class Simulation extends JPanel implements ActionListener {
             g2D.drawImage(t.getLayoutImg(), t.getTrans(), this);
 
         }
-
-
         if (!tm.isRunning())
             tm.start();
     }
 
     public void actionPerformed(ActionEvent e) {
         carSpawnTimer++;
-        if (x < 0 || x > 550)
-            velX = -velX;
-        x = x + velX;
-        if (mAngle < 450)
-            move += 0.2;
-        else
-            move += 2;
-        steerTowards(450, 120);
 
         //This section is where cars are created, every 800s
         if (carSpawnTimer % 500 == 0) {
@@ -175,21 +153,6 @@ public class Simulation extends JPanel implements ActionListener {
         }
     }
 
-    //simple function to test our steering
-
-    /**
-     * @param angle the final angle you want the car to positioned at relative to the normal
-     * @param time  the time in seconds you want the car to take to position itself at "angle"
-     */
-    private void steerTowards(float angle, float time) {
-        //first we calculate the angular velocity required to get the vehicle to angle in time t
-        float angularVel = angle / time;
-
-        if (Math.abs(mAngle) < Math.abs(angle))
-            mAngle += angularVel;
-
-    }
-
     public Simulation() {
         trafficLights = new ArrayList<>();
         addTrafficLight(349, 147, 180, 0, 1,
@@ -213,7 +176,6 @@ public class Simulation extends JPanel implements ActionListener {
                 new Vector2(1145, 175 + 47));
 
         try {
-            car1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/car1.jpg")));
             mTerrain = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/road1.jpg")));
         } catch (IOException | NullPointerException e) {
             System.exit(1);
