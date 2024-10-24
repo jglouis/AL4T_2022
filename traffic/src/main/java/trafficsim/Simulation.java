@@ -178,6 +178,7 @@ public class Simulation extends JPanel implements ActionListener {
         try {
             mTerrain = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/road1.jpg")));
         } catch (IOException | NullPointerException e) {
+            System.err.println(e.getMessage());
             System.exit(1);
         }
     }

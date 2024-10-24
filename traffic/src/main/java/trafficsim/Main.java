@@ -12,7 +12,8 @@ public class Main {
         jF.setSize(1366, 750);
         jF.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jF.setVisible(true);
-        final SoundManager manager = new SoundManager();
+        final SoundManager soundManager = new SoundManager();
+        soundManager.play();
         jF.addWindowListener(new WindowListener() {
             public void windowOpened(WindowEvent e) {
             }
@@ -30,12 +31,11 @@ public class Main {
             }
 
             public void windowClosed(WindowEvent e) {
-                manager.clip.close();
+                soundManager.close();
             }
 
             public void windowActivated(WindowEvent e) {
             }
         });
-        manager.clip.close();
     }
 }

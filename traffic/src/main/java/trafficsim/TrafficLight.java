@@ -80,6 +80,7 @@ public class TrafficLight implements ActionListener {
             trans.setToTranslation(position.x, position.y);
             trans.rotate(Math.toRadians(angle), (double) layoutImg.getWidth(iObs) / 2, (double) layoutImg.getHeight(iObs) / 2);
         } catch (IOException e) {
+            System.err.println(e.getMessage());
             System.exit(1);
         }
 
