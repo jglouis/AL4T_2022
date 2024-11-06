@@ -50,10 +50,6 @@ public class Vehicle implements ActionListener {
 	private Vector2 DOWN_UP_POS = new Vector2(920, 840);
 	private Vector2 UP_DOWN_POS = new Vector2(520, -100);
 	
-	//Terrain constants
-	//private final Vector2 MAX_POS = new Vector2(1100, 700);
-	//private final Vector2 MIN_POS = new Vector2(-150, -150);
-	
 	//Junction Turning Constants
 	private final Vector2 DOWN_LEFT = new Vector2(360, 0);
 	private final Vector2 RIGHT_UP  = new Vector2(0, 325);
@@ -180,8 +176,7 @@ public class Vehicle implements ActionListener {
 			
 			
 		} catch (IOException e) {
-			System.out.println("Can't find image");
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		}
 	}
 	
@@ -304,11 +299,6 @@ public class Vehicle implements ActionListener {
 			vState = VehicleState.BRAKE;		
 		}
 		
-		/*if(command == Command.TURN_LEFT || command == Command.TURN_RIGHT){
-			vState = VehicleState.TURNING;
-			//System.out.println("State: " +vState.name());
-		}*/
-		
 		switch(vState){
 		case BRAKE:
 			switch(vDirection){
@@ -321,7 +311,7 @@ public class Vehicle implements ActionListener {
 					accelerate(vehiclePosition.x, movingLeftPos);
 					velocity += acceleration;
 					if(vehiclePosition.x >= movingLeftPos){
-						
+
 						this.vehiclePosition.x += velocity;
 					}
 				}else{
@@ -438,9 +428,7 @@ public class Vehicle implements ActionListener {
 					vehiclePosition.x -= Math.abs(velocity - 2);
 					if(vehiclePosition.y <= movingDownPos + 80)
 						vehiclePosition.y += Math.abs(velocity-3);
-					
-					//System.out.println("Vehicle ahead null: " + vehicleAhead);
-					
+
 					this.trans.setToTranslation(vehiclePosition.x, vehiclePosition.y);
 					this.trans.rotate(Math.toRadians(mCurAngle), mImage.getWidth(imgObserve)/2, mImage.getHeight(imgObserve)/2);
 					break;
@@ -456,9 +444,7 @@ public class Vehicle implements ActionListener {
 					vehiclePosition.y -= Math.abs(velocity - 2);
 					if(vehiclePosition.x >= movingLeftPos - 100)
 						vehiclePosition.x -= 5;
-					
-					//System.out.println("Vehicle ahead null: " + vehicleAhead);
-					
+
 					this.trans.setToTranslation(vehiclePosition.x, vehiclePosition.y);
 					this.trans.rotate(Math.toRadians(mCurAngle), mImage.getWidth(imgObserve)/2, mImage.getHeight(imgObserve)/2);
 					break;
@@ -466,7 +452,6 @@ public class Vehicle implements ActionListener {
 					break;
 					
 				}
-				//System.out.println("Should be turning");
 				break;
 				
 			case TURN_RIGHT:
