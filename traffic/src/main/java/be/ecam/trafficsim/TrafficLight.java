@@ -1,4 +1,4 @@
-package trafficsim;
+package be.ecam.trafficsim;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

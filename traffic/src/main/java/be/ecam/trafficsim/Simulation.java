@@ -1,7 +1,7 @@
-package trafficsim;
+package be.ecam.trafficsim;
 
-import trafficsim.Vehicle.VehicleDirection;
-import trafficsim.Vehicle.VehicleState;
+import be.ecam.trafficsim.Vehicle.VehicleDirection;
+import be.ecam.trafficsim.Vehicle.VehicleState;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

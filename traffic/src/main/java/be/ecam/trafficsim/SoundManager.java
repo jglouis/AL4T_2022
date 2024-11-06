@@ -1,4 +1,4 @@
-package trafficsim;
+package be.ecam.trafficsim;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
