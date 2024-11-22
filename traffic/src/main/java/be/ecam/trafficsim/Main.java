@@ -20,7 +20,7 @@ public class Main {
         try {
             sounds = Map.of(
                     "traffic", Objects.requireNonNull(Main.class.getResourceAsStream("/Traffic Sounds - Free Sound Effects - Traffic Sound Clips - Sound Bites.wav")),
-                    "drift", Objects.requireNonNull(Main.class.getResourceAsStream(""))
+                    "drift", Objects.requireNonNull(Main.class.getResourceAsStream("/drift.wav"))
             );
         } catch (NullPointerException e) {
             System.err.println(e.getMessage());
