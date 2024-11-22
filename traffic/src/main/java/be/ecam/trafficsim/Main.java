@@ -12,6 +12,7 @@ public class Main {
         jF.setSize(1366, 750);
         jF.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jF.setVisible(true);
+        // TODO construct the list of input streams for sounds
         final SoundManager soundManager = new SoundManager();
         soundManager.play();
         jF.addWindowListener(new WindowListener() {
