@@ -3,18 +3,19 @@ package be.ecam.trafficsim;
 import javax.sound.sampled.*;
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.Objects;
+import java.io.InputStream;
+import java.util.Map;
 
 public class SoundManager implements Closeable {
     private final Clip clip;
     private final Clip driftClip;
 
-    public SoundManager() {
+    public SoundManager(Map<String, InputStream> inputs) {
         Clip clip = null;
         Clip driftClip = null;
         try {
-            AudioInputStream inputStream = AudioSystem.getAudioInputStream(Objects.requireNonNull(getClass().getResourceAsStream("/Traffic Sounds - Free Sound Effects - Traffic Sound Clips - Sound Bites.wav")));
-            AudioInputStream driftStream = AudioSystem.getAudioInputStream(Objects.requireNonNull(getClass().getResourceAsStream("/drift.wav")));
+            AudioInputStream inputStream = AudioSystem.getAudioInputStream(inputs.get("traffic"));
+            AudioInputStream driftStream = AudioSystem.getAudioInputStream(inputs.get("drift"));
             clip = AudioSystem.getClip();
             driftClip = AudioSystem.getClip();
             clip.open(inputStream);
