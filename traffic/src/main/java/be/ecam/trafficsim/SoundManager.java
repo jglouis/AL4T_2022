@@ -3,24 +3,32 @@ package be.ecam.trafficsim;
 import javax.sound.sampled.*;
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.Objects;
+import java.io.InputStream;
+import java.util.List;
 
 public class SoundManager implements Closeable {
     private final Clip clip;
     private final Clip driftClip;
 
-    public SoundManager() {
+    public SoundManager(List<InputStream> inputs) {
+        if (inputs == null || inputs.size() < 2) {
+            throw new IllegalArgumentException("At least two input streams are required.");
+        }
+
         Clip clip = null;
         Clip driftClip = null;
         try {
-            AudioInputStream inputStream = AudioSystem.getAudioInputStream(Objects.requireNonNull(getClass().getResourceAsStream("/Traffic Sounds - Free Sound Effects - Traffic Sound Clips - Sound Bites.wav")));
-            AudioInputStream driftStream = AudioSystem.getAudioInputStream(Objects.requireNonNull(getClass().getResourceAsStream("/drift.wav")));
+            // Use the provided InputStreams
+            AudioInputStream inputStream = AudioSystem.getAudioInputStream(inputs.get(0));
+            AudioInputStream driftStream = AudioSystem.getAudioInputStream(inputs.get(1));
+
             clip = AudioSystem.getClip();
             driftClip = AudioSystem.getClip();
+
             clip.open(inputStream);
             driftClip.open(driftStream);
-        } catch (NullPointerException | UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            System.err.println(e.getMessage());
+        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
+            System.err.println("Error initializing SoundManager: " + e.getMessage());
             System.exit(1);
         }
         this.clip = clip;

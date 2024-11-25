@@ -11,7 +11,7 @@ public class QuitTest {
     @Test
     void execute() {
         Quit quit = new Quit();
-        System.setSecurityManager(new NoExitSecurityManager());
+        //System.setSecurityManager(new NoExitSecurityManager());
         assertThrows(ExitException.class, quit::execute);
     }
 }

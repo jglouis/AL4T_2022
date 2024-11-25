@@ -1,23 +1,19 @@
 package be.ecam.trafficsim;
 
+import org.jetbrains.annotations.NotNull;
 import be.ecam.trafficsim.Vehicle.VehicleDirection;
 import be.ecam.trafficsim.Vehicle.VehicleState;
-import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
-
 
 
 public class Simulation extends JPanel implements ActionListener {
@@ -164,108 +160,35 @@ public class Simulation extends JPanel implements ActionListener {
                 new Vector2(349 + 23, 147),
                 new Vector2(349 + 47, 147));
 
-		trafficLights = new ArrayList<TrafficLight>();
-		
-		TrafficLight t1 = new TrafficLight(getClass().getResourceAsStream("/trafficLight.png"), 349, 147, 180, 0, 1, this);
-		t1.setLeft_light_pos(new Vector2(349,147));
-		t1.setForward_pos(new Vector2(349+23, 147));
-		t1.setRight_light_pos(new Vector2(349+47, 147));
-		trafficLights.add(t1);
-		
-		TrafficLight t2 = new TrafficLight(getClass().getResourceAsStream("/trafficLight.png"), 302, 530, 90, 1, 2, this);
-		t2.setLeft_light_pos(new Vector2(322,511));
-		t2.setForward_pos(new Vector2(322,533));
-		t2.setRight_light_pos(new Vector2(322, 558));
-		trafficLights.add(t2);
-		
-		TrafficLight t3 = new TrafficLight(getClass().getResourceAsStream("/trafficLight.png"), 1077, 585, 0, 0, 3, this);
-		t3.setLeft_light_pos(new Vector2(1079, 585));
-		t3.setForward_pos(new Vector2(1077+25, 585));
-		t3.setRight_light_pos(new Vector2(1077+48, 585));
-		trafficLights.add(t3);
-		
-		TrafficLight t4 = new TrafficLight(getClass().getResourceAsStream("/trafficLight.png"), 1125, 195, -90, 1, 4, this);
-		t4.setLeft_light_pos(new Vector2(1145, 175));
-		t4.setForward_pos(new Vector2(1145, 175+25));
-		t4.setRight_light_pos(new Vector2(1145, 175+47));
-		trafficLights.add(t4);
-		
-		v1 = new Vehicle(getClass().getResourceAsStream("/car1.jpg"), 6, VehicleState.MOVE_X, VehicleDirection.RIGHT, trafficLights.get(1),this, null, 0);
-		v2 = new Vehicle(getClass().getResourceAsStream("/car1.jpg"), 5, VehicleState.MOVE_Y, VehicleDirection.DOWN, trafficLights.get(0),this, null, 0);
-		v3 = new Vehicle(getClass().getResourceAsStream("/car1.jpg"), 6, VehicleState.MOVE_X, VehicleDirection.LEFT, trafficLights.get(3),this, null, 0);
-		v4 = new Vehicle(getClass().getResourceAsStream("/car1.jpg"), 5, VehicleState.MOVE_Y, VehicleDirection.UP, trafficLights.get(2),this, null, 0);
-		
-		vehiclesRight = new ArrayList<Vehicle>();
-		vehiclesLeft = new ArrayList<Vehicle>();
-		vehiclesDown = new ArrayList<Vehicle>();
-		vehiclesUp = new ArrayList<Vehicle>();
-		vehiclesRight.add(v1); vehiclesDown.add(v2); vehiclesLeft.add(v3); vehiclesUp.add(v4);
-		
-		
-		try {
-			car1 = ImageIO.read(getClass().getResourceAsStream("/car1.jpg"));
-			mTerrain = ImageIO.read(getClass().getResourceAsStream("/road1.jpg"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        addTrafficLight(302, 530, 90, 1, 2,
+                new Vector2(322, 511),
+                new Vector2(322, 533),
+                new Vector2(322, 558));
 
-	}
-	
-	public static void main(String args[]){
-	
-		JFrame jF = new JFrame("Traffic Simulation");
-		Simulation sim = new Simulation();
-		jF.setContentPane(sim);
-		jF.setSize(1366, 750);
-		jF.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jF.setVisible(true);
-		final SoundManager manager = new SoundManager();
-		jF.addWindowListener(new WindowListener() {
-			
-			public void windowOpened(WindowEvent e) {
-				
-				
-			}
-			
-			public void windowIconified(WindowEvent e) {
-			
-				
-			}
-			
-			public void windowDeiconified(WindowEvent e) {
-				
-				
-			}
-			
-			public void windowDeactivated(WindowEvent e) {
-			
-				
-			}
-			
-			public void windowClosing(WindowEvent e) {
-				
-				
-			}
-			
-			public void windowClosed(WindowEvent e) {
-			
-				manager.clip.close();
-				
-			}
-			
-			public void windowActivated(WindowEvent e) {
-			
-				
-			}
-		});
-		
-		
-		manager.clip.close();
-		
-		
-	
-		
-	}
+        addTrafficLight(1077, 585, 0, 0, 3,
+                new Vector2(1079, 585),
+                new Vector2(1077 + 25, 585),
+                new Vector2(1077 + 48, 585));
 
+        addTrafficLight(1125, 195, -90, 1, 4,
+                new Vector2(1145, 175),
+                new Vector2(1145, 175 + 25),
+                new Vector2(1145, 175 + 47));
+
+        try {
+            mTerrain = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/road1.jpg")));
+        } catch (IOException | NullPointerException e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
+    }
+
+    private void addTrafficLight(int x, int y, int rotation, int signalType, int id,
+                                 Vector2 leftPos, Vector2 forwardPos, Vector2 rightPos) {
+        TrafficLight t = new TrafficLight(getClass().getResourceAsStream("/trafficLight.png"), x, y, rotation, signalType, id, this);
+        t.setLeftLightPosition(leftPos);
+        t.setForwardPosition(forwardPos);
+        t.setRightLightPosition(rightPos);
+        trafficLights.add(t);
+    }
 }

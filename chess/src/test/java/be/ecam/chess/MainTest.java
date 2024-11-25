@@ -12,7 +12,7 @@ class MainTest {
 
     @Test
     void main() {
-        System.setSecurityManager(new NoExitSecurityManager());
+        //System.setSecurityManager(new NoExitSecurityManager());
 
         // Can be seen as some kind of integration test
         InputStream in = new ByteArrayInputStream("""                
