@@ -3,6 +3,7 @@ package be.ecam.trafficsim;
 import javax.swing.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import be.ecam.trafficsim.Simulation;
 
 public class Main {
     public static void main(String[] args) {
