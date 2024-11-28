@@ -11,18 +11,22 @@ public class SoundManager implements Closeable {
     private final Clip clip;
     private final Clip driftClip;
 
-    // TODO refactor the SoundManager
-    // - remove the hardcoded file names in this class
-    // - instead Use InputStream interface to respect SOLID principles
-    public SoundManager(/*List<InputStream> inputs*/) {
-        Clip clip = null;
+    // DONE refactor the SoundManager V
+    // - remove the hardcoded file names in this class V
+    // - instead Use InputStream interface to respect SOLID principles V
+    public SoundManager(List<InputStream> inputs) {
+
         Clip driftClip = null;
+        Clip clip = null;
+
         try {
-            // TODO use inputs
-            AudioInputStream inputStream = AudioSystem.getAudioInputStream(Objects.requireNonNull(getClass().getResourceAsStream("/Traffic Sounds - Free Sound Effects - Traffic Sound Clips - Sound Bites.wav")));
-            AudioInputStream driftStream = AudioSystem.getAudioInputStream(Objects.requireNonNull(getClass().getResourceAsStream("/drift.wav")));
+            // DONE use inputs V
+            AudioInputStream inputStream = AudioSystem.getAudioInputStream(inputs.get(0));
+            AudioInputStream driftStream = AudioSystem.getAudioInputStream(inputs.get(1));
+
             clip = AudioSystem.getClip();
             driftClip = AudioSystem.getClip();
+
             clip.open(inputStream);
             driftClip.open(driftStream);
         } catch (NullPointerException | UnsupportedAudioFileException | IOException | LineUnavailableException e) {
