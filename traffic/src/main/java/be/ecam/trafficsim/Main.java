@@ -27,7 +27,9 @@ public class Main {
             System.exit(1);
         }
         final SoundManager soundManager = new SoundManager(sounds);
-        soundManager.play();
+        soundManager.playContinuousLoop("traffic");
+        // TODO this should be played when a car is actually braking
+//        soundManager.playContinuousLoop("drift");
 
         jF.addWindowListener(new WindowListener() {
             public void windowOpened(WindowEvent e) {
