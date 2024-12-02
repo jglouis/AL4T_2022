@@ -57,4 +57,8 @@ public class VehicleDrawable implements ActionListener {
     public AffineTransform getTrans() {
         return trans;
     }
+
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
 }

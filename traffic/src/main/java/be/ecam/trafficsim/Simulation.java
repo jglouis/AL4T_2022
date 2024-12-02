@@ -23,10 +23,6 @@ public class Simulation extends JPanel implements ActionListener {
 
     private final Random random = new Random();
     //Arrays of vehicles in each direction
-    private final ArrayList<Vehicle> vehiclesRight = new ArrayList<>();
-    private final ArrayList<Vehicle> vehiclesDown = new ArrayList<>();
-    private final ArrayList<Vehicle> vehiclesLeft = new ArrayList<>();
-    private final ArrayList<Vehicle> vehiclesUp = new ArrayList<>();
 
     private final ArrayList<VehicleDrawable> vehiclesDrawableRight = new ArrayList<>();
     private final ArrayList<VehicleDrawable> vehiclesDrawableDown = new ArrayList<>();
@@ -50,7 +46,6 @@ public class Simulation extends JPanel implements ActionListener {
 
         g2D.drawImage(mTerrain, 0, 0, this);
 
-        //displays all cars going in the right direction
         for (ArrayList<VehicleDrawable> list : Arrays.asList(
                 vehiclesDrawableRight, vehiclesDrawableLeft, vehiclesDrawableDown, vehiclesDrawableUp))
             for (int i = 0; i < list.size(); i++) {
@@ -105,35 +100,30 @@ public class Simulation extends JPanel implements ActionListener {
     }
 
     private void spawnCar(@NotNull Direction direction) {
-        ArrayList<Vehicle> list;
         ArrayList<VehicleDrawable> listDrawable;
         VehicleDirection vehicleDirection;
         VehicleState vehicleState;
         TrafficLight trafficLight;
         switch (direction) {
             case LEFT -> {
-                list = vehiclesLeft;
                 listDrawable = vehiclesDrawableLeft;
                 vehicleDirection = VehicleDirection.LEFT;
                 vehicleState = VehicleState.MOVE_X;
                 trafficLight = trafficLights.get(3);
             }
             case UP -> {
-                list = vehiclesUp;
                 listDrawable = vehiclesDrawableUp;
                 vehicleDirection = VehicleDirection.UP;
                 vehicleState = VehicleState.MOVE_Y;
                 trafficLight = trafficLights.get(2);
             }
             case RIGHT -> {
-                list = vehiclesRight;
                 listDrawable = vehiclesDrawableRight;
                 vehicleDirection = VehicleDirection.RIGHT;
                 vehicleState = VehicleState.MOVE_X;
                 trafficLight = trafficLights.get(1);
             }
             case DOWN -> {
-                list = vehiclesDown;
                 listDrawable = vehiclesDrawableDown;
                 vehicleDirection = VehicleDirection.DOWN;
                 vehicleState = VehicleState.MOVE_Y;
@@ -141,26 +131,25 @@ public class Simulation extends JPanel implements ActionListener {
             }
             default -> throw new IllegalStateException("Unexpected value: " + direction);
         }
-        if (list.size() < 30) {
-            int line = (list.size()) / 3;
+        if (listDrawable.size() < 30) {
+            int line = (listDrawable.size()) / 3;
             int vAheadID = 1000;
             if (line > 0) {
-                vAheadID = list.size() - 3;
+                vAheadID = listDrawable.size() - 3;
             }
             int carImageId = random.nextInt(carImages.length);
             //int spd = 7- random.nextInt(2);
             Vehicle vehicleAhead = null;
-            if (vAheadID < list.size()) {
-                vehicleAhead = list.get(vAheadID);
+            if (vAheadID < listDrawable.size()) {
+                vehicleAhead = listDrawable.get(vAheadID).getVehicle();
             }
             try {
-                Vehicle vehicle = new Vehicle(6, vehicleState, vehicleDirection, trafficLight, vehicleAhead, list.size());
+                Vehicle vehicle = new Vehicle(6, vehicleState, vehicleDirection, trafficLight, vehicleAhead, listDrawable.size());
                 VehicleDrawable vehicleDrawable = new VehicleDrawable(
                         getClass().getResourceAsStream(carImages[carImageId]),
                         vehicle,
                         this
                 );
-                list.add(vehicle);
                 listDrawable.add(vehicleDrawable);
             } catch (IOException e) {
                 //TODO
