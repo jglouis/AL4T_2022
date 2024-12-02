@@ -1,20 +1,8 @@
 package be.ecam.trafficsim;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.geom.AffineTransform;
-import java.awt.image.ImageObserver;
-import java.io.IOException;
-import java.io.InputStream;
-
-public class Vehicle implements ActionListener {
+public class Vehicle {
 
     private TrafficLight trafficLight;
-    private final ImageObserver imgObserve;
-    private Image mImage;                                                //Image of vehicle
     private float velocity, acceleration = 0f, vehVelo;                                                    //Max speed of vehicle
     private float mCurAngle;                                            //Current angle of vehicle relative to normal
 
@@ -22,14 +10,15 @@ public class Vehicle implements ActionListener {
         LEFT, RIGHT, UP, DOWN, DOWN_LEFT, RIGHT_UP,
         RIGHT_DOWN, LEFT_UP, UP_LEFT, UP_RIGHT
     }
+
     public enum VehicleState {BRAKE, MOVE_X, MOVE_Y, TURNING}
+
     public enum Command {GO_STRAIGHT, TURN_LEFT, TURN_RIGHT}
 
     private Vector2 vehiclePosition;                                    //the position of vehicle
     private VehicleState vState;
     private final VehicleState vPrev;                                        //Stores current vehicle state
     private VehicleDirection vDirection;                                //Stores current vehicle direction
-    private AffineTransform trans;                                        //The transformation of vehicle
 
     private boolean passedTrafficLight;
 
@@ -53,140 +42,114 @@ public class Vehicle implements ActionListener {
      * Sets the current vehicle state to BRAKE
      * Sets current angle to 0
      *
-     * @param src Loads the vehicle image
      * @param vel Sets the vehicle max speed
      */
 
-    public Vehicle(InputStream src, int vel, VehicleState vehState, VehicleDirection vDir, TrafficLight tl, ImageObserver imObs, Vehicle vAhead, int index) {
+    public Vehicle(int vel, VehicleState vehState, VehicleDirection vDir, TrafficLight tl, Vehicle vAhead, int index) {
         vState = vehState;
         vehicleAhead = vAhead;
         vPrev = vState;                        //store previous state of vehicle
         vDirection = vDir;
-        imgObserve = imObs;
         trafficLight = tl;
         command = Command.GO_STRAIGHT;
-        try {
-            mImage = ImageIO.read(src);
-            //Random ran = new Random();
-            //int turnBool;
-            //Position Constants
-            Vector2 RIGHT_LEFT_POS = new Vector2(1500, 265);
-            Vector2 LEFT_RIGHT_POS = new Vector2(-300, 463);
-            Vector2 DOWN_UP_POS = new Vector2(920, 840);
-            Vector2 UP_DOWN_POS = new Vector2(520, -100);
-            switch (index % 3) {
-                case 0:
-                    //right lane
-                    //turnBool = ran.nextInt(5);
-                    UP_DOWN_POS = new Vector2(UP_DOWN_POS.x + 100, UP_DOWN_POS.y);
-                    DOWN_UP_POS = new Vector2(DOWN_UP_POS.x + 100, DOWN_UP_POS.y);
-                    LEFT_RIGHT_POS = new Vector2(LEFT_RIGHT_POS.x, LEFT_RIGHT_POS.y + 70);
-                    RIGHT_LEFT_POS = new Vector2(RIGHT_LEFT_POS.x, RIGHT_LEFT_POS.y + 60);
-                    command = Command.TURN_RIGHT;
-                    break;
-                case 1:
+        //Random ran = new Random();
+        //int turnBool;
+        //Position Constants
+        Vector2 RIGHT_LEFT_POS = new Vector2(1500, 265);
+        Vector2 LEFT_RIGHT_POS = new Vector2(-300, 463);
+        Vector2 DOWN_UP_POS = new Vector2(920, 840);
+        Vector2 UP_DOWN_POS = new Vector2(520, -100);
+        switch (index % 3) {
+            case 0:
+                //right lane
+                //turnBool = ran.nextInt(5);
+                UP_DOWN_POS = new Vector2(UP_DOWN_POS.x + 100, UP_DOWN_POS.y);
+                DOWN_UP_POS = new Vector2(DOWN_UP_POS.x + 100, DOWN_UP_POS.y);
+                LEFT_RIGHT_POS = new Vector2(LEFT_RIGHT_POS.x, LEFT_RIGHT_POS.y + 70);
+                RIGHT_LEFT_POS = new Vector2(RIGHT_LEFT_POS.x, RIGHT_LEFT_POS.y + 60);
+                command = Command.TURN_RIGHT;
+                break;
+            case 1:
 
-                    break;
-                case 2:
-                    //left lane
-                    //turnBool = ran.nextInt(10);
-                    UP_DOWN_POS = new Vector2(UP_DOWN_POS.x - 120, UP_DOWN_POS.y);
-                    DOWN_UP_POS = new Vector2(DOWN_UP_POS.x - 100, DOWN_UP_POS.y);
-                    LEFT_RIGHT_POS = new Vector2(LEFT_RIGHT_POS.x, LEFT_RIGHT_POS.y - 70);
-                    RIGHT_LEFT_POS = new Vector2(RIGHT_LEFT_POS.x, RIGHT_LEFT_POS.y - 70);
-                    //if(turnBool%3 == 0)
-                    command = Command.TURN_LEFT;
-                    break;
-            }
-
-            //Set vehicle position according to the direction it's moving to
-            //Junction Turning Constants
-            Vector2 DOWN_LEFT = new Vector2(360, 0);
-            Vector2 RIGHT_UP = new Vector2(0, 325);
-            Vector2 RIGHT_DOWN = new Vector2(0, 454);
-            Vector2 LEFT_UP = new Vector2(1000, 145);
-            Vector2 UP_RIGHT = new Vector2(651, 593);
-            Vector2 UP_LEFT = new Vector2(540, 600);
-            switch (vDir) {
-                case LEFT:
-                    if (vehicleAhead != null && vehicleAhead.vehiclePosition.x > movingLeftPos) {
-                        vehiclePosition = new Vector2(vehicleAhead.vehiclePosition.x + 300, RIGHT_LEFT_POS.y);
-                    } else {
-                        vehiclePosition = RIGHT_LEFT_POS;
-                    }
-                    break;
-
-                case RIGHT:
-                    if (vehicleAhead != null && vehicleAhead.vehiclePosition.x < movingRightPos) {
-                        vehiclePosition = new Vector2(vehicleAhead.vehiclePosition.x - 300, LEFT_RIGHT_POS.y);
-                    } else
-                        vehiclePosition = LEFT_RIGHT_POS;
-                    break;
-
-                case UP:
-                    if (vehicleAhead != null && vehicleAhead.vehiclePosition.y > movingUpPos) {
-                        vehiclePosition = new Vector2(DOWN_UP_POS.x, vehicleAhead.vehiclePosition.y + 200);
-                    } else
-                        vehiclePosition = DOWN_UP_POS;
-                    break;
-
-                case DOWN:
-                    if (vehicleAhead != null && vehicleAhead.vehiclePosition.y <= movingDownPos) {
-                        vehiclePosition = new Vector2(UP_DOWN_POS.x, vehicleAhead.vehiclePosition.y - 200);
-                    } else
-                        vehiclePosition = UP_DOWN_POS;
-                    break;
-                case DOWN_LEFT:
-                    vehiclePosition = DOWN_LEFT;
-                    break;
-                case RIGHT_UP:
-                    vehiclePosition = RIGHT_UP;
-                    break;
-                case RIGHT_DOWN:
-                    vehiclePosition = RIGHT_DOWN;
-                    break;
-                case LEFT_UP:
-                    vehiclePosition = LEFT_UP;
-                    break;
-                case UP_LEFT:
-                    vehiclePosition = UP_LEFT;
-                    break;
-                case UP_RIGHT:
-                    vehiclePosition = UP_RIGHT;
-                    break;
-                default:
-                    break;
-            }
-
-            trans = new AffineTransform();
-            velocity = vel;
-            vehVelo = velocity;
-            mCurAngle = 0;
-            trans.setToTranslation(vehiclePosition.x, vehiclePosition.y);
-
-            if (vState == VehicleState.MOVE_Y) {
-                mCurAngle = 90;
-                trans.setToTranslation(vehiclePosition.x, vehiclePosition.y);
-                trans.rotate(Math.toRadians(mCurAngle), (double) mImage.getWidth(imgObserve) / 2, (double) mImage.getHeight(imgObserve) / 2);
-            }
-
-            Timer mTimer = new Timer(10, this);
-            mTimer.start();
-
-
-        } catch (IOException e) {
-            System.err.println("Can't find image");
+                break;
+            case 2:
+                //left lane
+                //turnBool = ran.nextInt(10);
+                UP_DOWN_POS = new Vector2(UP_DOWN_POS.x - 120, UP_DOWN_POS.y);
+                DOWN_UP_POS = new Vector2(DOWN_UP_POS.x - 100, DOWN_UP_POS.y);
+                LEFT_RIGHT_POS = new Vector2(LEFT_RIGHT_POS.x, LEFT_RIGHT_POS.y - 70);
+                RIGHT_LEFT_POS = new Vector2(RIGHT_LEFT_POS.x, RIGHT_LEFT_POS.y - 70);
+                //if(turnBool%3 == 0)
+                command = Command.TURN_LEFT;
+                break;
         }
-    }
 
-    /**
-     * Getter for vehicle image
-     *
-     * @return Image The vehicle image object
-     */
+        //Set vehicle position according to the direction it's moving to
+        //Junction Turning Constants
+        Vector2 DOWN_LEFT = new Vector2(360, 0);
+        Vector2 RIGHT_UP = new Vector2(0, 325);
+        Vector2 RIGHT_DOWN = new Vector2(0, 454);
+        Vector2 LEFT_UP = new Vector2(1000, 145);
+        Vector2 UP_RIGHT = new Vector2(651, 593);
+        Vector2 UP_LEFT = new Vector2(540, 600);
+        switch (vDir) {
+            case LEFT:
+                if (vehicleAhead != null && vehicleAhead.vehiclePosition.x > movingLeftPos) {
+                    vehiclePosition = new Vector2(vehicleAhead.vehiclePosition.x + 300, RIGHT_LEFT_POS.y);
+                } else {
+                    vehiclePosition = RIGHT_LEFT_POS;
+                }
+                break;
 
-    public Image getImage() {
-        return mImage;
+            case RIGHT:
+                if (vehicleAhead != null && vehicleAhead.vehiclePosition.x < movingRightPos) {
+                    vehiclePosition = new Vector2(vehicleAhead.vehiclePosition.x - 300, LEFT_RIGHT_POS.y);
+                } else
+                    vehiclePosition = LEFT_RIGHT_POS;
+                break;
+
+            case UP:
+                if (vehicleAhead != null && vehicleAhead.vehiclePosition.y > movingUpPos) {
+                    vehiclePosition = new Vector2(DOWN_UP_POS.x, vehicleAhead.vehiclePosition.y + 200);
+                } else
+                    vehiclePosition = DOWN_UP_POS;
+                break;
+
+            case DOWN:
+                if (vehicleAhead != null && vehicleAhead.vehiclePosition.y <= movingDownPos) {
+                    vehiclePosition = new Vector2(UP_DOWN_POS.x, vehicleAhead.vehiclePosition.y - 200);
+                } else
+                    vehiclePosition = UP_DOWN_POS;
+                break;
+            case DOWN_LEFT:
+                vehiclePosition = DOWN_LEFT;
+                break;
+            case RIGHT_UP:
+                vehiclePosition = RIGHT_UP;
+                break;
+            case RIGHT_DOWN:
+                vehiclePosition = RIGHT_DOWN;
+                break;
+            case LEFT_UP:
+                vehiclePosition = LEFT_UP;
+                break;
+            case UP_LEFT:
+                vehiclePosition = UP_LEFT;
+                break;
+            case UP_RIGHT:
+                vehiclePosition = UP_RIGHT;
+                break;
+            default:
+                break;
+        }
+
+        velocity = vel;
+        vehVelo = velocity;
+        mCurAngle = 0;
+
+        if (vState == VehicleState.MOVE_Y) {
+            mCurAngle = 90;
+        }
     }
 
     public float getSpeed() {
@@ -197,9 +160,8 @@ public class Vehicle implements ActionListener {
         return vehiclePosition;
     }
 
-
-    public AffineTransform getTrans() {
-        return trans;
+    public float getCurrentAngle() {
+        return mCurAngle;
     }
 
     public boolean isInView() {
@@ -223,7 +185,6 @@ public class Vehicle implements ActionListener {
             acceleration = (0 - velocity) / t;
         else
             acceleration = 0;
-
     }
 
     /**
@@ -236,14 +197,10 @@ public class Vehicle implements ActionListener {
         if (angle == 0 || angle == 90 || angle == 270) {
             angularVel = (angle - mCurAngle) / time;
         }
-        //if(Math.abs(mCurAngle) < Math.abs(angle))
         mCurAngle += angularVel;
-
-        trans.rotate(Math.toRadians(mCurAngle), mImage.getWidth(imgObserve), mImage.getHeight(imgObserve));
     }
 
-
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed() {
         if (vehicleAhead != null && !vehicleAhead.isInView()) {
             vehicleAhead = null;
         }
@@ -276,11 +233,9 @@ public class Vehicle implements ActionListener {
                 if (vehicleAhead != null && vehicleAhead.vState != this.vState) {
                     velocity = vehicleAhead.velocity;
                     vehicleAhead = null;
-
                 }
                 if (!passedTrafficLight && !trafficLight.forwardGo) {
                     vState = VehicleState.BRAKE;
-
                 }
                 if (vehiclePosition.y < movingUpPos) {
                     passedTrafficLight = true;
@@ -387,14 +342,11 @@ public class Vehicle implements ActionListener {
                 }
             }
         }
-
         if (vDirection == VehicleDirection.UP || vDirection == VehicleDirection.DOWN) {
             this.vehiclePosition.y += (int) velocity;
         } else {
             this.vehiclePosition.x += (int) velocity;
         }
-        this.trans.setToTranslation(vehiclePosition.x, vehiclePosition.y);
-        this.trans.rotate(Math.toRadians(mCurAngle), (double) mImage.getWidth(imgObserve) / 2, (double) mImage.getHeight(imgObserve) / 2);
     }
 
     private void turning() {
@@ -406,42 +358,27 @@ public class Vehicle implements ActionListener {
                         if (mCurAngle == 180) {                        //if we reach the angle 180, we have to change the vehicle State
                             vDirection = VehicleDirection.LEFT;
                             vState = VehicleState.MOVE_X;
-
                         }
-
                         steerTowards(180, 40);
                         vehiclePosition.x -= (int) Math.abs(velocity - 2);
                         if (vehiclePosition.y <= movingDownPos + 80)
                             vehiclePosition.y += (int) Math.abs(velocity - 3);
-
-                        //System.out.println("Vehicle ahead null: " + vehicleAhead);
-
-                        this.trans.setToTranslation(vehiclePosition.x, vehiclePosition.y);
-                        this.trans.rotate(Math.toRadians(mCurAngle), (double) mImage.getWidth(imgObserve) / 2, (double) mImage.getHeight(imgObserve) / 2);
                         break;
 
                     case LEFT_UP:
                         if (mCurAngle == 270) {                        //if we reach the angle 180, we have to change the vehicle State
                             vDirection = VehicleDirection.LEFT;
                             vState = VehicleState.MOVE_X;
-
                         }
-
                         steerTowards(270, 10);
                         vehiclePosition.y -= (int) Math.abs(velocity - 2);
                         if (vehiclePosition.x >= movingLeftPos - 100)
                             vehiclePosition.x -= 5;
-
-                        //System.out.println("Vehicle ahead null: " + vehicleAhead);
-
-                        this.trans.setToTranslation(vehiclePosition.x, vehiclePosition.y);
-                        this.trans.rotate(Math.toRadians(mCurAngle), (double) mImage.getWidth(imgObserve) / 2, (double) mImage.getHeight(imgObserve) / 2);
                         break;
                     default:
                         break;
 
                 }
-                //System.out.println("Should be turning");
             }
             case TURN_RIGHT -> {
                 switch (vDirection) {
@@ -449,23 +386,16 @@ public class Vehicle implements ActionListener {
                         if (mCurAngle == 0) {                        //if we reach the angle 180, we have to change the vehicle State
                             vDirection = VehicleDirection.RIGHT;
                             vState = VehicleState.MOVE_X;
-
                         }
                         steerTowards(0, 9);
-
                         vehiclePosition.x += 5;
                         if (vehiclePosition.y >= movingUpPos - 120)
                             vehiclePosition.y -= 6;
-
-                        this.trans.setToTranslation(vehiclePosition.x, vehiclePosition.y);
-                        this.trans.rotate(Math.toRadians(mCurAngle), (double) mImage.getWidth(imgObserve) / 2, (double) mImage.getHeight(imgObserve) / 2);
                         break;
-
                     case RIGHT_DOWN:
                         if (mCurAngle == 90) {                        //if we reach the angle 180, we have to change the vehicle State
                             vDirection = VehicleDirection.DOWN;
                             vState = VehicleState.MOVE_Y;
-
                         }
                         steerTowards(90, 9);
 
@@ -473,9 +403,6 @@ public class Vehicle implements ActionListener {
                             vehiclePosition.x += 2;
                         }
                         vehiclePosition.y += 5;
-
-                        this.trans.setToTranslation(vehiclePosition.x, vehiclePosition.y);
-                        this.trans.rotate(Math.toRadians(mCurAngle), (double) mImage.getWidth(imgObserve) / 2, (double) mImage.getHeight(imgObserve) / 2);
                         break;
                     default:
                         break;
@@ -497,7 +424,6 @@ public class Vehicle implements ActionListener {
                     accelerate(vehiclePosition.x, movingLeftPos);
                     velocity += acceleration;
                     if (vehiclePosition.x >= movingLeftPos) {
-
                         this.vehiclePosition.x += (int) velocity;
                     }
                 } else {
@@ -508,11 +434,9 @@ public class Vehicle implements ActionListener {
                             this.vehiclePosition.x += (int) velocity;
                         }
                     }
-
                 }
                 break;
             case RIGHT:
-
                 if (vehicleAhead != null) {
                     if ((vehicleAhead.vehiclePosition.x > -50 && vehicleAhead.vehiclePosition.x < movingRightPos)) {
                         accelerate(vehiclePosition.x, vehicleAhead.getVehiclePosition().x - 150);
@@ -533,16 +457,13 @@ public class Vehicle implements ActionListener {
                         this.vehiclePosition.x += (int) velocity;
                 }
                 break;
-
             case UP:
                 mCurAngle = -90;
                 if (velocity > 0) {
                     velocity *= -1;
                 }
-
                 if (vehicleAhead != null && vehicleAhead.passedTrafficLight)
                     vehicleAhead = null;
-
                 if (vehicleAhead == null) {
                     accelerate(vehiclePosition.y, movingUpPos);
                     velocity += acceleration;
@@ -563,10 +484,8 @@ public class Vehicle implements ActionListener {
             case DOWN:
                 if (vehicleAhead != null && vehicleAhead.passedTrafficLight)
                     vehicleAhead = null;
-
                 if (acceleration > 0)        //new
                     acceleration *= -1;
-
                 if (vehicleAhead == null) {
                     accelerate(vehiclePosition.y, movingDownPos);
                     velocity += acceleration;
@@ -574,7 +493,6 @@ public class Vehicle implements ActionListener {
 
                         this.vehiclePosition.y += (int) velocity;
                     }
-
                 } else {
 
                     if (vehicleAhead.vehiclePosition.y > -50 && vehicleAhead.vehiclePosition.y < movingDownPos) {
@@ -587,15 +505,10 @@ public class Vehicle implements ActionListener {
                         }
                     }
                 }
-
                 break;
             default:
                 break;
         }
-
-        this.trans.setToTranslation(vehiclePosition.x, vehiclePosition.y);
-        this.trans.rotate(Math.toRadians(mCurAngle), (double) mImage.getWidth(imgObserve) / 2, (double) mImage.getHeight(imgObserve) / 2);
-        //nothing now
     }
 
 }

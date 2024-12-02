@@ -1,5 +1,6 @@
 package be.ecam.trafficsim;
 
+import be.ecam.trafficsim.ui.VehicleDrawable;
 import org.jetbrains.annotations.NotNull;
 import be.ecam.trafficsim.Vehicle.VehicleDirection;
 import be.ecam.trafficsim.Vehicle.VehicleState;
@@ -27,6 +28,11 @@ public class Simulation extends JPanel implements ActionListener {
     private final ArrayList<Vehicle> vehiclesLeft = new ArrayList<>();
     private final ArrayList<Vehicle> vehiclesUp = new ArrayList<>();
 
+    private final ArrayList<VehicleDrawable> vehiclesDrawableRight = new ArrayList<>();
+    private final ArrayList<VehicleDrawable> vehiclesDrawableDown = new ArrayList<>();
+    private final ArrayList<VehicleDrawable> vehiclesDrawableLeft = new ArrayList<>();
+    private final ArrayList<VehicleDrawable> vehiclesDrawableUp = new ArrayList<>();
+
     private final String[] carImages = {"/car1.png", "/car2.png", "/car3.png", "/car4.png",
             "/ambulance.png", "/police.png", "/truck1.png", "/truck2.png"};
 
@@ -45,9 +51,10 @@ public class Simulation extends JPanel implements ActionListener {
         g2D.drawImage(mTerrain, 0, 0, this);
 
         //displays all cars going in the right direction
-        for (ArrayList<Vehicle> list : Arrays.asList(vehiclesRight, vehiclesLeft, vehiclesDown, vehiclesUp))
+        for (ArrayList<VehicleDrawable> list : Arrays.asList(
+                vehiclesDrawableRight, vehiclesDrawableLeft, vehiclesDrawableDown, vehiclesDrawableUp))
             for (int i = 0; i < list.size(); i++) {
-                Vehicle v = list.get(i);
+                VehicleDrawable v = list.get(i);
                 if (v.isInView())
                     g2D.drawImage(v.getImage(), v.getTrans(), this);
                 else {
@@ -99,30 +106,35 @@ public class Simulation extends JPanel implements ActionListener {
 
     private void spawnCar(@NotNull Direction direction) {
         ArrayList<Vehicle> list;
+        ArrayList<VehicleDrawable> listDrawable;
         VehicleDirection vehicleDirection;
         VehicleState vehicleState;
         TrafficLight trafficLight;
         switch (direction) {
             case LEFT -> {
                 list = vehiclesLeft;
+                listDrawable = vehiclesDrawableLeft;
                 vehicleDirection = VehicleDirection.LEFT;
                 vehicleState = VehicleState.MOVE_X;
                 trafficLight = trafficLights.get(3);
             }
             case UP -> {
                 list = vehiclesUp;
+                listDrawable = vehiclesDrawableUp;
                 vehicleDirection = VehicleDirection.UP;
                 vehicleState = VehicleState.MOVE_Y;
                 trafficLight = trafficLights.get(2);
             }
             case RIGHT -> {
                 list = vehiclesRight;
+                listDrawable = vehiclesDrawableRight;
                 vehicleDirection = VehicleDirection.RIGHT;
                 vehicleState = VehicleState.MOVE_X;
                 trafficLight = trafficLights.get(1);
             }
             case DOWN -> {
                 list = vehiclesDown;
+                listDrawable = vehiclesDrawableDown;
                 vehicleDirection = VehicleDirection.DOWN;
                 vehicleState = VehicleState.MOVE_Y;
                 trafficLight = trafficLights.get(0);
@@ -141,15 +153,18 @@ public class Simulation extends JPanel implements ActionListener {
             if (vAheadID < list.size()) {
                 vehicleAhead = list.get(vAheadID);
             }
-            list.add(new Vehicle(
-                    getClass().getResourceAsStream(carImages[carImageId]),
-                    6,
-                    vehicleState,
-                    vehicleDirection,
-                    trafficLight,
-                    this,
-                    vehicleAhead,
-                    list.size()));
+            try {
+                Vehicle vehicle = new Vehicle(6, vehicleState, vehicleDirection, trafficLight, vehicleAhead, list.size());
+                VehicleDrawable vehicleDrawable = new VehicleDrawable(
+                        getClass().getResourceAsStream(carImages[carImageId]),
+                        vehicle,
+                        this
+                );
+                list.add(vehicle);
+                listDrawable.add(vehicleDrawable);
+            } catch (IOException e) {
+                //TODO
+            }
         }
     }
 
