@@ -23,7 +23,6 @@ public class Simulation extends JPanel implements ActionListener {
 
     private final Random random = new Random();
     //Arrays of vehicles in each direction
-
     private final ArrayList<VehicleDrawable> vehiclesDrawableRight = new ArrayList<>();
     private final ArrayList<VehicleDrawable> vehiclesDrawableDown = new ArrayList<>();
     private final ArrayList<VehicleDrawable> vehiclesDrawableLeft = new ArrayList<>();

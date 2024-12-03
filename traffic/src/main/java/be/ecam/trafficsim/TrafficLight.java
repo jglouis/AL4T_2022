@@ -10,7 +10,7 @@ import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class TrafficLight implements ActionListener {
+public class TrafficLight implements ActionListener, IForwardGo {
 
     private Image layoutImg;    //the layout image of the traffic light which would have transparent hole for light
     private final AffineTransform trans;
@@ -59,6 +59,11 @@ public class TrafficLight implements ActionListener {
      * Yellow = 1
      * Green = 2
      * */
+
+    @Override
+    public boolean isForwardGo() {
+        return forwardGo;
+    }
 
     public TrafficLight(InputStream imgSrc, int x, int y, int angle, int orient, int id, ImageObserver iObs) {
         trans = new AffineTransform();

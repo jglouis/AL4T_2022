@@ -2,8 +2,10 @@ package be.ecam.trafficsim;
 
 public class Vehicle {
 
-    private TrafficLight trafficLight;
-    private float velocity, acceleration = 0f, vehVelo;                                                    //Max speed of vehicle
+    private IForwardGo trafficLight;
+    private float velocity;
+    private float acceleration = 0f;
+    private final float vehVelo;                                                    //Max speed of vehicle
     private float mCurAngle;                                            //Current angle of vehicle relative to normal
 
     public enum VehicleDirection {
@@ -45,7 +47,7 @@ public class Vehicle {
      * @param vel Sets the vehicle max speed
      */
 
-    public Vehicle(int vel, VehicleState vehState, VehicleDirection vDir, TrafficLight tl, Vehicle vAhead, int index) {
+    public Vehicle(int vel, VehicleState vehState, VehicleDirection vDir, IForwardGo tl, Vehicle vAhead, int index) {
         vState = vehState;
         vehicleAhead = vAhead;
         vPrev = vState;                        //store previous state of vehicle
@@ -205,9 +207,9 @@ public class Vehicle {
             vehicleAhead = null;
         }
 
-        if (trafficLight != null && (trafficLight.forwardGo || passedTrafficLight) && !turn) {
+        if (trafficLight != null && (trafficLight.isForwardGo() || passedTrafficLight) && !turn) {
             vState = vPrev;
-        } else if (trafficLight != null && !trafficLight.forwardGo) {
+        } else if (trafficLight != null && !trafficLight.isForwardGo()) {
             vState = VehicleState.BRAKE;
         }
 
@@ -234,7 +236,7 @@ public class Vehicle {
                     velocity = vehicleAhead.velocity;
                     vehicleAhead = null;
                 }
-                if (!passedTrafficLight && !trafficLight.forwardGo) {
+                if (!passedTrafficLight && !trafficLight.isForwardGo()) {
                     vState = VehicleState.BRAKE;
                 }
                 if (vehiclePosition.y < movingUpPos) {
@@ -257,7 +259,7 @@ public class Vehicle {
                 }
             }
             case DOWN -> {
-                if (!passedTrafficLight && !trafficLight.forwardGo)
+                if (!passedTrafficLight && !trafficLight.isForwardGo())
                     vState = VehicleState.BRAKE;
 
                 if (vehiclePosition.y > movingDownPos) {
@@ -291,7 +293,7 @@ public class Vehicle {
 
         switch (vDirection) {
             case LEFT -> {
-                if (!passedTrafficLight && !trafficLight.forwardGo)
+                if (!passedTrafficLight && !trafficLight.isForwardGo())
                     vState = VehicleState.BRAKE;
 
                 if (vehiclePosition.x < movingLeftPos && !turn) {
@@ -316,7 +318,7 @@ public class Vehicle {
                 }
             }
             case RIGHT -> {
-                if (!passedTrafficLight && !trafficLight.forwardGo)
+                if (!passedTrafficLight && !trafficLight.isForwardGo())
                     vState = VehicleState.BRAKE;
 
                 if (vehiclePosition.x > movingRightPos) {
