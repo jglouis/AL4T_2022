@@ -4,16 +4,13 @@ import be.ecam.trafficsim.Vector2;
 import be.ecam.trafficsim.Vehicle;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class VehicleDrawable implements ActionListener {
+public class VehicleDrawable {
     private final Image image;
     private final ImageObserver observer;
     private final AffineTransform trans = new AffineTransform();
@@ -25,12 +22,9 @@ public class VehicleDrawable implements ActionListener {
         this.observer = observer;
         this.vehicle = vehicle;
         update();
-        Timer mTimer = new Timer(10, this);
-        mTimer.start();
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed() {
         // Update the Vehicle state
         this.vehicle.actionPerformed();
         // Update image

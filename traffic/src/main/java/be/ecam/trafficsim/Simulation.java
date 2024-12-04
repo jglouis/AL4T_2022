@@ -18,8 +18,10 @@ import java.util.Random;
 
 
 public class Simulation extends JPanel implements ActionListener {
+    public static final int FRAME_DELAY_MS = 1000/30;
     private Image mTerrain;
-    private final Timer tm = new Timer(1, this);
+    private final Timer tm = new Timer(FRAME_DELAY_MS, this);
+
 
     private final Random random = new Random();
     //Arrays of vehicles in each direction
@@ -35,6 +37,10 @@ public class Simulation extends JPanel implements ActionListener {
     //timer regulating the rate new cars are created
     private int carSpawnTimer = 0;
 
+    public void start() {
+        tm.start();
+    }
+
     private enum Direction {
         LEFT, UP, RIGHT, DOWN
     }
@@ -49,9 +55,11 @@ public class Simulation extends JPanel implements ActionListener {
                 vehiclesDrawableRight, vehiclesDrawableLeft, vehiclesDrawableDown, vehiclesDrawableUp))
             for (int i = 0; i < list.size(); i++) {
                 VehicleDrawable v = list.get(i);
-                if (v.isInView())
+                if (v.isInView()) {
+                    v.actionPerformed();
                     g2D.drawImage(v.getImage(), v.getTrans(), this);
-                else {
+                } else {
+                    v.actionPerformed();
                     list.remove(v);
                 }
             }
@@ -78,15 +86,13 @@ public class Simulation extends JPanel implements ActionListener {
             g2D.drawImage(t.getLayoutImg(), t.getTrans(), this);
 
         }
-        if (!tm.isRunning())
-            tm.start();
     }
 
     public void actionPerformed(ActionEvent e) {
         carSpawnTimer++;
 
         //This section is where cars are created, every 800s
-        if (carSpawnTimer % 500 == 0) {
+        if (carSpawnTimer % 50 == 0) {
             //create new car objects over here
             for (int i = 0; i < 20; i++) {
                 for (Direction direction : Direction.values()) {
@@ -143,7 +149,7 @@ public class Simulation extends JPanel implements ActionListener {
                 vehicleAhead = listDrawable.get(vAheadID).getVehicle();
             }
             try {
-                Vehicle vehicle = new Vehicle(6, vehicleState, vehicleDirection, trafficLight, vehicleAhead, listDrawable.size());
+                Vehicle vehicle = new Vehicle(15, vehicleState, vehicleDirection, trafficLight, vehicleAhead, listDrawable.size());
                 VehicleDrawable vehicleDrawable = new VehicleDrawable(
                         getClass().getResourceAsStream(carImages[carImageId]),
                         vehicle,
@@ -151,7 +157,7 @@ public class Simulation extends JPanel implements ActionListener {
                 );
                 listDrawable.add(vehicleDrawable);
             } catch (IOException e) {
-                //TODO
+                System.err.println(e.getMessage());
             }
         }
     }

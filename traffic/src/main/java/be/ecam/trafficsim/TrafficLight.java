@@ -10,6 +10,8 @@ import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static be.ecam.trafficsim.Simulation.FRAME_DELAY_MS;
+
 public class TrafficLight implements ActionListener, IForwardGo {
 
     private Image layoutImg;    //the layout image of the traffic light which would have transparent hole for light
@@ -80,7 +82,7 @@ public class TrafficLight implements ActionListener, IForwardGo {
 
         try {
             layoutImg = ImageIO.read(imgSrc);
-            tm = new Timer(1, this);
+            tm = new Timer(FRAME_DELAY_MS, this);
             Vector2 position = new Vector2(x, y);
             trans.setToTranslation(position.x, position.y);
             trans.rotate(Math.toRadians(angle), (double) layoutImg.getWidth(iObs) / 2, (double) layoutImg.getHeight(iObs) / 2);
@@ -112,7 +114,7 @@ public class TrafficLight implements ActionListener, IForwardGo {
     }
 
     public void actionPerformed(ActionEvent arg0) {
-        timer++;
+        timer += FRAME_DELAY_MS;
         int trafficTime = 5;
         if (id == 1) {
             if (timer > 550 && timer < (trafficTime * 1000) - 700) {

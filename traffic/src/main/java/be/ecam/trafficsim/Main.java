@@ -11,6 +11,7 @@ public class Main {
     public static void main(String[] args) {
         JFrame jF = new JFrame("Traffic Simulation");
         Simulation sim = new Simulation();
+        sim.start();
         jF.setContentPane(sim);
         jF.setSize(1366, 750);
         jF.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

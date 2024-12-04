@@ -199,7 +199,7 @@ public class Vehicle {
         if (angle == 0 || angle == 90 || angle == 270) {
             angularVel = (angle - mCurAngle) / time;
         }
-        mCurAngle += angularVel;
+        mCurAngle += angularVel * 2;
     }
 
     public void actionPerformed() {
