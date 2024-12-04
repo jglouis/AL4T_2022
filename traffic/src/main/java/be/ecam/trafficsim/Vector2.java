@@ -1,4 +1,4 @@
-package trafficsim;
+package be.ecam.trafficsim;
 
 public class Vector2 {
 	public int x, y;
