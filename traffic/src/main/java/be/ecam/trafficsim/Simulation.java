@@ -9,58 +9,102 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
 
-
 public class Simulation extends JPanel implements ActionListener {
     private Image mTerrain;
     private final Timer tm = new Timer(1, this);
 
     private final Random random = new Random();
-    //Arrays of vehicles in each direction
-    private final ArrayList<Vehicle> vehiclesRight = new ArrayList<>();
-    private final ArrayList<Vehicle> vehiclesDown = new ArrayList<>();
-    private final ArrayList<Vehicle> vehiclesLeft = new ArrayList<>();
-    private final ArrayList<Vehicle> vehiclesUp = new ArrayList<>();
+    // Arrays of vehicles in each direction
+    private final ArrayList<UIVehicle> vehiclesRight = new ArrayList<>();
+    private final ArrayList<UIVehicle> vehiclesDown = new ArrayList<>();
+    private final ArrayList<UIVehicle> vehiclesLeft = new ArrayList<>();
+    private final ArrayList<UIVehicle> vehiclesUp = new ArrayList<>();
 
     private final String[] carImages = {"/car1.png", "/car2.png", "/car3.png", "/car4.png",
             "/ambulance.png", "/police.png", "/truck1.png", "/truck2.png"};
 
     private final ArrayList<TrafficLight> trafficLights;
-    //timer regulating the rate new cars are created
+    // Timer regulating the rate new cars are created
     private int carSpawnTimer = 0;
 
     private enum Direction {
         LEFT, UP, RIGHT, DOWN
     }
 
-    public void paintComponent(Graphics g) {
+    public Simulation() {
+        trafficLights = new ArrayList<>();
+        addTrafficLight(349, 147, 180, 0, 1,
+                new Vector2(349, 147),
+                new Vector2(349 + 23, 147),
+                new Vector2(349 + 47, 147));
+
+        addTrafficLight(302, 530, 90, 1, 2,
+                new Vector2(322, 511),
+                new Vector2(322, 533),
+                new Vector2(322, 558));
+
+        addTrafficLight(1077, 585, 0, 0, 3,
+                new Vector2(1079, 585),
+                new Vector2(1077 + 25, 585),
+                new Vector2(1077 + 48, 585));
+
+        addTrafficLight(1125, 195, -90, 1, 4,
+                new Vector2(1145, 175),
+                new Vector2(1145, 175 + 25),
+                new Vector2(1145, 175 + 47));
+
+        try {
+            mTerrain = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/road1.jpg")));
+        } catch (IOException | NullPointerException e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
+        addTestVehicle();
+    }
+
+    private void addTestVehicle() {
+        try {
+            // Create a traffic light for reference
+            TrafficLight testTrafficLight = trafficLights.get(0);
+
+            // Create a test vehicle with visible coordinates
+            Vehicle testVehicle = new Vehicle(6, Vehicle.VehicleState.MOVE_X, Vehicle.VehicleDirection.RIGHT, testTrafficLight, null);
+            testVehicle.getVehiclePosition().x = 300; // Set an X coordinate inside the map
+            testVehicle.getVehiclePosition().y = 400; // Set a Y coordinate inside the map
+
+            // Create the UIVehicle
+            UIVehicle testUIVehicle = new UIVehicle(getClass().getResourceAsStream("/car1.png"), this, testVehicle);
+
+            // Add it to the appropriate list
+            vehiclesRight.add(testUIVehicle);
+        } catch (Exception e) {
+            System.err.println("Failed to add test vehicle: " + e.getMessage());
+        }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D) g;
 
         g2D.drawImage(mTerrain, 0, 0, this);
 
-        //displays all cars going in the right direction
-        for (ArrayList<Vehicle> list : Arrays.asList(vehiclesRight, vehiclesLeft, vehiclesDown, vehiclesUp))
-            for (int i = 0; i < list.size(); i++) {
-                Vehicle v = list.get(i);
-                if (v.isInView())
-                    g2D.drawImage(v.getImage(), v.getTrans(), this);
-                else {
-                    list.remove(v);
-                }
+        // Display all cars in their respective directions
+        for (ArrayList<UIVehicle> list : Arrays.asList(vehiclesRight, vehiclesLeft, vehiclesDown, vehiclesUp)) {
+            list.removeIf(uiVehicle -> !uiVehicle.getVehicle().isInView());
+            for (UIVehicle uiVehicle : list) {
+                uiVehicle.render(g2D);
             }
+        }
 
-        //Draw trafficLights
+        // Draw traffic lights
         for (TrafficLight t : trafficLights) {
-            //Draw the lights
             Color[] colors = t.getCurrentLightColor();
             if (t.getOrientation() == 0) {
                 g2D.setColor(colors[1]);
@@ -78,30 +122,39 @@ public class Simulation extends JPanel implements ActionListener {
                 g2D.fillRect(t.getRightLightPosition().x, t.getRightLightPosition().y, 29, 22);
             }
             g2D.drawImage(t.getLayoutImg(), t.getTrans(), this);
-
         }
-        if (!tm.isRunning())
+
+        if (!tm.isRunning()) {
             tm.start();
+        }
     }
 
+    private void updateVehicles() {
+        for (ArrayList<UIVehicle> list : Arrays.asList(vehiclesRight, vehiclesLeft, vehiclesDown, vehiclesUp)) {
+            for (UIVehicle uiVehicle : list) {
+                uiVehicle.getVehicle().move(); // Update the vehicle's position
+            }
+        }
+    }
+
+    @Override
     public void actionPerformed(ActionEvent e) {
         carSpawnTimer++;
 
-        //This section is where cars are created, every 800s
-        if (carSpawnTimer % 500 == 0) {
-            //create new car objects over here
-            for (int i = 0; i < 20; i++) {
-                for (Direction direction : Direction.values()) {
-                    spawnCar(direction);
-                }
+        // Create new cars every 500ms
+        if (carSpawnTimer % 250 == 0) {
+            for (Direction direction : Direction.values()) {
+                spawnCar(direction);
             }
             carSpawnTimer = 0;
         }
+
+        updateVehicles();
         repaint();
     }
 
     private void spawnCar(@NotNull Direction direction) {
-        ArrayList<Vehicle> list;
+        ArrayList<UIVehicle> list;
         VehicleDirection vehicleDirection;
         VehicleState vehicleState;
         TrafficLight trafficLight;
@@ -132,57 +185,16 @@ public class Simulation extends JPanel implements ActionListener {
             }
             default -> throw new IllegalStateException("Unexpected value: " + direction);
         }
+
         if (list.size() < 30) {
-            int line = (list.size()) / 3;
-            int vAheadID = 1000;
-            if (line > 0) {
-                vAheadID = list.size() - 3;
-            }
             int carImageId = random.nextInt(carImages.length);
-            //int spd = 7- random.nextInt(2);
-            Vehicle vehicleAhead = null;
-            if (vAheadID < list.size()) {
-                vehicleAhead = list.get(vAheadID);
+            Vehicle vehicle = new Vehicle(6, vehicleState, vehicleDirection, trafficLight, null);
+            try {
+                UIVehicle uiVehicle = new UIVehicle(getClass().getResourceAsStream(carImages[carImageId]), this, vehicle);
+                list.add(uiVehicle);
+            } catch (Exception ex) {
+                System.err.println("Failed to load vehicle image: " + ex.getMessage());
             }
-            list.add(new Vehicle(
-                    getClass().getResourceAsStream(carImages[carImageId]),
-                    6,
-                    vehicleState,
-                    vehicleDirection,
-                    trafficLight,
-                    this,
-                    vehicleAhead,
-                    list.size()));
-        }
-    }
-
-    public Simulation() {
-        trafficLights = new ArrayList<>();
-        addTrafficLight(349, 147, 180, 0, 1,
-                new Vector2(349, 147),
-                new Vector2(349 + 23, 147),
-                new Vector2(349 + 47, 147));
-
-        addTrafficLight(302, 530, 90, 1, 2,
-                new Vector2(322, 511),
-                new Vector2(322, 533),
-                new Vector2(322, 558));
-
-        addTrafficLight(1077, 585, 0, 0, 3,
-                new Vector2(1079, 585),
-                new Vector2(1077 + 25, 585),
-                new Vector2(1077 + 48, 585));
-
-        addTrafficLight(1125, 195, -90, 1, 4,
-                new Vector2(1145, 175),
-                new Vector2(1145, 175 + 25),
-                new Vector2(1145, 175 + 47));
-
-        try {
-            mTerrain = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/road1.jpg")));
-        } catch (IOException | NullPointerException e) {
-            System.err.println(e.getMessage());
-            System.exit(1);
         }
     }
 
