@@ -31,10 +31,10 @@ public class Vehicle {
     private Command command;
 
     //Traffic lights position constants that vehicles should pass
-    private final int movingRightPos = 301;        //vehicle position.x should be > 351 to continue moving
-    private final int movingLeftPos = 1150;        //vehicle position.x should be < 1150 to continue moving
-    private final int movingDownPos = 121;        //vehicle position.y should be > 171 to continue moving
-    private final int movingUpPos = 652;        //vehicle position.y should be < 582 to continue moving
+    public final int MOVING_RIGHT_POSITION = 301;        //vehicle position.x should be > 351 to continue moving
+    public final int MOVING_LEFT_POSITION = 1150;        //vehicle position.x should be < 1150 to continue moving
+    public final int MOVING_DOWN_POSITION = 121;        //vehicle position.y should be > 171 to continue moving
+    public final int MOVING_UP_POSITION = 652;        //vehicle position.y should be < 582 to continue moving
 
     //A turning constant
     private boolean turn = false;
@@ -64,7 +64,6 @@ public class Vehicle {
         switch (index % 3) {
             case 0:
                 //right lane
-                //turnBool = ran.nextInt(5);
                 UP_DOWN_POS = new Vector2(UP_DOWN_POS.x + 100, UP_DOWN_POS.y);
                 DOWN_UP_POS = new Vector2(DOWN_UP_POS.x + 100, DOWN_UP_POS.y);
                 LEFT_RIGHT_POS = new Vector2(LEFT_RIGHT_POS.x, LEFT_RIGHT_POS.y + 70);
@@ -72,16 +71,13 @@ public class Vehicle {
                 command = Command.TURN_RIGHT;
                 break;
             case 1:
-
                 break;
             case 2:
                 //left lane
-                //turnBool = ran.nextInt(10);
                 UP_DOWN_POS = new Vector2(UP_DOWN_POS.x - 120, UP_DOWN_POS.y);
                 DOWN_UP_POS = new Vector2(DOWN_UP_POS.x - 100, DOWN_UP_POS.y);
                 LEFT_RIGHT_POS = new Vector2(LEFT_RIGHT_POS.x, LEFT_RIGHT_POS.y - 70);
                 RIGHT_LEFT_POS = new Vector2(RIGHT_LEFT_POS.x, RIGHT_LEFT_POS.y - 70);
-                //if(turnBool%3 == 0)
                 command = Command.TURN_LEFT;
                 break;
         }
@@ -96,7 +92,7 @@ public class Vehicle {
         Vector2 UP_LEFT = new Vector2(540, 600);
         switch (vDir) {
             case LEFT:
-                if (vehicleAhead != null && vehicleAhead.vehiclePosition.x > movingLeftPos) {
+                if (vehicleAhead != null && vehicleAhead.vehiclePosition.x > MOVING_LEFT_POSITION) {
                     vehiclePosition = new Vector2(vehicleAhead.vehiclePosition.x + 300, RIGHT_LEFT_POS.y);
                 } else {
                     vehiclePosition = RIGHT_LEFT_POS;
@@ -104,21 +100,21 @@ public class Vehicle {
                 break;
 
             case RIGHT:
-                if (vehicleAhead != null && vehicleAhead.vehiclePosition.x < movingRightPos) {
+                if (vehicleAhead != null && vehicleAhead.vehiclePosition.x < MOVING_RIGHT_POSITION) {
                     vehiclePosition = new Vector2(vehicleAhead.vehiclePosition.x - 300, LEFT_RIGHT_POS.y);
                 } else
                     vehiclePosition = LEFT_RIGHT_POS;
                 break;
 
             case UP:
-                if (vehicleAhead != null && vehicleAhead.vehiclePosition.y > movingUpPos) {
+                if (vehicleAhead != null && vehicleAhead.vehiclePosition.y > MOVING_UP_POSITION) {
                     vehiclePosition = new Vector2(DOWN_UP_POS.x, vehicleAhead.vehiclePosition.y + 200);
                 } else
                     vehiclePosition = DOWN_UP_POS;
                 break;
 
             case DOWN:
-                if (vehicleAhead != null && vehicleAhead.vehiclePosition.y <= movingDownPos) {
+                if (vehicleAhead != null && vehicleAhead.vehiclePosition.y <= MOVING_DOWN_POSITION) {
                     vehiclePosition = new Vector2(UP_DOWN_POS.x, vehicleAhead.vehiclePosition.y - 200);
                 } else
                     vehiclePosition = UP_DOWN_POS;
@@ -164,6 +160,10 @@ public class Vehicle {
 
     public float getCurrentAngle() {
         return mCurAngle;
+    }
+
+    public VehicleState getState() {
+        return vState;
     }
 
     public boolean isInView() {
@@ -227,7 +227,7 @@ public class Vehicle {
         }
     }
 
-    private void move() {
+    protected void move() {
         velocity = vehVelo;
         switch (vDirection) {
             case UP -> {
@@ -239,7 +239,7 @@ public class Vehicle {
                 if (!passedTrafficLight && !trafficLight.isForwardGo()) {
                     vState = VehicleState.BRAKE;
                 }
-                if (vehiclePosition.y < movingUpPos) {
+                if (vehiclePosition.y < MOVING_UP_POSITION) {
                     passedTrafficLight = true;
                     if (command == Command.TURN_RIGHT) {
                         vDirection = VehicleDirection.UP_RIGHT;
@@ -262,7 +262,7 @@ public class Vehicle {
                 if (!passedTrafficLight && !trafficLight.isForwardGo())
                     vState = VehicleState.BRAKE;
 
-                if (vehiclePosition.y > movingDownPos) {
+                if (vehiclePosition.y > MOVING_DOWN_POSITION) {
                     passedTrafficLight = true;
 
                     if (command == Command.TURN_LEFT) {
@@ -289,14 +289,11 @@ public class Vehicle {
                     vehicleAhead = null;
                 }
             }
-        }
-
-        switch (vDirection) {
             case LEFT -> {
                 if (!passedTrafficLight && !trafficLight.isForwardGo())
                     vState = VehicleState.BRAKE;
 
-                if (vehiclePosition.x < movingLeftPos && !turn) {
+                if (vehiclePosition.x < MOVING_LEFT_POSITION && !turn) {
                     passedTrafficLight = true;
                     if (command == Command.TURN_LEFT) {
                         vDirection = VehicleDirection.LEFT_UP;
@@ -321,7 +318,7 @@ public class Vehicle {
                 if (!passedTrafficLight && !trafficLight.isForwardGo())
                     vState = VehicleState.BRAKE;
 
-                if (vehiclePosition.x > movingRightPos) {
+                if (vehiclePosition.x > MOVING_RIGHT_POSITION) {
                     passedTrafficLight = true;
 
                     if (command == Command.TURN_RIGHT) {
@@ -363,7 +360,7 @@ public class Vehicle {
                         }
                         steerTowards(180, 40);
                         vehiclePosition.x -= (int) Math.abs(velocity - 2);
-                        if (vehiclePosition.y <= movingDownPos + 80)
+                        if (vehiclePosition.y <= MOVING_DOWN_POSITION + 80)
                             vehiclePosition.y += (int) Math.abs(velocity - 3);
                         break;
 
@@ -374,7 +371,7 @@ public class Vehicle {
                         }
                         steerTowards(270, 10);
                         vehiclePosition.y -= (int) Math.abs(velocity - 2);
-                        if (vehiclePosition.x >= movingLeftPos - 100)
+                        if (vehiclePosition.x >= MOVING_LEFT_POSITION - 100)
                             vehiclePosition.x -= 5;
                         break;
                     default:
@@ -391,7 +388,7 @@ public class Vehicle {
                         }
                         steerTowards(0, 9);
                         vehiclePosition.x += 5;
-                        if (vehiclePosition.y >= movingUpPos - 120)
+                        if (vehiclePosition.y >= MOVING_UP_POSITION - 120)
                             vehiclePosition.y -= 6;
                         break;
                     case RIGHT_DOWN:
@@ -401,7 +398,7 @@ public class Vehicle {
                         }
                         steerTowards(90, 9);
 
-                        if (vehiclePosition.x <= movingRightPos + 50) {
+                        if (vehiclePosition.x <= MOVING_RIGHT_POSITION + 50) {
                             vehiclePosition.x += 2;
                         }
                         vehiclePosition.y += 5;
@@ -423,13 +420,13 @@ public class Vehicle {
                     mCurAngle = 180;
                 }
                 if (vehicleAhead == null) {
-                    accelerate(vehiclePosition.x, movingLeftPos);
+                    accelerate(vehiclePosition.x, MOVING_LEFT_POSITION);
                     velocity += acceleration;
-                    if (vehiclePosition.x >= movingLeftPos) {
+                    if (vehiclePosition.x >= MOVING_LEFT_POSITION) {
                         this.vehiclePosition.x += (int) velocity;
                     }
                 } else {
-                    if (vehicleAhead.vehiclePosition.x < 1450 && vehicleAhead.vehiclePosition.x > movingLeftPos) {
+                    if (vehicleAhead.vehiclePosition.x < 1450 && vehicleAhead.vehiclePosition.x > MOVING_LEFT_POSITION) {
                         accelerate(vehiclePosition.x, vehicleAhead.getVehiclePosition().x + 120);
                         if (vehiclePosition.x >= vehicleAhead.vehiclePosition.x + 120) {
                             velocity += acceleration;
@@ -440,7 +437,7 @@ public class Vehicle {
                 break;
             case RIGHT:
                 if (vehicleAhead != null) {
-                    if ((vehicleAhead.vehiclePosition.x > -50 && vehicleAhead.vehiclePosition.x < movingRightPos)) {
+                    if ((vehicleAhead.vehiclePosition.x > -50 && vehicleAhead.vehiclePosition.x < MOVING_RIGHT_POSITION)) {
                         accelerate(vehiclePosition.x, vehicleAhead.getVehiclePosition().x - 150);
 
                         if (acceleration > 0)
@@ -453,9 +450,9 @@ public class Vehicle {
 
                     }
                 } else {
-                    accelerate(vehiclePosition.x, movingRightPos);
+                    accelerate(vehiclePosition.x, MOVING_RIGHT_POSITION);
                     velocity += acceleration;
-                    if (vehiclePosition.x <= movingRightPos)
+                    if (vehiclePosition.x <= MOVING_RIGHT_POSITION)
                         this.vehiclePosition.x += (int) velocity;
                 }
                 break;
@@ -467,13 +464,13 @@ public class Vehicle {
                 if (vehicleAhead != null && vehicleAhead.passedTrafficLight)
                     vehicleAhead = null;
                 if (vehicleAhead == null) {
-                    accelerate(vehiclePosition.y, movingUpPos);
+                    accelerate(vehiclePosition.y, MOVING_UP_POSITION);
                     velocity += acceleration;
-                    if (vehiclePosition.y >= movingUpPos) {
+                    if (vehiclePosition.y >= MOVING_UP_POSITION) {
                         this.vehiclePosition.y += (int) velocity;
                     }
                 } else {
-                    if (vehicleAhead.vehiclePosition.y > 650 && vehicleAhead.vehiclePosition.y > movingUpPos) {
+                    if (vehicleAhead.vehiclePosition.y > 650 && vehicleAhead.vehiclePosition.y > MOVING_UP_POSITION) {
                         accelerate(vehiclePosition.y, vehicleAhead.vehiclePosition.y + 150);
                         velocity += acceleration;
                         if (vehiclePosition.y > vehicleAhead.vehiclePosition.y + 150) {
@@ -489,15 +486,15 @@ public class Vehicle {
                 if (acceleration > 0)        //new
                     acceleration *= -1;
                 if (vehicleAhead == null) {
-                    accelerate(vehiclePosition.y, movingDownPos);
+                    accelerate(vehiclePosition.y, MOVING_DOWN_POSITION);
                     velocity += acceleration;
-                    if (vehiclePosition.y <= movingDownPos) {
+                    if (vehiclePosition.y <= MOVING_DOWN_POSITION) {
 
                         this.vehiclePosition.y += (int) velocity;
                     }
                 } else {
 
-                    if (vehicleAhead.vehiclePosition.y > -50 && vehicleAhead.vehiclePosition.y < movingDownPos) {
+                    if (vehicleAhead.vehiclePosition.y > -50 && vehicleAhead.vehiclePosition.y < MOVING_DOWN_POSITION) {
                         //if(vehicleAhead.vehiclePosition.y > vehiclePosition.y)
                         accelerate(vehiclePosition.y, vehicleAhead.vehiclePosition.y - 140);
                         velocity += acceleration;

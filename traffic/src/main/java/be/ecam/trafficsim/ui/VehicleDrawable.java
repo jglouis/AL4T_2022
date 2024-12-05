@@ -24,7 +24,7 @@ public class VehicleDrawable {
     public void actionPerformed() {
         // Update the Vehicle state
         this.vehicle.actionPerformed();
-        // Update image
+        // Update trans
         update();
     }
 
