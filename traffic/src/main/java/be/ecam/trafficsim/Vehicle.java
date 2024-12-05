@@ -1,6 +1,11 @@
 package be.ecam.trafficsim;
 
+import dagger.assisted.Assisted;
+import dagger.assisted.AssistedInject;
+
 public class Vehicle {
+
+    private final ISoundManager soundManager;
 
     private IForwardGo trafficLight;
     private float velocity;
@@ -47,7 +52,16 @@ public class Vehicle {
      * @param vel Sets the vehicle max speed
      */
 
-    public Vehicle(int vel, VehicleState vehState, VehicleDirection vDir, IForwardGo tl, Vehicle vAhead, int index) {
+    @AssistedInject
+    public Vehicle(
+            @Assisted("velocity") int vel,
+            @Assisted VehicleState vehState,
+            @Assisted VehicleDirection vDir,
+            @Assisted IForwardGo tl,
+            @Assisted("vAhead") Vehicle vAhead,
+            @Assisted("index") int index,
+            ISoundManager soundManager) {
+        this.soundManager = soundManager;
         vState = vehState;
         vehicleAhead = vAhead;
         vPrev = vState;                        //store previous state of vehicle
@@ -413,6 +427,9 @@ public class Vehicle {
     }
 
     private void brake() {
+
+        soundManager.playOnce("drift");
+
         switch (vDirection) {
             case LEFT:
                 if (velocity > 0) {

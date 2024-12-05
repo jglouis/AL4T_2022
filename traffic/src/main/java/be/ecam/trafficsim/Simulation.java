@@ -1,11 +1,14 @@
 package be.ecam.trafficsim;
 
+import be.ecam.trafficsim.dagger.AssistedVehicleFactory;
 import be.ecam.trafficsim.ui.VehicleDrawable;
 import org.jetbrains.annotations.NotNull;
 import be.ecam.trafficsim.Vehicle.VehicleDirection;
 import be.ecam.trafficsim.Vehicle.VehicleState;
 
 import javax.imageio.ImageIO;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,7 +20,12 @@ import java.util.Objects;
 import java.util.Random;
 
 
+@Singleton
 public class Simulation extends JPanel implements ActionListener {
+
+    private final ISoundManager soundManager;
+    private final AssistedVehicleFactory vehicleFactory;
+
     public static final int FRAME_DELAY_MS = 1000 / 30;
     private Image mTerrain;
     private final Timer tm = new Timer(FRAME_DELAY_MS, this);
@@ -39,6 +47,7 @@ public class Simulation extends JPanel implements ActionListener {
 
     public void start() {
         tm.start();
+        soundManager.playContinuousLoop("traffic");
     }
 
     private enum Direction {
@@ -156,7 +165,7 @@ public class Simulation extends JPanel implements ActionListener {
                 vehicleAhead = listDrawable.get(vAheadID).getVehicle();
             }
             try {
-                Vehicle vehicle = new Vehicle(15, vehicleState, vehicleDirection, trafficLight, vehicleAhead, listDrawable.size());
+                Vehicle vehicle = vehicleFactory.create(15, vehicleState, vehicleDirection, trafficLight, vehicleAhead, listDrawable.size());
                 VehicleDrawable vehicleDrawable = new VehicleDrawable(getClass().getResourceAsStream(carImages[carImageId]), vehicle );
                 listDrawable.add(vehicleDrawable);
             } catch (IOException e) {
@@ -165,7 +174,10 @@ public class Simulation extends JPanel implements ActionListener {
         }
     }
 
-    public Simulation() {
+    @Inject
+    public Simulation(ISoundManager soundManager, AssistedVehicleFactory vehicleFactory) {
+        this.soundManager = soundManager;
+        this.vehicleFactory = vehicleFactory;
         trafficLights = new ArrayList<>();
         addTrafficLight(349, 147, 180, 0, 1,
                 new Vector2(349, 147),

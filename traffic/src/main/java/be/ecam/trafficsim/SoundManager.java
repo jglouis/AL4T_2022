@@ -3,13 +3,12 @@ package be.ecam.trafficsim;
 import org.jetbrains.annotations.NotNull;
 
 import javax.sound.sampled.*;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SoundManager implements Closeable {
+public class SoundManager implements ISoundManager {
    private final Map<String, Clip> clipsByName = new HashMap<>();
 
     public SoundManager(Map<String, InputStream> inputs) {
@@ -30,6 +29,7 @@ public class SoundManager implements Closeable {
      * Play given clip name in a continuous loop.
      * @param clipName the clip name
      */
+    @Override
     public void playContinuousLoop(@NotNull String clipName) {
         try {
             Clip clip = clipsByName.get(clipName); // <- what could go wrong ? A name does not exist in the map
@@ -40,7 +40,20 @@ public class SoundManager implements Closeable {
         }
     }
 
-    // TODO playOnce
+    @Override
+    public void playOnce(@NotNull String clipName) {
+        try {
+            Clip clip = clipsByName.get(clipName); // <- what could go wrong ? A name does not exist in the map
+            if (clip.isRunning()) return;
+            // DO not forget to go ack to the beginning of the clip
+            clip.setFramePosition(0);
+            clip.start();
+        } catch (NullPointerException e) {
+            String errorMsg = String.format("The clip name %s could not be found", clipName);
+            System.err.println(errorMsg);
+        }
+    }
+
 
     @Override
     public void close() {
