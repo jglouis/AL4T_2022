@@ -15,7 +15,7 @@ dependencies {
     implementation ("org.jetbrains:annotations:16.0.2")
 }
 application {
-     mainClass = "trafficsim.Main"
+     mainClass = "be.ecam.trafficsim.Main"
 }
 tasks.test {
     useJUnitPlatform()
