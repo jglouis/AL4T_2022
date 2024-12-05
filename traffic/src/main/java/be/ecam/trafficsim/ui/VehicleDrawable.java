@@ -6,20 +6,17 @@ import be.ecam.trafficsim.Vehicle;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class VehicleDrawable {
     private final Image image;
-    private final ImageObserver observer;
     private final AffineTransform trans = new AffineTransform();
 
     private final Vehicle vehicle;
 
-    public VehicleDrawable(InputStream src, Vehicle vehicle, ImageObserver observer) throws IOException {
+    public VehicleDrawable(InputStream src, Vehicle vehicle) throws IOException {
         this.image = ImageIO.read(src);
-        this.observer = observer;
         this.vehicle = vehicle;
         update();
     }
@@ -33,11 +30,9 @@ public class VehicleDrawable {
 
     private void update() {
         double angle = Math.toRadians(vehicle.getCurrentAngle());
-        double anchorX = (double) image.getWidth(observer) / 2;
-        double anchorY = (double) image.getHeight(observer) /2;
         Vector2 vehiclePosition = vehicle.getVehiclePosition();
         trans.setToTranslation(vehiclePosition.x, vehiclePosition.y);
-        trans.rotate(angle, anchorX, anchorY);
+        trans.rotate(angle);
     }
 
     public boolean isInView() {

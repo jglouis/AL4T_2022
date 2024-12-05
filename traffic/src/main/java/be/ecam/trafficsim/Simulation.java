@@ -157,11 +157,7 @@ public class Simulation extends JPanel implements ActionListener {
             }
             try {
                 Vehicle vehicle = new Vehicle(15, vehicleState, vehicleDirection, trafficLight, vehicleAhead, listDrawable.size());
-                VehicleDrawable vehicleDrawable = new VehicleDrawable(
-                        getClass().getResourceAsStream(carImages[carImageId]),
-                        vehicle,
-                        this
-                );
+                VehicleDrawable vehicleDrawable = new VehicleDrawable(getClass().getResourceAsStream(carImages[carImageId]), vehicle );
                 listDrawable.add(vehicleDrawable);
             } catch (IOException e) {
                 System.err.println(e.getMessage());
