@@ -18,7 +18,7 @@ import java.util.Random;
 
 
 public class Simulation extends JPanel implements ActionListener {
-    public static final int FRAME_DELAY_MS = 1000/30;
+    public static final int FRAME_DELAY_MS = 1000 / 30;
     private Image mTerrain;
     private final Timer tm = new Timer(FRAME_DELAY_MS, this);
 
@@ -56,10 +56,8 @@ public class Simulation extends JPanel implements ActionListener {
             for (int i = 0; i < list.size(); i++) {
                 VehicleDrawable v = list.get(i);
                 if (v.isInView()) {
-                    v.actionPerformed();
                     g2D.drawImage(v.getImage(), v.getTrans(), this);
                 } else {
-                    v.actionPerformed();
                     list.remove(v);
                 }
             }
@@ -101,6 +99,15 @@ public class Simulation extends JPanel implements ActionListener {
             }
             carSpawnTimer = 0;
         }
+
+        // Update car positions
+        for (ArrayList<VehicleDrawable> drawableList :
+                Arrays.asList(vehiclesDrawableRight, vehiclesDrawableDown, vehiclesDrawableLeft, vehiclesDrawableUp)) {
+            for (VehicleDrawable vehicleDrawable : drawableList) {
+                vehicleDrawable.actionPerformed();
+            }
+        }
+
         repaint();
     }
 
