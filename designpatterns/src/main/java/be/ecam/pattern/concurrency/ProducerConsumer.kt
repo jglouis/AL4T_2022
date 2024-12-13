@@ -10,7 +10,7 @@ fun main() = runBlocking {
         producer()
     }
 
-    val consumerJob = launch(Dispatchers.Main) { // launch a coroutine to act as a consumer
+    val consumerJob = launch(Dispatchers.Default) { // launch a coroutine to act as a consumer
         consumer()
     }
 
