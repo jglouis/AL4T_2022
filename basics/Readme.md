@@ -3,6 +3,24 @@
 This document covers the most common sources of mistakes using Java.
 It is not intended to be a reference for the Java programming language.
 
+## Hands-on samples with unit tests
+
+A collection of tiny samples is available in `be.ecam.basics.samples.Samples` with unit tests in `basics/src/test/java/be/ecam/basics/samples/SamplesTest.java`.
+They illustrate common pitfalls such as:
+- casting and integer overflow/underflow
+- integer division truncation
+- floating-point precision (IEEE 754)
+- NaN comparison behavior
+- null handling and NullPointerException (checked vs unchecked)
+- checked exceptions enforcement
+- reference aliasing and mutability
+- string reference equality (==) vs content equality (equals)
+- autounboxing null leading to NPE
+
+How to run the tests for this module only:
+- Using Gradle Wrapper from the project root: `gradlew :basics:test`
+- Or from the `basics` directory: `gradlew test`
+
 ## The Java types
 
 Although Java possesses a static type system, there are some dangers that developer should be aware off.
@@ -154,3 +172,13 @@ Common ways to handle null are:
 - basic null check
 - usage of type annotation `@Nullable`, `@NotNull`
 - usage of `Optional<T>` as return type from a method
+
+## Exercises
+
+A set of 10 small, realistic exercises lives under the package `be.ecam.basics.exercises`.
+Their unit tests are in `basics/src/test/java/be/ecam/basics/exercises`.
+Some of these tests intentionally fail at first to reflect typical real‑world bugs; your goal is to make them pass by improving the production code.
+
+How to run only this module’s tests:
+- From project root: `gradlew :basics:test`
+- From the `basics` directory: `gradlew test`

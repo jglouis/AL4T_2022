@@ -12,11 +12,17 @@ repositories {
 
 dependencies {
     implementation 'org.jetbrains:annotations:16.0.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
 }
 
 application {
     // Define the main class for the application.
     mainClass = 'be.ecam.Main'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 run {
