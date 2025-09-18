@@ -175,10 +175,9 @@ Common ways to handle null are:
 
 ## Exercises
 
-A set of 10 small, realistic exercises lives under the package `be.ecam.basics.exercises`.
+A set of 9 small, realistic exercises lives under the package `be.ecam.basics.exercises`.
 Their unit tests are in `basics/src/test/java/be/ecam/basics/exercises`.
 Some of these tests intentionally fail at first to reflect typical real‑world bugs; your goal is to make them pass by improving the production code.
 
 How to run only this module’s tests:
 - From project root: `gradlew :basics:test`
-- From the `basics` directory: `gradlew test`
