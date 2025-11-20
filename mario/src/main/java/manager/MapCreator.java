@@ -106,7 +106,7 @@ class MapCreator implements IMapCreator {
                     createdMap.addEnemy(enemy);
                 }
                 else if (currentPixel == mario) {
-                    Mario marioObject = new Mario(xLocation, yLocation);
+                    Mario marioObject = new Mario(xLocation, yLocation, imageLoader);
                     createdMap.setMario(marioObject);
                 }
                 else if(currentPixel == end){
