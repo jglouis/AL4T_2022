@@ -91,11 +91,13 @@ public class Mario extends GameObject{
     }
 
     public int getRemainingLives() {
+        // 
         return remainingLives;
     }
 
     public void setRemainingLives(int remainingLives) {
-        this.remainingLives = remainingLives;
+        // Cap lives to the range [0, 3] so OneUpMushroom can't increase lives above 3
+        this.remainingLives = Math.min(3, Math.max(0, remainingLives));
     }
 
     public int getPoints() {
