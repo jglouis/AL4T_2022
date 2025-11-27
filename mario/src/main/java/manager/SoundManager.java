@@ -43,6 +43,14 @@ public class SoundManager implements ISoundManager {
         return null;
     }
 
+    public Clip getBackgroundClip() {
+        return background;
+    }
+
+    public long getClipTime() {
+        return clipTime;
+    }
+
     @Override
     public void resumeBackground(){
         background.setMicrosecondPosition(clipTime);
