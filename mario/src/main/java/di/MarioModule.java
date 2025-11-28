@@ -22,7 +22,7 @@ public abstract class MarioModule {
 
     @Binds
     @Singleton
-    abstract IImageLoader bindImageLoader(ImageLoader impl);
+    abstract IImageLoader bindImageLoader(ImageLoader impl);  //here
 
     @Binds
     @Singleton
