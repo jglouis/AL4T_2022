@@ -91,4 +91,12 @@ public class MarioTest {
         assertThat(mario.isFalling()).isTrue();
         assertThat(mario.getX()).isEqualTo(50);
     }
+
+    @Test
+    void acquirePointsIncreasesScore() {
+        Mario mario = new Mario(0, 0, imageLoader);
+        int initialScore = mario.getPoints();
+        mario.acquirePoints(100);
+        assertThat(mario.getPoints()).isEqualTo(initialScore + 100);
+    }
 }
