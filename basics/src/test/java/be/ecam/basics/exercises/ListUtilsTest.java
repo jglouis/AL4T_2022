@@ -13,7 +13,7 @@ class ListUtilsTest {
     @Test
     void removesShortStringsInPlace() {
         List<String> list = new ArrayList<>(Arrays.asList("a", "abcd", "zz", "longer"));
-        List<String> out = ListUtils.removeShortStrings(list, 3);
+        List<String> out = ListUtils.removeShortStrings(list, 3); // added - Using itertor instead of for-each to avoid ConcurrentModificationException
         assertEquals(Arrays.asList("abcd", "longer"), out);
         assertSame(list, out, "should modify in place and return the same list");
     }

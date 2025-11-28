@@ -9,7 +9,7 @@ class NameFormatterTest {
     @Test
     void nullMiddleNameShouldBeIgnored() {
         NameFormatter.Person p = new NameFormatter.Person("John", null, "Doe");
-        assertEquals("John Doe", NameFormatter.displayName(p));
+        assertEquals("John Doe", NameFormatter.displayName(p));  // added - to return once and solve the middle name issue
     }
 
     @Test

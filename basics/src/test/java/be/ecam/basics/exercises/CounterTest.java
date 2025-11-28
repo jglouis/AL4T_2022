@@ -13,6 +13,6 @@ class CounterTest {
 
     @Test
     void countShouldNotOverflow() {
-        assertEquals(300, Counter.count(0, 300));
+        assertEquals(300, Counter.count(0, 300)); // deleting build folder + changing byte into int
     }
 }

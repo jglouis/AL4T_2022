@@ -43,7 +43,8 @@ public class SoundManager implements ISoundManager {
     @Override
     public void resumeBackground(){
         background.setMicrosecondPosition(clipTime);
-        background.start();
+        // Loop music track, so game music doesn't stop
+        background.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
     @Override

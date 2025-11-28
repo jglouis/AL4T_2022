@@ -8,13 +8,13 @@ class ImageScalerTest {
 
     @Test
     void scaleThirdShouldRoundReasonably() {
-        int[] out = ImageScaler.scale(5, 5, 1, 3);
+        int[] out = ImageScaler.scale(5, 5, 1, 3); // added - casting to double to avoid integer division
         assertArrayEquals(new int[]{2, 2}, out);
     }
 
     @Test
     void scaleHalfShouldHandleOddSizes() {
-        int[] out = ImageScaler.scale(5, 4, 1, 2);
+        int[] out = ImageScaler.scale(5, 4, 1, 2); // added - casting to double to avoid integer division
         assertArrayEquals(new int[]{3, 2}, out);
     }
 }

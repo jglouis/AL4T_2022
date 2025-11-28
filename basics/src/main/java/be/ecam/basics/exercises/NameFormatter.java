@@ -19,10 +19,17 @@ public class NameFormatter {
 
     public static String displayName(Person p) {
         String s = p.getFirstName().trim();
-        if (!p.getMiddleName().isEmpty()) {
-            s += " " + p.getMiddleName().trim();
+        // if (!p.getMiddleName().isEmpty()) {
+        //     s += " " + p.getMiddleName().trim();
+        //}
+        // s += " " + p.getLastName().trim();
+        // return s;
+        String m = p.getMiddleName(); // added - to return once and solve the middle name issue (Pas de trim sur m car sinon déclenche erreur avec null)
+        String l = p.getLastName().trim();
+        if (p.getMiddleName() == null || p.getMiddleName().isEmpty()) {
+            return s + " " + l;
+        } else {
+            return s + " " + m + " " + l;
         }
-        s += " " + p.getLastName().trim();
-        return s;
     }
 }

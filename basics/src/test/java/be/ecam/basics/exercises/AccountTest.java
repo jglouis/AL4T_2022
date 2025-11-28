@@ -8,10 +8,10 @@ class AccountTest {
 
     @Test
     void depositAndWithdrawShouldBeExactInCents() {
-        Account a = new Account();
+        Account a = new Account(); 
         a.deposit(0.10);
         a.deposit(0.20);
-        assertEquals(0.30, a.getBalance(), 0.0, "Money operations should be exact in cents");
+        assertEquals(0.30, a.getBalance(), 0.0, "Money operations should be exact in cents"); // rounding to 1e-2
         a.withdraw(0.10);
         assertEquals(0.20, a.getBalance(), 0.0);
     }

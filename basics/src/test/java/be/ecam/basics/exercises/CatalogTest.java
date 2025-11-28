@@ -11,8 +11,8 @@ class CatalogTest {
 
     @Test
     void nullTagsShouldBeTreatedAsEmpty() {
-        Catalog.Product p = new Catalog.Product("Toy", null);
-        assertEquals(0, Catalog.countTags(p));
+        Catalog.Product p = new Catalog.Product("Toy", null); 
+        assertEquals(0, Catalog.countTags(p)); // added if null then send back an empty list
     }
 
     @Test
