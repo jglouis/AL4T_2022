@@ -2,7 +2,7 @@ plugins {
     id 'application'
 }
 
-version 'unspecified'
+version = 'unspecified'
 
 repositories {
     mavenCentral()
@@ -30,8 +30,8 @@ run {
     standardInput = System.in
 }
 
-task utf8Run(type: JavaExec) {
-    group('application')
+tasks.register('utf8Run', JavaExec) {
+    group = 'application'
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'be.ecam.chess.Main'
 //    dependsOn(':chess:utf8Classes')
