@@ -11,6 +11,6 @@ application {
 }
 
 dependencies {
-    implementation "com.google.dagger:dagger:2.44"
-    annotationProcessor "com.google.dagger:dagger-compiler:2.44"
+    implementation "com.google.dagger:dagger:2.60.1"
+    annotationProcessor "com.google.dagger:dagger-compiler:2.60.1"
 }
