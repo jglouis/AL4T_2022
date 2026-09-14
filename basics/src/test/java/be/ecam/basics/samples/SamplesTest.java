@@ -65,4 +65,27 @@ class SamplesTest {
     void autoUnboxingNullThrowsNPE() {
         assertThrows(NullPointerException.class, Samples::unboxNull);
     }
+
+    @Test
+    void boxedIntegerReferenceEquality() {
+        assertFalse(Samples.boxedIntegerReferenceEquality());
+    }
+
+    @Test
+    void arrayEqualsPitfall() {
+        assertFalse(Samples.arrayEqualsForSameContents());
+        assertTrue(java.util.Arrays.equals(new int[]{1, 2, 3}, new int[]{1, 2, 3}));
+    }
+
+    @Test
+    void finalReferenceAllowsObjectMutation() {
+        assertEquals("Bob", Samples.mutateFinalReference());
+    }
+
+    @Test
+    void inheritanceDynamicDispatchVsFieldResolution() {
+        Samples.Animal animal = new Samples.Dog();
+        assertEquals("dog", Samples.dynamicMethodDispatch(animal));
+        assertEquals("animal", Samples.staticFieldAccess(animal));
+    }
 }

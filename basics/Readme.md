@@ -15,7 +15,10 @@ They illustrate common pitfalls such as:
 - checked exceptions enforcement
 - reference aliasing and mutability
 - string reference equality (==) vs content equality (equals)
-- autounboxing null leading to NPE
+- autoboxing and unboxing, including unboxing `null`
+- array identity vs content equality
+- `final` references vs mutable objects
+- inheritance and dynamic method dispatch
 
 How to run the tests for this module only:
 - Using Gradle Wrapper from the project root: `gradlew :basics:test`
@@ -70,6 +73,74 @@ As a first approximation, we can say that a reference is candidate for garbage c
 referenced by the program.
 
 The default value of a reference is `null`.
+
+
+### Arrays are reference types
+
+Arrays are reference types, even when their elements are primitive values.
+
+For example:
+
+```java
+int[] values = new int[10];
+```
+
+The variable `values` does not contain the array itself. It contains a reference to an array object.
+
+This means arrays behave like other reference types with respect to identity:
+
+```java
+int[] a = {1, 2, 3};
+int[] b = {1, 2, 3};
+
+System.out.println(a == b); // false
+```
+
+The two arrays contain the same values, but they are two different array objects.
+
+Arrays also illustrate an important limitation of `Object.equals()`. Arrays do not override `equals()` to compare their elements:
+
+```java
+System.out.println(a.equals(b));       // false
+System.out.println(java.util.Arrays.equals(a, b)); // true
+```
+
+When comparing array contents, use the appropriate methods from `java.util.Arrays`.
+
+### Boxing and unboxing
+
+Java provides wrapper types for primitive values, such as `Integer` for `int` and `Boolean` for `boolean`.
+
+Java can automatically convert between primitive and reference types:
+
+```java
+Integer x = 42; // boxing: int -> Integer
+int y = x;      // unboxing: Integer -> int
+```
+
+This is convenient, but it can hide the distinction between values and references.
+
+For example, reference equality is not the same as value equality:
+
+```java
+Integer a = 1000;
+Integer b = 1000;
+
+System.out.println(a == b);      // false
+System.out.println(a.equals(b)); // true
+```
+
+The `==` operator compares the references here, while `equals()` compares the values.
+
+Unboxing can also fail when the reference is `null`:
+
+```java
+Integer value = null;
+
+int number = value; // NullPointerException
+```
+
+Be aware that Java may insert boxing and unboxing operations implicitly, so code that looks like it operates entirely on primitive values may actually involve objects.
 
 ## Byte manipulation and endianness
 
@@ -624,6 +695,113 @@ The proper ways to release resources is by using either:
 - `try-finally` blocks
 - `try-with` (Assuming the resource implements `Closeable` or `AutoCloseable`)
 
+## Identity versus equality
+
+For reference types, there are two different questions we can ask:
+
+```text
+Are these the same object?
+        ↓
+      ==
+
+Do these objects represent the same value?
+        ↓
+    equals()
+```
+
+For example:
+
+```java
+String a = new String("hello");
+String b = new String("hello");
+
+System.out.println(a == b);      // false
+System.out.println(a.equals(b)); // true
+```
+
+`a` and `b` refer to two different objects, but those objects contain equal strings.
+
+The distinction is fundamental when designing classes: an object may have an identity that matters independently of the value it represents.
+
+The same distinction explains why overriding `equals()` is a deliberate design decision rather than something Java does automatically.
+
+## `final` does not mean immutable
+
+The `final` keyword prevents a variable from being assigned a different value after initialization. For a reference, however, it does **not** make the referenced object immutable.
+
+For example:
+
+```java
+final Person person = new Person();
+
+person.setName("Alice"); // potentially valid
+
+// person = new Person(); // does not compile
+```
+
+The reference cannot be changed, but the object it refers to may still be mutable.
+
+```text
+final reference
+      │
+      ▼
+   ┌─────────┐
+   │ Person  │
+   │ mutable │
+   └─────────┘
+```
+
+Immutability is a property of the object's state and API, not simply of the reference pointing to it.
+
+## Inheritance and dynamic dispatch
+
+Inheritance allows a class to specialize another class:
+
+```java
+class Animal {
+    void speak() {
+        System.out.println("animal");
+    }
+}
+
+class Dog extends Animal {
+    @Override
+    void speak() {
+        System.out.println("dog");
+    }
+}
+```
+
+A reference of the parent type can refer to an instance of the child type:
+
+```java
+Animal animal = new Dog();
+
+animal.speak(); // dog
+```
+
+The method that is executed is determined by the **runtime type of the object**. This is called dynamic dispatch.
+
+It is important to distinguish this from fields. Fields are not dynamically dispatched:
+
+```java
+class Animal {
+    String name = "animal";
+}
+
+class Dog extends Animal {
+    String name = "dog";
+}
+
+Animal animal = new Dog();
+
+System.out.println(animal.name); // animal
+```
+
+The declared type of the reference determines which field is accessed, while overridden instance methods are dynamically dispatched according to the runtime type.
+
+This distinction is one reason why fields should generally not be used as a substitute for polymorphic behavior.
+
 ## Exceptions and Errors
 
 Java uses Exceptions and Errors, both inheriting from a common class `Throwable`.
@@ -670,7 +848,7 @@ Common ways to handle null are:
 
 ## Exercises
 
-A set of 9 small, realistic exercises lives under the package `be.ecam.basics.exercises`.
+A set of 13 small, realistic exercises lives under the package `be.ecam.basics.exercises`.
 Their unit tests are in `basics/src/test/java/be/ecam/basics/exercises`.
 Some of these tests intentionally fail at first to reflect typical real‑world bugs; your goal is to make them pass by improving the production code.
 

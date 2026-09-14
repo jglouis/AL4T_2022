@@ -64,4 +64,55 @@ public final class Samples {
         // This will throw NullPointerException during unboxing
         return x;
     }
+
+    // 11) Boxed Integer equality pitfall: == compares references, not values
+    public static boolean boxedIntegerReferenceEquality() {
+        Integer a = 1000;
+        Integer b = 1000;
+        //noinspection NumberEquality
+        return a == b; // false because outside IntegerCache (-128..127)
+    }
+
+    // 12) Array equality pitfall: arrays do not override equals(), so equals() compares references
+    public static boolean arrayEqualsForSameContents() {
+        int[] a = {1, 2, 3};
+        int[] b = {1, 2, 3};
+        //noinspection ArrayEquals
+        return a.equals(b); // false because arrays do not override equals()
+    }
+
+    // 13) final references vs mutable objects: final prevents reassignment, not mutation of the referenced object
+    public static class MutablePerson {
+        private String name;
+        public MutablePerson(String name) { this.name = name; }
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+    }
+
+    public static String mutateFinalReference() {
+        final MutablePerson person = new MutablePerson("Alice");
+        person.setName("Bob"); // allowed: mutating the object, not the reference
+        return person.getName();
+    }
+
+    // 14) Inheritance and dynamic dispatch: methods are dynamically dispatched by runtime type,
+    // but field access is statically determined by the reference's declared type
+    public static class Animal {
+        public String name = "animal";
+        public String speak() { return "animal"; }
+    }
+
+    public static class Dog extends Animal {
+        public String name = "dog";
+        @Override
+        public String speak() { return "dog"; }
+    }
+
+    public static String dynamicMethodDispatch(Animal animal) {
+        return animal.speak();
+    }
+
+    public static String staticFieldAccess(Animal animal) {
+        return animal.name;
+    }
 }
