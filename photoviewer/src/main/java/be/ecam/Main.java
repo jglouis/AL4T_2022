@@ -1,5 +1,6 @@
 package be.ecam;
 import java.awt.Image;
+import java.awt.BorderLayout;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -44,6 +45,10 @@ public class Main {
         // Display the first picture in the array
         try {
             BufferedImage img = ImageIO.read(files[0]);
+            if (img == null) {
+                System.err.println("Format d'image non reconnu ou fichier corrompu.");
+                return;
+            }
 
             double ratio = Math.min((double) targetWidth / img.getWidth(),
                     (double) targetHeight / img.getHeight());
@@ -51,7 +56,7 @@ public class Main {
             int newHeight = (int) (img.getHeight() * ratio);
 
             Image scaledImg = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-            frame.add(new JLabel(new ImageIcon(scaledImg)), SwingConstants.CENTER);
+            frame.add(new JLabel(new ImageIcon(scaledImg)), BorderLayout.CENTER);
         } catch (IOException e) {
             System.err.println("Erreur lors de la lecture du fichier : " + e.getMessage());
         }
