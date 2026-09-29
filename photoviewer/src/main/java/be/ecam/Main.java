@@ -1,4 +1,5 @@
 package be.ecam;
+import java.awt.Image;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -34,14 +35,23 @@ public class Main {
 
         // 2. Create the UI.
         JFrame frame = new JFrame("Simple photo Viewer");
-        frame.setSize(800, 600);
+        int targetWidth = 800;
+        int targetHeight = 600;
+        frame.setSize(targetWidth, targetHeight);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
         // Display the first picture in the array
         try {
             BufferedImage img = ImageIO.read(files[0]);
-            frame.add(new JLabel(new ImageIcon(img)), SwingConstants.CENTER);
+
+            double ratio = Math.min((double) targetWidth / img.getWidth(),
+                    (double) targetHeight / img.getHeight());
+            int newWidth = (int) (img.getWidth() * ratio);
+            int newHeight = (int) (img.getHeight() * ratio);
+
+            Image scaledImg = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+            frame.add(new JLabel(new ImageIcon(scaledImg)), SwingConstants.CENTER);
         } catch (IOException e) {
             System.err.println("Erreur lors de la lecture du fichier : " + e.getMessage());
         }
