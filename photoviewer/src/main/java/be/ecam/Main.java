@@ -19,9 +19,14 @@ public class Main {
         File[] files = dir.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
-                return name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".png");
+                return name.toLowerCase().endsWith(".jpg") || name.toLowerCase().endsWith(".jpeg") || name.toLowerCase().endsWith(".png");
             }
         });
+        // Because if dir exist but is not a directory dir value is null and if we don't have any file in files it's useful to continue
+        if (files == null || files.length == 0) {
+            System.out.println("Aucune image trouvée dans le dossier.");
+            return;
+        }
 
         for (File file : files) {
             System.out.println(file.getName());
@@ -38,7 +43,7 @@ public class Main {
             BufferedImage img = ImageIO.read(files[0]);
             frame.add(new JLabel(new ImageIcon(img)), SwingConstants.CENTER);
         } catch (IOException e) {
-            // TODO something
+            System.err.println("Erreur lors de la lecture du fichier : " + e.getMessage());
         }
 
         frame.setVisible(true);
