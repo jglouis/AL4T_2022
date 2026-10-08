@@ -17,10 +17,10 @@ public class FileSystemPhotoSource implements PhotoSource {
             @Override
             public boolean accept(File dir, String name) {
                 String lower  = name.toLowerCase();
-                return lower.endsWith(".jpg") || lower.endsWith("jpeg") || lower.endsWith(".png");
+                return lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png");
             }
         });
-        if (files==null || files.length==0){throw new PhotoException("It is impossible to fetch all photos!: "+directory.getAbsolutePath());}
+        if (files==null){throw new PhotoException("It is impossible to fetch all photos!: "+directory.getAbsolutePath());}
         List<Photo> photos = new ArrayList<>();
         for (File file : files) {photos.add(new Photo(file));}
         if (photos.isEmpty()){throw new PhotoException("No photos found!");}
