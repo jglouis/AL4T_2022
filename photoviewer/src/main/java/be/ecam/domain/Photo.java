@@ -16,4 +16,9 @@ public class Photo {
     public String getName() {
         return file.getName();
     }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

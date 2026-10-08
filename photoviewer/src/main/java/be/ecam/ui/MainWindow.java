@@ -15,6 +15,8 @@ public class MainWindow extends JFrame {
     private final PhotoSource photoSource;
     private final ImagePanel imagePanel = new ImagePanel();
     private final StatusBar statusBar = new StatusBar();
+    private final JList<Photo> photoList = new JList<>();
+    private final DefaultListModel<Photo> listModel = new DefaultListModel<>();
 
     public MainWindow(PhotoSource photoSource) {
         this.photoSource = photoSource;
@@ -34,6 +36,18 @@ public class MainWindow extends JFrame {
         add(imagePanel, BorderLayout.CENTER);
         add(statusBar, BorderLayout.SOUTH);
 
+        photoList.setModel(listModel);
+        photoList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        photoList.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                onPhotoSelected();
+            }
+        });
+
+        JScrollPane listScroll = new JScrollPane(photoList);
+        listScroll.setPreferredSize(new Dimension(200, 0));
+        add(listScroll, BorderLayout.WEST);
+
         imagePanel.clear();
         statusBar.showMessage("Select folder with Open button");
     }
@@ -48,9 +62,28 @@ public class MainWindow extends JFrame {
         File directory = chooser.getSelectedFile();
         try {
             List<Photo> photos = photoSource.listPhotos(directory);
-            BufferedImage image = photoSource.load(photos.get(0));
+            listModel.clear();
+            for (Photo photo : photos) {
+                listModel.addElement(photo);
+            }
+            photoList.setSelectedIndex(0);
+        } catch (PhotoException ex) {
+            listModel.clear();
+            imagePanel.clear();
+            statusBar.showError(ex.getMessage());
+        }
+    }
+
+
+    private void onPhotoSelected() {
+        Photo selected = photoList.getSelectedValue();
+        if (selected == null) {
+            return;
+        }
+        try {
+            BufferedImage image = photoSource.load(selected);
             imagePanel.showImage(image);
-            statusBar.showMessage(photos.get(0).getName() + " — " + photos.size() + " image(s)");
+            statusBar.showMessage(selected.getName());
         } catch (PhotoException ex) {
             imagePanel.clear();
             statusBar.showError(ex.getMessage());
