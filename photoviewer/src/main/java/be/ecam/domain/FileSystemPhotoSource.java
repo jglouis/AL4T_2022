@@ -1,41 +1,39 @@
 package be.ecam.domain;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
 public class FileSystemPhotoSource implements PhotoSource {
 
     @Override
-    public List<Photo> listPhotos(File directory) throws PhotoException {
-        if (!directory.exists()){ throw new PhotoException("Directory does not exist: "+directory.getAbsolutePath());}
-        File[] files = directory.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                String lower  = name.toLowerCase();
-                return lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png");
-            }
-        });
-        if (files==null){throw new PhotoException("It is impossible to fetch all photos!: "+directory.getAbsolutePath());}
-        List<Photo> photos = new ArrayList<>();
-        for (File file : files) {photos.add(new Photo(file));}
-        if (photos.isEmpty()){throw new PhotoException("No photos found!");}
-        return photos;
+    public List<Photo> listPhotos(Path directory) {
+        try {
+            return Files.walk(directory)
+                    .filter(this::isImage)
+                    .map(Photo::new)
+                    .toList();
+        } catch (IOException e) {
+            return Collections.emptyList();
+        }
 
     }
 
+    private boolean isImage(Path path) {
+        String name = path.getFileName().toString();
+        String lower  = name.toLowerCase();
+        return lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png");
+    }
+
     @Override
-    public BufferedImage load(Photo photo) throws PhotoException {
+    public InputStream load(Photo photo) throws PhotoException {
         try {
-            BufferedImage image = ImageIO.read(photo.getFile());
-            if (image==null){throw new PhotoException("This format is not supported!:" +photo.getName());}
-            return image;
+            return Files.newInputStream(photo.path());
         } catch (IOException e) {
-            throw new PhotoException("Impossible to fetch image!: " + photo.getName());
+            throw new PhotoException("Impossible to fetch image!: " + photo.name());
         }
     }
 }

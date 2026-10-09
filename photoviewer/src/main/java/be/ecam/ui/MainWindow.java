@@ -4,10 +4,12 @@ import be.ecam.domain.Photo;
 import be.ecam.domain.PhotoException;
 import be.ecam.domain.PhotoSource;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 public class MainWindow extends JFrame {
@@ -15,6 +17,7 @@ public class MainWindow extends JFrame {
     private final PhotoSource photoSource;
     private final ImagePanel imagePanel = new ImagePanel();
     private final StatusBar statusBar = new StatusBar();
+    // TODO Display the pictures as thumbnails
     private final JList<Photo> photoList = new JList<>();
     private final DefaultListModel<Photo> listModel = new DefaultListModel<>();
 
@@ -59,7 +62,7 @@ public class MainWindow extends JFrame {
         if (result != JFileChooser.APPROVE_OPTION) {
             return;
         }
-        File directory = chooser.getSelectedFile();
+        Path directory = chooser.getSelectedFile().toPath();
         try {
             List<Photo> photos = photoSource.listPhotos(directory);
             listModel.clear();
@@ -67,7 +70,7 @@ public class MainWindow extends JFrame {
                 listModel.addElement(photo);
             }
             photoList.setSelectedIndex(0);
-        } catch (PhotoException ex) {
+        } catch (RuntimeException ex) {
             listModel.clear();
             imagePanel.clear();
             statusBar.showError(ex.getMessage());
@@ -81,10 +84,10 @@ public class MainWindow extends JFrame {
             return;
         }
         try {
-            BufferedImage image = photoSource.load(selected);
+            BufferedImage image = ImageIO.read(photoSource.load(selected));
             imagePanel.showImage(image);
-            statusBar.showMessage(selected.getName());
-        } catch (PhotoException ex) {
+            statusBar.showMessage(selected.name());
+        } catch (IOException | PhotoException ex) {
             imagePanel.clear();
             statusBar.showError(ex.getMessage());
         }

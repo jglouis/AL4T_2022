@@ -1,24 +1,11 @@
 package be.ecam.domain;
 
 import java.io.File;
+import java.nio.file.Path;
 
-public class Photo {
-    private final File file;
+public record Photo(Path path) {
 
-    public Photo(File file) {
-        this.file = file;
-    }
-
-    public File getFile() {
-        return file;
-    }
-
-    public String getName() {
-        return file.getName();
-    }
-
-    @Override
-    public String toString() {
-        return getName();
+    public String name() {
+        return path.getFileName().toString();
     }
 }
