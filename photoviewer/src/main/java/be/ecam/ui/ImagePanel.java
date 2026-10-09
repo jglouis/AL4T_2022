@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import static be.ecam.ui.UiUtils.scale;
+
 public class ImagePanel extends JPanel {
 
     private final JLabel label = new JLabel("", SwingConstants.CENTER);
@@ -17,14 +19,7 @@ public class ImagePanel extends JPanel {
         int maxWidth = getWidth();
         int maxHeight = getHeight();
 
-        double ratio = Math.min(
-                (double) maxWidth / image.getWidth(),
-                (double) maxHeight / image.getHeight());
-
-        int newWidth = (int) (image.getWidth() * ratio);
-        int newHeight = (int) (image.getHeight() * ratio);
-
-        Image scaled = image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+        Image scaled = scale(image, maxWidth, maxHeight);
         label.setIcon(new ImageIcon(scaled));
         label.setText("");
 

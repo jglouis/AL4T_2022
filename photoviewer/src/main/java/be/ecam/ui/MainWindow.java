@@ -17,8 +17,8 @@ public class MainWindow extends JFrame {
     private final PhotoSource photoSource;
     private final ImagePanel imagePanel = new ImagePanel();
     private final StatusBar statusBar = new StatusBar();
-    // TODO Display the pictures as thumbnails
     private final JList<Photo> photoList = new JList<>();
+    private final ListCellRenderer<Photo> photoListCellRenderer = new PhotoCellRenderer();
     private final DefaultListModel<Photo> listModel = new DefaultListModel<>();
 
     public MainWindow(PhotoSource photoSource) {
@@ -40,6 +40,7 @@ public class MainWindow extends JFrame {
         add(statusBar, BorderLayout.SOUTH);
 
         photoList.setModel(listModel);
+        photoList.setCellRenderer(photoListCellRenderer);
         photoList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         photoList.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
