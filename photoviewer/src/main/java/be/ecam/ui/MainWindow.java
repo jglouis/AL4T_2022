@@ -18,7 +18,8 @@ public class MainWindow extends JFrame {
     private final ImagePanel imagePanel = new ImagePanel();
     private final StatusBar statusBar = new StatusBar();
     private final JList<Photo> photoList = new JList<>();
-    private final ListCellRenderer<Photo> photoListCellRenderer = new PhotoCellRenderer();
+    private final ThumbnailCache thumbnailCache = new ThumbnailCache(100);
+    private final ListCellRenderer<Photo> photoListCellRenderer = new PhotoCellRenderer(thumbnailCache);
     private final DefaultListModel<Photo> listModel = new DefaultListModel<>();
 
     public MainWindow(PhotoSource photoSource) {

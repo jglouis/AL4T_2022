@@ -12,7 +12,10 @@ import static be.ecam.ui.UiUtils.scale;
 
 public class PhotoCellRenderer extends JLabel implements ListCellRenderer<Photo> {
 
-    public PhotoCellRenderer() {
+    private final ThumbnailCache cache;
+
+    public PhotoCellRenderer(ThumbnailCache cache) {
+        this.cache = cache;
         setBorder(BorderFactory.createEmptyBorder(8,8,8,8));
         setOpaque(true);
     }
@@ -27,19 +30,33 @@ public class PhotoCellRenderer extends JLabel implements ListCellRenderer<Photo>
         // Handle the case where photo is null.
         if (photo == null) {
             setText("No photo!");
+            setIcon(null);
             return this;
         }
 
-        // Happy path
-        try {
-            BufferedImage original = ImageIO.read(photo.path().toFile());
-            if (original == null) {
+        setText("");
+
+        //  On cherche dabord l'image en mémoire
+        ImageIcon cachedIcon = cache.get(photo);
+
+        if (cachedIcon != null) {
+            setIcon(cachedIcon);
+        } else {
+            // 'image n'est pas là, on la lit depuis le disque
+            try {
+                BufferedImage original = ImageIO.read(photo.path().toFile());
+                if (original == null) {
+                    setIcon(null);
+                } else {
+                    ImageIcon newIcon = new ImageIcon(scale(original, 120, 120));
+
+                    cache.put(photo, newIcon); 
+                    setIcon(newIcon);
+                }
+            } catch (IOException e) {
                 setIcon(null);
-            } else {
-                setIcon(new ImageIcon(scale(original, 120, 120)));
+                setText("Erreur");
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
 
         if (isSelected) {
