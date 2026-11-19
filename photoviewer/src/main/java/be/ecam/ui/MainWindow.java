@@ -11,6 +11,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import static be.ecam.Main.THUMBNAIL_SIZE;
 
@@ -34,6 +36,12 @@ public class MainWindow extends JFrame implements PhotoCache.Listener {
         setTitle("Simple Photo Viewer");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                photoCache.shutdown();
+            }
+        });
         setLayout(new BorderLayout());
 
         JButton openButton = new JButton("Open");
@@ -50,8 +58,10 @@ public class MainWindow extends JFrame implements PhotoCache.Listener {
         photoList.setModel(listModel);
         photoList.setCellRenderer(photoListCellRenderer);
 
-        // Without a fixed height, JList calls the renderer on every element to measure it,
-        // which loads every thumbnail and flushes the LRU cache when there are many photos.
+        // Without a fixed height, JList calls the renderer on every element to measure
+        // it,
+        // which loads every thumbnail and flushes the LRU cache when there are many
+        // photos.
 
         photoList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         photoList.setFixedCellHeight(PHOTO_CELL_HEIGHT);
@@ -91,7 +101,6 @@ public class MainWindow extends JFrame implements PhotoCache.Listener {
             statusBar.showError(ex.getMessage());
         }
     }
-
 
     private void onPhotoSelected() {
         Photo selected = photoList.getSelectedValue();

@@ -23,18 +23,19 @@ public class PhotoCellRenderer extends JLabel implements ListCellRenderer<Photo>
             int index,
             boolean isSelected,
             boolean cellHasFocus) {
-        // This label is reused for every cell: reset what the previous cell left behind.
+        // This label is reused for every cell: reset what the previous cell left
+        // behind.
         setIcon(null);
         setText(null);
 
         if (photo == null) {
             setText("No photo!");
         } else {
-            BufferedImage thumbnail = photoCache.get(photo.path());
-            if (thumbnail != null) {
-                setIcon(new ImageIcon(thumbnail));
-            } else {
-                setText("Unreadable image");
+            PhotoCache.Result result = photoCache.get(photo.path(), list::repaint);
+            switch (result.status()) {
+                case READY -> setIcon(new ImageIcon(result.image()));
+                case LOADING -> setText("Loading...");
+                case FAILED -> setText("Unreadable image");
             }
         }
 
