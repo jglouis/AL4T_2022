@@ -1,13 +1,12 @@
 package be.ecam.ui;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
-
-import javax.imageio.ImageIO;
+import java.util.Set;
 
 import static be.ecam.ui.UiUtils.estimatedSize;
 
@@ -24,29 +23,26 @@ public class PhotoCache {
 
     public interface Listener {
         void onUpdate(int usedBytes, int hits, int misses, int evictions);
-    }
 
-    /**
-     * Produces the thumbnail of a file. Called by the cache on a miss only.
-     */
-    public interface Loader {
         /**
-         * @return the thumbnail, or null if the file is not a readable image
+         * Called on the EDT when a thumbnail loaded in the background is available,
+         * so the view can repaint. Default: nothing.
          */
-        BufferedImage load(Path path) throws IOException;
+        default void onThumbnailLoaded(Path path) {}
     }
 
     // Only one listener can be registered. No-op until then, so get() never has to check for null.
     private Listener listener = (usedBytes, hits, misses, evictions) -> {};
 
     private final int maxBytes;
-    private final Loader loader;
     private final Map<Path, Optional<BufferedImage>> cache;
     private int usedBytes;
     private int hits;
     private int misses;
     private int evictions;
-
+    private final ImageLoader imageloader;
+    // Paths whose thumbnail is being loaded in the background, so a repaint does not submit them again.
+    private final Set<Path> pending = new HashSet<>();
     /**
      * Creates a cache that reads the images from disk and scales them down.
      *
@@ -54,41 +50,30 @@ public class PhotoCache {
      * @param thumbnailSize maximum width and height of a thumbnail, in pixels
      */
     public PhotoCache(int maxBytes, int thumbnailSize) {
-        this(maxBytes, scalingLoader(thumbnailSize));
+        this(maxBytes, new ImageLoader(4, thumbnailSize));
     }
 
     /**
-     * @param maxBytes maximum memory used by the cached thumbnails, in bytes
-     * @param loader   produces the thumbnails on a cache miss
+     * @param maxBytes    maximum memory used by the cached thumbnails, in bytes
+     * @param imageloader produces the thumbnails in the background on a cache miss
      */
-    public PhotoCache(int maxBytes, Loader loader) {
+    public PhotoCache(int maxBytes, ImageLoader imageloader) {
         if (maxBytes <= 0) {
             throw new IllegalArgumentException("Cache size must be positive");
         }
 
         this.maxBytes = maxBytes;
-        this.loader = loader;
         this.cache = new LinkedHashMap<>(16, 0.75f, true);
+        this.imageloader = imageloader;
     }
 
-    private static Loader scalingLoader(int thumbnailSize) {
-        if (thumbnailSize <= 0) {
-            throw new IllegalArgumentException("Thumbnail size must be positive");
-        }
-        return path -> {
-            BufferedImage original = ImageIO.read(path.toFile());
-            if (original == null) {
-                return null;
-            }
-            // Keep the aspect ratio of the original image.
-            return UiUtils.scale(original, thumbnailSize, thumbnailSize);
-        };
-    }
 
     /**
-     * Returns the thumbnail for the given path, loading it from disk on a cache miss.
+     * Returns the thumbnail for the given path. On a cache miss, the thumbnail is loaded
+     * in the background by the {@link ImageLoader} and null is returned until it is ready;
+     * the listener is then told through {@link Listener#onThumbnailLoaded(Path)}.
      *
-     * @return the thumbnail, or null if the file cannot be read as an image
+     * @return the thumbnail, or null if it is still loading or the file cannot be read as an image
      */
     public BufferedImage get(Path path) {
 
@@ -98,9 +83,27 @@ public class PhotoCache {
             listener.onUpdate(usedBytes, hits, misses, evictions);
             return cache.get(path).orElse(null);
         }
-        misses++;
 
-        Optional<BufferedImage> thumbnail = load(path);
+        // Already submitted: wait for the worker thread instead of submitting it again.
+        if (pending.contains(path)) {
+            return null;
+        }
+
+        misses++;
+        pending.add(path);
+
+        // Producer: the EDT submits the job, a worker thread of the ImageLoader consumes it.
+        imageloader.loadAsync(path, thumbnail -> onLoaded(path, thumbnail));
+        return null;
+    }
+
+    /**
+     * Callback of the ImageLoader. Runs on the EDT (invokeLater), so the cache stays single-threaded.
+     */
+    private void onLoaded(Path path, BufferedImage loaded) {
+        pending.remove(path);
+
+        Optional<BufferedImage> thumbnail = Optional.ofNullable(loaded);
         cache.put(path, thumbnail);
         usedBytes += estimatedSize(thumbnail.orElse(null));
 
@@ -113,8 +116,7 @@ public class PhotoCache {
         }
 
         listener.onUpdate(usedBytes, hits, misses, evictions);
-
-        return thumbnail.orElse(null);
+        listener.onThumbnailLoaded(path);
     }
 
     /**
@@ -124,17 +126,15 @@ public class PhotoCache {
         return cache.size();
     }
 
-    private Optional<BufferedImage> load(Path path) {
-        try {
-            return Optional.ofNullable(loader.load(path));
-        } catch (IOException e) {
-            System.err.println("Cannot read " + path + ": " + e.getMessage());
-            return Optional.empty();
-        }
-    }
-
     public void registerListener(Listener listener) {
         this.listener = listener;
+    }
+
+    /**
+     * Stops the background threads of the ImageLoader. Call it when the application closes.
+     */
+    public void shutdown() {
+        imageloader.shutdown();
     }
 
 }
