@@ -7,6 +7,8 @@ import be.ecam.domain.PhotoSource;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -34,6 +36,13 @@ public class MainWindow extends JFrame implements PhotoCache.Listener {
         setTitle("Simple Photo Viewer");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                // Stop the thumbnail loading threads before the application exits.
+                photoCache.shutdown();
+            }
+        });
         setLayout(new BorderLayout());
 
         JButton openButton = new JButton("Open");
@@ -114,5 +123,11 @@ public class MainWindow extends JFrame implements PhotoCache.Listener {
         String label = String.format("size: %.1f MB, hits: %d, misses: %d, evictions: %d",
                 usedMegabytes, hits, misses, evictions);
         cacheStatus.setText(label);
+    }
+
+    @Override
+    public void onThumbnailLoaded(Path path) {
+        // The thumbnail was loaded in the background: redraw the cells so it appears.
+        photoList.repaint(); // like a refresh() of the photolist of photoCache
     }
 }
